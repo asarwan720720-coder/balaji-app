@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Admin Deposit Requests</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f2f2f2;
+}
+
+.header{
+    background:#111827;
+    color:white;
+    padding:18px;
+    text-align:center;
+    font-size:21px;
+    font-weight:bold;
+}
+
+.container{
+    max-width:600px;
+    margin:20px auto;
+    padding:10px;
+}
+
+.deposit-card{
+    background:white;
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:15px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.10);
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    padding:7px 0;
+    border-bottom:1px solid #eee;
+}
+
+.row:last-child{
+    border-bottom:0;
+}
+
+.label{
+    font-weight:bold;
+    color:#555;
+}
+
+.amount{
+    font-size:22px;
+    font-weight:bold;
+}
+
+.status{
+    display:inline-block;
+    margin-top:10px;
+    padding:7px 12px;
+    border-radius:20px;
+    background:#fff3cd;
+    color:#856404;
+    font-weight:bold;
+}
+
+#message{
+    text-align:center;
+    padding:20px;
+    color:#666;
+}
+
+.refresh{
+    width:100%;
+    padding:13px;
+    margin-bottom:15px;
+    border:0;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+    ADMIN DEPOSIT REQUESTS
+</div>
+
+<div class="container">
+
+    <button class="refresh" onclick="loadDeposits()">
+        🔄 Refresh Requests
+    </button>
+
+    <div id="message">
+        Loading...
+    </div>
+
+    <div id="depositList"></div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+"https://katbdbzoufiblnnsoxkk.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
+
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+// --------------------------------
+// LOAD DEPOSIT REQUESTS
+// --------------------------------
+
+async function loadDeposits(){
+
+    const list =
+        document.getElementById("depositList");
+
+    const message =
+        document.getElementById("message");
+
+
+    list.innerHTML = "";
+
+    message.innerText =
+        "Loading...";
+
+
+    const { data, error } =
+        await supabaseClient
+        .from("deposits")
+        .select("*")
+        .eq("status", "pending")
+        .order("created_at", {
+            ascending:false
+        });
+
+
+    if(error){
+
+        console.error(error);
+
+        message.innerText =
+            "Error: " + error.message;
+
+        return;
+    }
+
+
+    if(!data || data.length === 0){
+
+        message.innerText =
+            "Koi pending deposit request nahi hai.";
+
+        return;
+    }
+
+
+    message.innerText =
+        data.length + " Pending Request";
+
+
+    data.forEach(item => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "deposit-card";
+
+
+        const date =
+            item.created_at
+            ? new Date(item.created_at).toLocaleString("en-IN")
+            : "-";
+
+
+        card.innerHTML = `
+
+            <div class="row">
+                <span class="label">
+                    Deposit ID
+                </span>
+
+                <span>
+                    ${item.id}
+                </span>
+            </div>
+
+
+            <div class="row">
+                <span class="label">
+                    User ID
+                </span>
+
+                <span>
+                    ${item.user_id}
+                </span>
+            </div>
+
+
+            <div class="row">
+                <span class="label">
+                    Amount
+                </span>
+
+                <span class="amount">
+                    ₹${Number(item.amount).toFixed(2)}
+                </span>
+            </div>
+
+
+            <div class="row">
+                <span class="label">
+                    Time
+                </span>
+
+                <span>
+                    ${date}
+                </span>
+            </div>
+
+
+            <span class="status">
+                PENDING
+            </span>
+
+        `;
+
+
+        list.appendChild(card);
+
+    });
+
+}
+
+
+// Page open hote hi load
+loadDeposits();
+
+</script>
+
+</body>
+</html>
