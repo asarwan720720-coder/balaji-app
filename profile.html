@@ -9,7 +9,7 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Profile</title>
+<title>My Profile</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -25,10 +25,7 @@ body{
   background:#f2f2f2;
 }
 
-
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 
 .header{
   background:red;
@@ -39,395 +36,128 @@ body{
   font-weight:bold;
 }
 
+/* PROFILE CARD */
 
-/* =========================
-   USER TOP CARD
-========================= */
-
-.user-top{
-  margin:15px;
-  padding:18px;
+.profile-card{
+  margin:20px 15px;
+  padding:25px 20px;
   background:white;
   border-radius:20px;
-
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  box-shadow:0 2px 8px rgba(0,0,0,0.10);
+  box-shadow:0 2px 10px rgba(0,0,0,0.10);
 }
 
+/* USER DETAILS */
 
-.user-info{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+.detail{
+  padding:15px 0;
+  border-bottom:1px solid #eeeeee;
 }
 
-
-#userId{
-  background:green;
-  color:white;
-
-  padding:7px 14px;
-  border-radius:20px;
-
-  font-size:14px;
-  font-weight:bold;
-
-  width:max-content;
+.detail:last-child{
+  border-bottom:none;
 }
 
-
-#userName{
-  font-size:18px;
-  font-weight:bold;
-  color:#222;
-}
-
-
-#refCode{
-  font-size:14px;
-  color:#666;
-}
-
-
-#wallet{
-  background:red;
-  color:white;
-
-  padding:8px 15px;
-  border-radius:20px;
-
-  font-weight:bold;
-  font-size:16px;
-
-  white-space:nowrap;
-}
-
-
-/* =========================
-   PROFILE CARD
-========================= */
-
-.container{
-  padding:0 15px 30px;
-}
-
-
-.card{
-  background:white;
-  padding:20px;
-  border-radius:18px;
-  margin-bottom:15px;
-
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
-}
-
-
-.card-title{
-  font-size:19px;
-  font-weight:bold;
-  margin-bottom:15px;
-}
-
-
-/* =========================
-   INPUT
-========================= */
-
-.input-group{
-  margin-bottom:15px;
-}
-
-
-.input-group label{
-  display:block;
-  font-size:14px;
-  color:#555;
+.label{
+  font-size:13px;
+  color:#777;
   margin-bottom:6px;
 }
 
-
-.input-group input{
-  width:100%;
-
-  padding:12px;
-
-  border:1px solid #ddd;
-  border-radius:10px;
-
-  font-size:15px;
-  outline:none;
-}
-
-
-.input-group input:focus{
-  border-color:red;
-}
-
-
-/* =========================
-   BUTTON
-========================= */
-
-button{
-  width:100%;
-
-  padding:13px;
-
-  border:0;
-  border-radius:10px;
-
-  background:red;
-  color:white;
-
-  font-size:16px;
+.value{
+  font-size:18px;
   font-weight:bold;
-
-  cursor:pointer;
+  color:#222;
+  word-break:break-word;
 }
 
+/* LOADING */
 
-/* =========================
-   QR
-========================= */
-
-#qrPreview{
-  margin-top:10px;
+.loading{
   text-align:center;
-}
-
-
-#qrPreview img{
-  max-width:200px;
-  max-height:200px;
-  border-radius:10px;
-}
-
-
-/* =========================
-   MESSAGE
-========================= */
-
-#message{
-  text-align:center;
-  margin-top:10px;
-  font-size:14px;
+  color:#777;
+  padding:20px;
 }
 
 </style>
 
 </head>
 
-
 <body>
 
-
-<!-- =========================
-     HEADER
-========================= -->
+<!-- HEADER -->
 
 <div class="header">
   My Profile
 </div>
 
 
-<!-- =========================
-     USER TOP
-========================= -->
+<!-- PROFILE -->
 
-<div class="user-top">
+<div class="profile-card">
 
-  <div class="user-info">
+  <!-- USER ID -->
 
-    <div id="userId">
-      ID: Loading...
+  <div class="detail">
+
+    <div class="label">
+      User ID
     </div>
 
-    <div id="userName">
-      Name: Loading...
-    </div>
-
-    <div id="refCode">
-      Refer Code: Loading...
+    <div class="value" id="userId">
+      Loading...
     </div>
 
   </div>
 
 
-  <div id="wallet">
-    ₹ 0
-  </div>
+  <!-- USER NAME -->
 
-</div>
+  <div class="detail">
 
-
-<div class="container">
-
-
-  <!-- =========================
-       PROFILE DETAILS
-  ========================== -->
-
-  <div class="card">
-
-    <div class="card-title">
-      Profile Details
+    <div class="label">
+      User Name
     </div>
 
-
-    <div class="input-group">
-
-      <label>
-        Name
-      </label>
-
-      <input
-        type="text"
-        id="name"
-        placeholder="Enter Name">
-
+    <div class="value" id="userName">
+      Loading...
     </div>
-
-
-    <div class="input-group">
-
-      <label>
-        Mobile
-      </label>
-
-      <input
-        type="text"
-        id="mobile"
-        placeholder="Mobile Number">
-
-    </div>
-
-
-    <button onclick="saveProfile()">
-      Save Profile
-    </button>
-
-
-    <div id="message"></div>
 
   </div>
 
 
-  <!-- =========================
-       UPI DETAILS
-  ========================== -->
+  <!-- MOBILE -->
 
-  <div class="card">
+  <div class="detail">
 
-    <div class="card-title">
-      UPI Details
+    <div class="label">
+      Mobile Number
     </div>
 
-
-    <div class="input-group">
-
-      <label>
-        UPI ID
-      </label>
-
-      <input
-        type="text"
-        id="upi_id"
-        placeholder="Enter UPI ID">
-
+    <div class="value" id="userMobile">
+      Loading...
     </div>
-
-
-    <div class="input-group">
-
-      <label>
-        UPI Number
-      </label>
-
-      <input
-        type="text"
-        id="upi_number"
-        placeholder="Enter UPI Number">
-
-    </div>
-
-
-    <button onclick="saveBankDetails()">
-      Save UPI Details
-    </button>
 
   </div>
 
 
-  <!-- =========================
-       BANK DETAILS
-  ========================== -->
+  <!-- REFER CODE -->
 
-  <div class="card">
+  <div class="detail">
 
-    <div class="card-title">
-      Bank Details
+    <div class="label">
+      Refer Code
     </div>
 
-
-    <div class="input-group">
-
-      <label>
-        Bank Name
-      </label>
-
-      <input
-        type="text"
-        id="bank"
-        placeholder="Enter Bank Name">
-
+    <div class="value" id="refCode">
+      Loading...
     </div>
-
-
-    <button onclick="saveBankDetails()">
-      Save Bank Details
-    </button>
-
-  </div>
-
-
-  <!-- =========================
-       QR CODE
-  ========================== -->
-
-  <div class="card">
-
-    <div class="card-title">
-      QR Code
-    </div>
-
-
-    <input
-      type="file"
-      id="qrFile"
-      accept="image/*">
-
-
-    <div id="qrPreview"></div>
-
-
-    <br>
-
-
-    <button onclick="uploadQR()">
-      Upload QR
-    </button>
 
   </div>
 
 </div>
-
 
 
 <script>
-
 
 // =====================================
 // SUPABASE
@@ -436,10 +166,8 @@ button{
 const SUPABASE_URL =
 "https://katbdbzoufiblnnsoxkk.supabase.co";
 
-
 const SUPABASE_KEY =
 "sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
-
 
 const client =
 supabase.createClient(
@@ -449,11 +177,10 @@ supabase.createClient(
 
 
 // =====================================
-// GET LOGGED-IN USER
+// GET LOGGED-IN USER ID
 // =====================================
 
 let userId = null;
-
 
 const savedUser =
 localStorage.getItem("user");
@@ -468,8 +195,7 @@ if(savedUser){
 
     if(user && user.id){
 
-      userId =
-        user.id;
+      userId = user.id;
 
     }
 
@@ -486,7 +212,8 @@ if(savedUser){
 }
 
 
-// Fallback
+// FALLBACK
+
 if(!userId){
 
   userId =
@@ -504,13 +231,16 @@ async function loadProfile(){
   if(!userId){
 
     document.getElementById("userId").innerText =
-      "ID: Login required";
+      "Login required";
 
     document.getElementById("userName").innerText =
-      "Name: -";
+      "-";
+
+    document.getElementById("userMobile").innerText =
+      "-";
 
     document.getElementById("refCode").innerText =
-      "Refer Code: -";
+      "-";
 
     return;
 
@@ -530,21 +260,20 @@ async function loadProfile(){
   const {
     data,
     error
-  } =
-    await client
+  } = await client
 
-      .from("login")
+    .from("login")
 
-      .select(
-        "id,name,mobile,balance,refer_code,upi_id,upi_number,bank,qr"
-      )
+    .select(
+      "id,name,mobile,ref_code"
+    )
 
-      .eq(
-        "id",
-        userId
-      )
+    .eq(
+      "id",
+      userId
+    )
 
-      .single();
+    .single();
 
 
   console.log(
@@ -559,10 +288,65 @@ async function loadProfile(){
   );
 
 
+  // ===================================
+  // ERROR
+  // ===================================
+
   if(error){
 
+    console.log(
+      "Profile loading error:",
+      error.message
+    );
+
+    document.getElementById("userId").innerText =
+      "Error";
+
     document.getElementById("userName").innerText =
-      "Name: Error";
+      "-";
+
+    document.getElementById("userMobile").innerText =
+      "-";
 
     document.getElementById("refCode").innerText =
+      "-";
+
+    return;
+
+  }
+
+
+  // ===================================
+  // SHOW USER DATA
+  // ===================================
+
+  document.getElementById("userId").innerText =
+    data.id ?? "-";
+
+
+  document.getElementById("userName").innerText =
+    data.name ?? "-";
+
+
+  document.getElementById("userMobile").innerText =
+    data.mobile ?? "-";
+
+
+  document.getElementById("refCode").innerText =
+    data.ref_code ?? "-";
+
+}
+
+
+// =====================================
+// START
+// =====================================
+
+loadProfile();
+
+</script>
+
+</body>
+
+</html>
 ```
