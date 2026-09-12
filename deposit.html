@@ -1,9 +1,6 @@
-```html
 <!DOCTYPE html>
-<html lang="hi">
-
+<html lang="en">
 <head>
-
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -11,202 +8,273 @@
 
 <title>Deposit</title>
 
-<style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<style>
 *{
-  box-sizing:border-box;
+    box-sizing:border-box;
 }
 
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f3f4f6;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f3f4f6;
 }
 
-.depositBox{
-  width:92%;
-  max-width:400px;
-  background:white;
-  padding:25px;
-  border-radius:20px;
-  box-shadow:0 4px 15px rgba(0,0,0,.15);
+.container{
+    max-width:420px;
+    margin:40px auto;
+    padding:20px;
+}
+
+.box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.10);
 }
 
 h2{
-  text-align:center;
-  margin-top:0;
+    text-align:center;
+    margin-top:0;
 }
 
 label{
-  display:block;
-  margin-bottom:7px;
-  font-weight:bold;
+    display:block;
+    margin-bottom:8px;
+    font-weight:bold;
 }
 
 input{
-  width:100%;
-  padding:14px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  font-size:18px;
-  outline:none;
+    width:100%;
+    padding:14px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    font-size:17px;
+    outline:none;
 }
 
-input:focus{
-  border-color:#d19b19;
+button{
+    width:100%;
+    margin-top:18px;
+    padding:14px;
+    border:0;
+    border-radius:10px;
+    background:#16a34a;
+    color:white;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-.payBtn{
-  width:100%;
-  margin-top:18px;
-  padding:14px;
-  border:0;
-  border-radius:11px;
-  background:#159447;
-  color:white;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
+button:disabled{
+    background:#999;
 }
 
-.payBtn:active{
-  transform:scale(.98);
+.info{
+    margin-top:18px;
+    padding:12px;
+    background:#f1f5f9;
+    border-radius:10px;
+    font-size:14px;
 }
 
-.upiInfo{
-  margin-top:18px;
-  padding:12px;
-  background:#f5f5f5;
-  border-radius:10px;
-  text-align:center;
-  font-size:13px;
-  color:#555;
+#message{
+    margin-top:15px;
+    text-align:center;
+    font-weight:bold;
 }
-
 </style>
-
 </head>
-
 
 <body>
 
+<div class="container">
 
-<div class="depositBox">
+    <div class="box">
 
-  <h2>💰 Deposit</h2>
+        <h2>Deposit Money</h2>
 
+        <label>Amount</label>
 
-  <label>
-    Amount
-  </label>
+        <input
+            type="number"
+            id="amount"
+            min="1"
+            step="1"
+            placeholder="Enter amount"
+        >
 
+        <button id="payBtn" onclick="createDeposit()">
+            PAY NOW
+        </button>
 
-  <input
-    id="amount"
-    type="number"
-    inputmode="decimal"
-    min="1"
-    step="1"
-    placeholder="Amount enter karein">
+        <div class="info">
+            <b>Payment UPI:</b><br>
+            8901239533@amazonpay
+        </div>
 
+        <div id="message"></div>
 
-  <button
-    class="payBtn"
-    onclick="payNow()">
-
-    Pay Now
-
-  </button>
-
-
-  <div class="upiInfo">
-
-    Payment UPI:<br>
-
-    <b>8901239533@amazonpay</b>
-
-  </div>
+    </div>
 
 </div>
 
 
-
 <script>
 
-function payNow(){
+const SUPABASE_URL =
+"https://katbdbzoufiblnnsoxkk.supabase.co";
 
-  const amountInput =
-    document.getElementById("amount");
+const SUPABASE_KEY =
+"sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
 
-  const amount =
-    Number(amountInput.value);
-
-
-  /* =========================
-     VALIDATE AMOUNT
-  ========================= */
-
-  if(
-    !amount ||
-    amount <= 0
-  ){
-
-    alert(
-      "Pehle valid amount enter karein."
-    );
-
-    amountInput.focus();
-
-    return;
-
-  }
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
 
-  /* =========================
-     UPI PAYMENT
-  ========================= */
+// -----------------------------
+// CREATE DEPOSIT
+// -----------------------------
 
-  const upiId =
-    "8901239533@amazonpay";
+async function createDeposit(){
 
-  const payeeName =
-    "Deposit";
+    const amountInput =
+        document.getElementById("amount");
 
+    const button =
+        document.getElementById("payBtn");
 
-  const transactionId =
-    "DEP" +
-    Date.now();
+    const message =
+        document.getElementById("message");
 
-
-  const upiUrl =
-    "upi://pay" +
-    "?pa=" +
-    encodeURIComponent(upiId) +
-    "&pn=" +
-    encodeURIComponent(payeeName) +
-    "&am=" +
-    encodeURIComponent(amount.toFixed(2)) +
-    "&cu=INR" +
-    "&tr=" +
-    encodeURIComponent(transactionId);
+    const amount =
+        Number(amountInput.value);
 
 
-  /* =========================
-     OPEN UPI APP
-  ========================= */
+    // Amount check
+    if(!amount || amount <= 0){
 
-  window.location.href = upiUrl;
+        message.style.color = "red";
+        message.innerText =
+            "Please enter a valid amount.";
+
+        return;
+    }
+
+
+    // Logged-in user
+    const savedUser =
+        localStorage.getItem("user");
+
+    if(!savedUser){
+
+        alert("Please login first.");
+
+        return;
+    }
+
+
+    let user;
+
+    try{
+
+        user = JSON.parse(savedUser);
+
+    }catch(e){
+
+        alert("Login session invalid. Please login again.");
+
+        return;
+    }
+
+
+    // User ID check
+    if(!user.id){
+
+        alert("User ID nahi mila. Please login again.");
+
+        return;
+    }
+
+
+    button.disabled = true;
+    button.innerText = "Creating Request...";
+
+
+    // Save deposit request
+    const { data, error } =
+        await supabaseClient
+        .from("deposits")
+        .insert([
+            {
+                user_id: user.id,
+                amount: amount,
+                status: "pending"
+            }
+        ])
+        .select()
+        .single();
+
+
+    if(error){
+
+        console.error(error);
+
+        message.style.color = "red";
+
+        message.innerText =
+            "Deposit request create nahi hui.";
+
+        button.disabled = false;
+        button.innerText = "PAY NOW";
+
+        return;
+    }
+
+
+    // -----------------------------
+    // OPEN UPI PAYMENT
+    // -----------------------------
+
+    const upiId =
+        "8901239533@amazonpay";
+
+    const payeeName =
+        "Deposit";
+
+
+    const transactionId =
+        "DEP" + data.id + "_" + Date.now();
+
+
+    const upiUrl =
+        "upi://pay" +
+        "?pa=" + encodeURIComponent(upiId) +
+        "&pn=" + encodeURIComponent(payeeName) +
+        "&am=" + encodeURIComponent(amount.toFixed(2)) +
+        "&cu=INR" +
+        "&tr=" + encodeURIComponent(transactionId);
+
+
+    message.style.color = "green";
+
+    message.innerText =
+        "Deposit request created. Payment app opening...";
+
+
+    setTimeout(() => {
+
+        window.location.href = upiUrl;
+
+    }, 500);
 
 }
 
 </script>
 
-
 </body>
-
 </html>
-```
