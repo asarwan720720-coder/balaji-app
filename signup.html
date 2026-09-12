@@ -90,11 +90,14 @@
     placeholder="Full Name"
   >
 
-  <input
-    id="mobile"
-    type="text"
-    placeholder="Mobile Number"
-  >
+ <input
+  id="mobile"
+  type="tel"
+  inputmode="numeric"
+  maxlength="10"
+  placeholder="Mobile Number"
+  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
+>
 
   <input
     id="password"
@@ -165,7 +168,12 @@ async function signup() {
 
     return;
   }
+if (!/^\d{10}$/.test(mobile)) {
 
+  alert("Mobile number exactly 10 digits ka hona chahiye");
+
+  return;
+}
 
   // ================================
   // INSERT INTO SUPABASE
@@ -189,11 +197,20 @@ async function signup() {
   // ERROR
   // ================================
 
-  if (error) {
+if (error) {
+
+  if (error.code === "23505") {
+
+    alert("Ye mobile number already registered hai.");
+
+  } else {
 
     alert("Error: " + error.message);
 
-    return;
+  }
+
+  return;
+}
   }
 
 
