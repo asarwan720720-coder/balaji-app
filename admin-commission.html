@@ -1,0 +1,303 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Commission</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f4f6f9;
+    color:#222;
+}
+
+.container{
+    max-width:600px;
+    margin:auto;
+    padding:15px;
+}
+
+h2{
+    text-align:center;
+    margin:10px 0 20px;
+}
+
+.filters{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+select{
+    width:100%;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    background:white;
+    font-size:15px;
+}
+
+.commission-card{
+    background:white;
+    border-radius:10px;
+    padding:15px;
+    margin-bottom:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    margin:6px 0;
+}
+
+.label{
+    font-weight:bold;
+}
+
+.commission{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.date-time{
+    color:#666;
+    font-size:14px;
+}
+
+#loading{
+    text-align:center;
+    padding:20px;
+}
+
+#noData{
+    text-align:center;
+    padding:25px;
+    color:#777;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Admin Commission</h2>
+
+    <!-- =========================
+         3 DROPDOWNS
+    ========================== -->
+
+    <div class="filters">
+
+        <!-- ID -->
+        <select id="idFilter">
+            <option value="all">All ID</option>
+        </select>
+
+        <!-- DATE -->
+        <select id="dateFilter">
+            <option value="all">All Date</option>
+        </select>
+
+        <!-- MARKET -->
+        <select id="marketFilter">
+            <option value="all">All Market</option>
+        </select>
+
+    </div>
+
+    <div id="loading">
+        Loading...
+    </div>
+
+    <div id="noData">
+        Commission data nahi mili.
+    </div>
+
+    <div id="commissionList"></div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"https://katbdbzoufiblnnsoxkk.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
+
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+/* =========================
+   VARIABLES
+========================= */
+
+let allCommissions = [];
+
+
+/* =========================
+   HISTORY DATA SE AMOUNT
+========================= */
+
+function getHistoryTotal(data){
+
+    let total = 0;
+
+    try{
+
+        let arr = data;
+
+        if(typeof arr === "string"){
+            arr = JSON.parse(arr);
+        }
+
+        if(!Array.isArray(arr)){
+            return 0;
+        }
+
+        arr.forEach(item => {
+
+            if(!item) return;
+
+            let amount = Number(
+                item.amount ??
+                item.points ??
+                item.a ??
+                0
+            );
+
+            if(!Number.isFinite(amount)) return;
+
+            total += amount;
+
+        });
+
+    }catch(error){
+
+        console.error(
+            "History data error:",
+            error
+        );
+
+    }
+
+    return total;
+}
+
+
+/* =========================
+   DATE FORMAT
+========================= */
+
+function getDateOnly(date){
+
+    const d = new Date(date);
+
+    const day =
+        String(d.getDate()).padStart(2,"0");
+
+    const month =
+        String(d.getMonth()+1).padStart(2,"0");
+
+    const year =
+        d.getFullYear();
+
+    return `${day}/${month}/${year}`;
+}
+
+
+function getDateTime(date){
+
+    const d = new Date(date);
+
+    return d.toLocaleString("en-IN",{
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit",
+        hour12:true
+    });
+}
+
+
+/* =========================
+   LOAD COMMISSION DATA
+========================= */
+
+async function loadCommissionData(){
+
+    try{
+
+        /*
+         * Sabhi login users
+         * ref_code aur ref_by ke liye
+         */
+
+        const {
+            data: users,
+            error: usersError
+        } = await supabaseClient
+            .from("login")
+            .select("id,ref_code,ref_by");
+
+        if(usersError){
+            throw usersError;
+        }
+
+
+        /*
+         * Har referrer ke ref_by wale users
+         */
+
+        const referrerMap = {};
+
+        users.forEach(user => {
+
+            if(user.ref_by){
+
+                if(!referrerMap[user.ref_by]){
+                    referrerMap[user.ref_by] = [];
+                }
+
+                referrerMap[user.ref_by].push(user.id);
+            }
+
+        });
+
+
+        /*
+         * Sabhi history
+         */
+
+        const {
+            data: history,
+            error: historyError
+        } = await supabaseClient
+            .from("history")
+            .select(
+                "user_id,market,data,created
+```

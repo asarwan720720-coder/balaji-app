@@ -1,0 +1,492 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Commission</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+    margin:0;
+    background:#f2f2f2;
+    font-family:Arial;
+    padding:15px;
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.commission-card{
+    background:#fff;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
+
+.user-name{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.commission{
+    color:green;
+    font-size:20px;
+    font-weight:bold;
+    margin-top:7px;
+}
+
+.date-time{
+    color:#777;
+    font-size:13px;
+    margin-top:7px;
+}
+
+.empty{
+    text-align:center;
+    background:#fff;
+    padding:25px;
+    border-radius:15px;
+    color:#777;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Commission</h2>
+
+<div id="commissionList"></div>
+
+
+<script>
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const client = supabase.createClient(
+    "https://katbdbzoufiblnnsoxkk.supabase.co",
+    "sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a"
+);
+
+
+/* =========================================
+   CURRENT LOGIN USER
+========================================= */
+
+const user = JSON.parse(
+    localStorage.getItem("user")
+);
+
+if(!user){
+
+    alert("Login required");
+
+    window.location.href = "login.html";
+
+}
+
+
+/* =========================================
+   5% COMMISSION
+========================================= */
+
+const COMMISSION_PERCENT = 5;
+
+
+/* =========================================
+   GET AMOUNT FROM HISTORY DATA
+========================================= */
+
+function getHistoryTotal(data){
+
+    let total = 0;
+
+    try{
+
+        let arr = data;
+
+        if(typeof arr === "string"){
+            arr = JSON.parse(arr);
+        }
+
+        if(!Array.isArray(arr)){
+            return 0;
+        }
+
+
+        arr.forEach(item => {
+
+            if(!item) return;
+
+
+            let amount = Number(
+                item.amount ??
+                item.points ??
+                item.a ??
+                0
+            );
+
+
+            if(Number.isFinite(amount)){
+                total += amount;
+            }
+
+        });
+
+    }
+    catch(error){
+
+        console.error(
+            "History data error:",
+            error
+        );
+
+    }
+
+    return total;
+
+}
+
+
+/* =========================================
+   LOAD COMMISSION
+========================================= */
+
+async function loadCommission(){
+
+    const list =
+        document.getElementById(
+            "commissionList"
+        );
+
+    list.innerHTML = "";
+
+
+    /* -----------------------------------------
+       CURRENT USER LOGIN DATA
+    ----------------------------------------- */
+
+    const {data:me,error:meError} =
+        await client
+        .from("login")
+        .select("id,name,ref_code")
+        .eq("id",user.id)
+        .single();
+
+
+    if(meError || !me){
+
+        console.error(meError);
+
+        list.innerHTML =
+            `<div class="empty">
+                User data nahi mila.
+            </div>`;
+
+        return;
+
+    }
+
+
+    /*
+       A ka ref_code
+    */
+
+    const myRefCode =
+        me.ref_code;
+
+
+    if(!myRefCode){
+
+        list.innerHTML =
+            `<div class="empty">
+                Aapka referral code nahi mila.
+            </div>`;
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------
+       A KE REFERRAL SE AAYE USERS
+    ----------------------------------------- */
+
+    const {data:referredUsers,error:userError} =
+        await client
+        .from("login")
+        .select("id,name,ref_by")
+        .eq("ref_by",myRefCode);
+
+
+    if(userError){
+
+        console.error(userError);
+
+        list.innerHTML =
+            `<div class="empty">
+                Referral users load nahi hue.
+            </div>`;
+
+        return;
+
+    }
+
+
+    if(!referredUsers || referredUsers.length === 0){
+
+        list.innerHTML =
+            `<div class="empty">
+                Abhi koi commission nahi hai.
+            </div>`;
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------
+       REFERRED USER IDs
+    ----------------------------------------- */
+
+    const userIds =
+        referredUsers.map(
+            u => u.id
+        );
+
+
+    /* -----------------------------------------
+       HISTORY DATA
+    ----------------------------------------- */
+
+    const {data:history,error:historyError} =
+        await client
+        .from("history")
+        .select(
+            "user_id,market,data,created_at"
+        )
+        .in(
+            "user_id",
+            userIds
+        )
+        .order(
+            "created_at",
+            {ascending:false}
+        );
+
+
+    if(historyError){
+
+        console.error(historyError);
+
+        list.innerHTML =
+            `<div class="empty">
+                Commission data load nahi hua.
+            </div>`;
+
+        return;
+
+    }
+
+
+    /*
+       GROUP:
+
+       USER + MARKET + DATE
+
+       Isse ek user ke ek market ki
+       ek din ki saari rows combine hongi.
+    */
+
+    const grouped = {};
+
+
+    (history || []).forEach(row => {
+
+        if(!row.user_id) return;
+        if(!row.created_at) return;
+
+
+        const userData =
+            referredUsers.find(
+                u => String(u.id) === String(row.user_id)
+            );
+
+
+        if(!userData) return;
+
+
+        const market =
+            row.market || "unknown";
+
+
+        const date =
+            row.created_at.split("T")[0];
+
+
+        const key =
+            row.user_id +
+            "|" +
+            market +
+            "|" +
+            date;
+
+
+        if(!grouped[key]){
+
+            grouped[key] = {
+
+                userId:row.user_id,
+
+                name:
+                    userData.name ||
+                    "User",
+
+                market:market,
+
+                date:date,
+
+                created_at:
+                    row.created_at,
+
+                total:0
+
+            };
+
+        }
+
+
+        /*
+           Dealer code wali same calculation
+        */
+
+        grouped[key].total +=
+            getHistoryTotal(row.data);
+
+    });
+
+
+    /* -----------------------------------------
+       COMMISSION ENTRIES
+    ----------------------------------------- */
+
+    const entries =
+        Object.values(grouped)
+        .map(item => {
+
+            return {
+
+                name:item.name,
+
+                commission:
+                    item.total *
+                    COMMISSION_PERCENT /
+                    100,
+
+                created_at:
+                    item.created_at
+
+            };
+
+        })
+        .filter(
+            item => item.commission > 0
+        );
+
+
+    /*
+       Latest first
+    */
+
+    entries.sort(
+        (a,b) =>
+            new Date(b.created_at) -
+            new Date(a.created_at)
+    );
+
+
+    /* -----------------------------------------
+       SHOW
+    ----------------------------------------- */
+
+    if(entries.length === 0){
+
+        list.innerHTML =
+            `<div class="empty">
+                Abhi koi commission nahi hai.
+            </div>`;
+
+        return;
+
+    }
+
+
+    entries.forEach(item => {
+
+        const date =
+            new Date(
+                item.created_at
+            );
+
+
+        const formatted =
+            date.toLocaleString(
+                "en-IN",
+                {
+                    day:"2-digit",
+                    month:"2-digit",
+                    year:"numeric",
+                    hour:"2-digit",
+                    minute:"2-digit",
+                    hour12:true
+                }
+            );
+
+
+        list.innerHTML += `
+
+            <div class="commission-card">
+
+                <div class="user-name">
+                    ${item.name}
+                </div>
+
+                <div class="commission">
+                    ₹${item.commission.toFixed(2)}
+                </div>
+
+                <div class="date-time">
+                    ${formatted}
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+loadCommission();
+
+</script>
+
+</body>
+</html>
+```

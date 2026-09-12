@@ -1,0 +1,1029 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>My Commission</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+    color:#1f2937;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:linear-gradient(135deg,#111827,#2563eb);
+    color:white;
+    padding:22px 18px 28px;
+    border-radius:0 0 25px 25px;
+    box-shadow:0 5px 18px rgba(0,0,0,.15);
+}
+
+.header-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.back-btn{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    border:none;
+    background:rgba(255,255,255,.15);
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+}
+
+.header h1{
+    font-size:22px;
+}
+
+.header p{
+    margin-top:5px;
+    font-size:13px;
+    opacity:.8;
+}
+
+/* =========================
+   TOTAL COMMISSION
+========================= */
+
+.total-card{
+    margin:18px;
+    margin-top:-5px;
+    background:white;
+    border-radius:20px;
+    padding:22px;
+    box-shadow:0 7px 25px rgba(0,0,0,.08);
+}
+
+.total-title{
+    color:#6b7280;
+    font-size:13px;
+}
+
+.total-money{
+    margin-top:8px;
+    font-size:32px;
+    font-weight:bold;
+    color:#16a34a;
+}
+
+.total-bottom{
+    margin-top:12px;
+    display:flex;
+    justify-content:space-between;
+    color:#6b7280;
+    font-size:13px;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.section{
+    padding:0 18px;
+}
+
+.section-title{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+/* =========================
+   USER CARD
+========================= */
+
+.user-card{
+    background:white;
+    border-radius:18px;
+    padding:16px;
+    margin-bottom:12px;
+    box-shadow:0 4px 16px rgba(0,0,0,.06);
+}
+
+.user-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.user-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.avatar{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+}
+
+.user-name{
+    font-weight:bold;
+    font-size:15px;
+}
+
+.user-id{
+    color:#9ca3af;
+    font-size:12px;
+    margin-top:3px;
+}
+
+.commission{
+    color:#16a34a;
+    font-size:17px;
+    font-weight:bold;
+}
+
+.user-details{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:15px;
+    padding-top:13px;
+    border-top:1px solid #eee;
+}
+
+.detail{
+    background:#f8fafc;
+    border-radius:10px;
+    padding:10px;
+}
+
+.detail-label{
+    color:#9ca3af;
+    font-size:11px;
+}
+
+.detail-value{
+    margin-top:4px;
+    font-size:14px;
+    font-weight:bold;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading{
+    text-align:center;
+    padding:35px 10px;
+    color:#6b7280;
+}
+
+.spinner{
+    width:35px;
+    height:35px;
+    border:4px solid #e5e7eb;
+    border-top:4px solid #2563eb;
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+    margin:auto;
+    margin-bottom:12px;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty{
+    background:white;
+    border-radius:18px;
+    padding:30px 15px;
+    text-align:center;
+    color:#6b7280;
+}
+
+.empty-icon{
+    font-size:38px;
+    margin-bottom:10px;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.error{
+    background:#fff1f2;
+    color:#be123c;
+    border:1px solid #fecdd3;
+    padding:15px;
+    border-radius:14px;
+    font-size:13px;
+}
+
+/* =========================
+   REFERRAL CODE
+========================= */
+
+.ref-box{
+    margin:18px;
+    background:linear-gradient(135deg,#7c3aed,#2563eb);
+    color:white;
+    border-radius:18px;
+    padding:18px;
+    box-shadow:0 7px 20px rgba(37,99,235,.22);
+}
+
+.ref-label{
+    font-size:12px;
+    opacity:.8;
+}
+
+.ref-code{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:8px;
+}
+
+.ref-code strong{
+    font-size:22px;
+    letter-spacing:1px;
+}
+
+.copy-btn{
+    border:0;
+    background:white;
+    color:#2563eb;
+    padding:8px 13px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:420px){
+
+    .total-money{
+        font-size:29px;
+    }
+
+    .header h1{
+        font-size:20px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<div class="header">
+
+    <div class="header-top">
+
+        <button class="back-btn"
+                onclick="history.back()">
+            ‹
+        </button>
+
+        <div>
+            <h1>My Commission</h1>
+            <p>Earn 5% from your referred users</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TOTAL CARD
+========================= -->
+
+<div class="total-card">
+
+    <div class="total-title">
+        Total Commission
+    </div>
+
+    <div class="total-money"
+         id="totalCommission">
+        ₹0.00
+    </div>
+
+    <div class="total-bottom">
+
+        <span>
+            Referred Users:
+            <b id="userCount">0</b>
+        </span>
+
+        <span>
+            Rate:
+            <b>5%</b>
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     REFERRAL CODE
+========================= -->
+
+<div class="ref-box">
+
+    <div class="ref-label">
+        Your Referral Code
+    </div>
+
+    <div class="ref-code">
+
+        <strong id="myReferCode">
+            Loading...
+        </strong>
+
+        <button class="copy-btn"
+                onclick="copyCode()">
+            COPY
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     USERS
+========================= -->
+
+<div class="section">
+
+    <div class="section-title">
+        Referred Users
+    </div>
+
+    <div id="commissionList">
+
+        <div class="loading">
+
+            <div class="spinner"></div>
+
+            Loading commission...
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+    "https://katbdbzoufiblnnsoxkk.supabase.co";
+
+
+/*
+   IMPORTANT:
+   Yahan apna Supabase anon/publishable key
+   wahi use karo jo tumhare supabase.js mein hai.
+*/
+
+const SUPABASE_KEY =
+    "YOUR_SUPABASE_ANON_KEY";
+
+
+const client =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* =====================================================
+   COMMISSION RATE
+===================================================== */
+
+const COMMISSION_RATE = 0.05;
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+let myUser = null;
+let myReferCode = "";
+let totalCommission = 0;
+
+
+/* =====================================================
+   GET CURRENT USER
+===================================================== */
+
+function getCurrentUser(){
+
+    let user = null;
+
+    try{
+
+        const saved =
+            localStorage.getItem("user");
+
+        if(saved){
+
+            user = JSON.parse(saved);
+
+        }
+
+    }catch(error){
+
+        console.log(
+            "user parse error:",
+            error
+        );
+
+    }
+
+
+    /*
+       Agar user object localStorage mein
+       kisi aur naam se saved hai
+    */
+
+    if(!user){
+
+        const possibleKeys = [
+            "currentUser",
+            "loginUser",
+            "loggedUser"
+        ];
+
+
+        for(const key of possibleKeys){
+
+            try{
+
+                const saved =
+                    localStorage.getItem(key);
+
+                if(saved){
+
+                    user = JSON.parse(saved);
+
+                    break;
+
+                }
+
+            }catch(error){}
+
+        }
+
+    }
+
+
+    return user;
+
+}
+
+
+/* =====================================================
+   LOAD COMMISSION
+===================================================== */
+
+async function loadCommission(){
+
+    const list =
+        document.getElementById(
+            "commissionList"
+        );
+
+
+    try{
+
+        myUser =
+            getCurrentUser();
+
+
+        console.log(
+            "CURRENT USER:",
+            myUser
+        );
+
+
+        if(!myUser){
+
+            list.innerHTML =
+                `<div class="error">
+                    User login information nahi mili.
+                 </div>`;
+
+            return;
+
+        }
+
+
+        /* =========================================
+           CURRENT USER ID
+        ========================================= */
+
+        const currentId =
+            myUser.id ||
+            myUser.user_id ||
+            myUser.userId;
+
+
+        if(!currentId){
+
+            list.innerHTML =
+                `<div class="error">
+                    Current user ID nahi mili.
+                 </div>`;
+
+            return;
+
+        }
+
+
+        /* =========================================
+           GET CURRENT USER FROM DATABASE
+        ========================================= */
+
+        const {
+            data:currentUser,
+            error:userError
+        } =
+            await client
+                .from("login")
+                .select(
+                    "id,name,mobile,refer_code,ref_by"
+                )
+                .eq("id", currentId)
+                .maybeSingle();
+
+
+        if(userError){
+
+            console.log(
+                "CURRENT USER ERROR:",
+                userError
+            );
+
+            list.innerHTML =
+                `<div class="error">
+                    Current user load nahi hua.
+                 </div>`;
+
+            return;
+
+        }
+
+
+        if(!currentUser){
+
+            list.innerHTML =
+                `<div class="error">
+                    Database mein user nahi mila.
+                 </div>`;
+
+            return;
+
+        }
+
+
+        myReferCode =
+            String(
+                currentUser.refer_code || ""
+            ).trim();
+
+
+        console.log(
+            "MY REFER CODE:",
+            myReferCode
+        );
+
+
+        document.getElementById(
+            "myReferCode"
+        ).textContent =
+            myReferCode || "N/A";
+
+
+        if(!myReferCode){
+
+            list.innerHTML =
+                `<div class="empty">
+
+                    <div class="empty-icon">
+                        🔗
+                    </div>
+
+                    Referral code nahi mila.
+
+                 </div>`;
+
+            return;
+
+        }
+
+
+        /* =========================================
+           GET REFERRED USERS
+        ========================================= */
+
+        const {
+            data:referredUsers,
+            error:refError
+        } =
+            await client
+                .from("login")
+                .select(
+                    "id,name,mobile,refer_code,ref_by"
+                )
+                .eq(
+                    "ref_by",
+                    myReferCode
+                )
+                .order(
+                    "id",
+                    {ascending:false}
+                );
+
+
+        if(refError){
+
+            console.log(
+                "REFERRAL ERROR:",
+                refError
+            );
+
+            list.innerHTML =
+                `<div class="error">
+                    Referred users load nahi hue.
+                 </div>`;
+
+            return;
+
+        }
+
+
+        console.log(
+            "REFERRED USERS:",
+            referredUsers
+        );
+
+
+        document.getElementById(
+            "userCount"
+        ).textContent =
+            referredUsers.length;
+
+
+        if(
+            !referredUsers ||
+            referredUsers.length === 0
+        ){
+
+            document.getElementById(
+                "totalCommission"
+            ).textContent =
+                "₹0.00";
+
+
+            list.innerHTML =
+                `<div class="empty">
+
+                    <div class="empty-icon">
+                        👥
+                    </div>
+
+                    <div>
+                        Abhi koi referred user nahi mila.
+                    </div>
+
+                 </div>`;
+
+            return;
+
+        }
+
+
+        /* =========================================
+           LOAD EACH USER HISTORY
+        ========================================= */
+
+        list.innerHTML = "";
+
+
+        totalCommission = 0;
+
+
+        for(
+            const user of referredUsers
+        ){
+
+            let userTotal = 0;
+
+
+            const {
+                data:historyData,
+                error:historyError
+            } =
+                await client
+                    .from("history")
+                    .select(
+                        "id,user_id,total,market,created_at,status,win_amount,typing,mode"
+                    )
+                    .eq(
+                        "user_id",
+                        user.id
+                    );
+
+
+            if(historyError){
+
+                console.log(
+                    "HISTORY ERROR:",
+                    historyError
+                );
+
+                continue;
+
+            }
+
+
+            /* =====================================
+               CALCULATE TOTAL PLAY
+            ===================================== */
+
+            if(historyData){
+
+                historyData.forEach(
+                    function(row){
+
+                        const amount =
+                            Number(
+                                row.total
+                            ) || 0;
+
+
+                        /*
+                           Sirf positive amount
+                           commission mein count hoga.
+                        */
+
+                        if(amount > 0){
+
+                            userTotal +=
+                                amount;
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            /* =====================================
+               5% COMMISSION
+            ===================================== */
+
+            const commission =
+                userTotal *
+                COMMISSION_RATE;
+
+
+            totalCommission +=
+                commission;
+
+
+            /* =====================================
+               USER CARD
+            ===================================== */
+
+            const name =
+                user.name ||
+                "User";
+
+
+            const firstLetter =
+                name
+                    .charAt(0)
+                    .toUpperCase();
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "user-card";
+
+
+            card.innerHTML = `
+
+                <div class="user-top">
+
+                    <div class="user-left">
+
+                        <div class="avatar">
+                            ${firstLetter}
+                        </div>
+
+                        <div>
+
+                            <div class="user-name">
+                                ${escapeHTML(name)}
+                            </div>
+
+                            <div class="user-id">
+                                ID: ${user.id}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="commission">
+                        ₹${commission.toFixed(2)}
+                    </div>
+
+                </div>
+
+
+                <div class="user-details">
+
+                    <div class="detail">
+
+                        <div class="detail-label">
+                            Total Amount
+                        </div>
+
+                        <div class="detail-value">
+                            ₹${userTotal.toFixed(2)}
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail">
+
+                        <div class="detail-label">
+                            Commission
+                        </div>
+
+                        <div class="detail-value">
+                            5%
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            `;
+
+
+            list.appendChild(card);
+
+        }
+
+
+        /* =========================================
+           TOTAL
+        ========================================= */
+
+        document.getElementById(
+            "totalCommission"
+        ).textContent =
+            "₹" +
+            totalCommission.toFixed(2);
+
+
+    }catch(error){
+
+        console.log(
+            "COMMISSION PAGE ERROR:",
+            error
+        );
+
+
+        list.innerHTML =
+            `<div class="error">
+                Something went wrong.
+                Console check karo.
+             </div>`;
+
+    }
+
+}
+
+
+/* =====================================================
+   COPY REFERRAL CODE
+===================================================== */
+
+function copyCode(){
+
+    if(!myReferCode){
+
+        return;
+
+    }
+
+
+    navigator.clipboard
+        .writeText(myReferCode)
+        .then(function(){
+
+            alert(
+                "Referral code copied!"
+            );
+
+        })
+        .catch(function(){
+
+            alert(
+                "Code: " +
+                myReferCode
+            );
+
+        });
+
+}
+
+
+/* =====================================================
+   HTML SAFE TEXT
+===================================================== */
+
+function escapeHTML(text){
+
+    return String(text)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadCommission();
+
+</script>
+
+</body>
+</html>
+```
