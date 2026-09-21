@@ -158,7 +158,7 @@ async function loadDeposits(){
 
     const { data, error } =
         await supabaseClient
-        .from("deposits")
+        .from("deposit_requests")
         .select("*")
         .eq("status", "pending")
         .order("created_at", {
