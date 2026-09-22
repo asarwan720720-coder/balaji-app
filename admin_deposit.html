@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -79,6 +80,31 @@ body{
     font-weight:bold;
 }
 
+.actions{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.actions button{
+    flex:1;
+    padding:12px;
+    border:0;
+    border-radius:9px;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.accept{
+    background:#16a34a;
+}
+
+.cancel{
+    background:#dc2626;
+}
+
 #message{
     text-align:center;
     padding:20px;
@@ -95,6 +121,7 @@ body{
     color:white;
     font-size:16px;
     font-weight:bold;
+    cursor:pointer;
 }
 
 </style>
@@ -124,6 +151,11 @@ body{
 
 <script>
 
+
+// ===============================
+// SUPABASE
+// ===============================
+
 const SUPABASE_URL =
 "https://katbdbzoufiblnnsoxkk.supabase.co";
 
@@ -137,9 +169,10 @@ supabase.createClient(
 );
 
 
-// --------------------------------
+
+// ===============================
 // LOAD DEPOSIT REQUESTS
-// --------------------------------
+// ===============================
 
 async function loadDeposits(){
 
@@ -158,9 +191,13 @@ async function loadDeposits(){
 
     const { data, error } =
         await supabaseClient
+
         .from("deposit_requests")
+
         .select("*")
+
         .eq("status", "pending")
+
         .order("created_at", {
             ascending:false
         });
@@ -192,8 +229,10 @@ async function loadDeposits(){
 
     data.forEach(item => {
 
+
         const card =
             document.createElement("div");
+
 
         card.className =
             "deposit-card";
@@ -201,13 +240,15 @@ async function loadDeposits(){
 
         const date =
             item.created_at
-            ? new Date(item.created_at).toLocaleString("en-IN")
+            ? new Date(item.created_at)
+                .toLocaleString("en-IN")
             : "-";
 
 
         card.innerHTML = `
 
             <div class="row">
+
                 <span class="label">
                     Deposit ID
                 </span>
@@ -215,10 +256,12 @@ async function loadDeposits(){
                 <span>
                     ${item.id}
                 </span>
+
             </div>
 
 
             <div class="row">
+
                 <span class="label">
                     User ID
                 </span>
@@ -226,10 +269,12 @@ async function loadDeposits(){
                 <span>
                     ${item.user_id}
                 </span>
+
             </div>
 
 
             <div class="row">
+
                 <span class="label">
                     Amount
                 </span>
@@ -237,10 +282,12 @@ async function loadDeposits(){
                 <span class="amount">
                     ₹${Number(item.amount).toFixed(2)}
                 </span>
+
             </div>
 
 
             <div class="row">
+
                 <span class="label">
                     Time
                 </span>
@@ -248,12 +295,39 @@ async function loadDeposits(){
                 <span>
                     ${date}
                 </span>
+
             </div>
 
 
             <span class="status">
                 PENDING
             </span>
+
+
+            <div class="actions">
+
+                <button
+                    class="accept"
+                    onclick='acceptDeposit(
+                        ${item.id},
+                        "${item.user_id}",
+                        ${Number(item.amount)}
+                    )'>
+
+                    ✅ ACCEPT
+
+                </button>
+
+
+                <button
+                    class="cancel"
+                    onclick="cancelDeposit(${item.id})">
+
+                    ❌ CANCEL
+
+                </button>
+
+            </div>
 
         `;
 
@@ -265,10 +339,324 @@ async function loadDeposits(){
 }
 
 
-// Page open hote hi load
+
+// ===============================
+// ACCEPT DEPOSIT
+// ===============================
+
+async function acceptDeposit(
+    depositId,
+    userId,
+    amount
+){
+
+    const confirmAccept =
+        confirm(
+            "₹" +
+            Number(amount).toFixed(2) +
+            " wallet me add karna hai?"
+        );
+
+
+    if(!confirmAccept){
+
+        return;
+
+    }
+
+
+    // Pehle request ka current status check
+
+    const { data: request, error: requestError } =
+
+        await supabaseClient
+
+        .from("deposit_requests")
+
+        .select("status")
+
+        .eq("id", depositId)
+
+        .single();
+
+
+    if(requestError){
+
+        alert(
+            "Request check nahi ho payi."
+        );
+
+        console.error(requestError);
+
+        return;
+    }
+
+
+    // Agar already approved hai
+
+    if(request.status === "approved"){
+
+        alert(
+            "Ye deposit already approved hai."
+        );
+
+        loadDeposits();
+
+        return;
+    }
+
+
+    // Agar already cancelled hai
+
+    if(request.status === "cancelled"){
+
+        alert(
+            "Ye deposit already cancelled hai."
+        );
+
+        loadDeposits();
+
+        return;
+    }
+
+
+
+    // ===============================
+    // USER CURRENT BALANCE
+    // ===============================
+
+    const { data: user, error: userError } =
+
+        await supabaseClient
+
+        .from("login")
+
+        .select("balance")
+
+        .eq("id", userId)
+
+        .single();
+
+
+    if(userError){
+
+        alert(
+            "User ka wallet nahi mila."
+        );
+
+        console.error(userError);
+
+        return;
+    }
+
+
+    const currentBalance =
+        Number(user.balance) || 0;
+
+
+    const depositAmount =
+        Number(amount) || 0;
+
+
+    const newBalance =
+        currentBalance + depositAmount;
+
+
+
+    // ===============================
+    // ADD BALANCE
+    // ===============================
+
+    const { error: balanceError } =
+
+        await supabaseClient
+
+        .from("login")
+
+        .update({
+            balance: newBalance
+        })
+
+        .eq("id", userId);
+
+
+    if(balanceError){
+
+        alert(
+            "Wallet balance update nahi hua."
+        );
+
+        console.error(balanceError);
+
+        return;
+    }
+
+
+
+    // ===============================
+    // CHANGE REQUEST STATUS
+    // ===============================
+
+    const { error: statusError } =
+
+        await supabaseClient
+
+        .from("deposit_requests")
+
+        .update({
+            status: "approved"
+        })
+
+        .eq("id", depositId);
+
+
+    if(statusError){
+
+        alert(
+            "Deposit status update nahi hua."
+        );
+
+        console.error(statusError);
+
+        return;
+    }
+
+
+
+    alert(
+        "Deposit Approved ✅\n\n" +
+        "₹" +
+        depositAmount.toFixed(2) +
+        " wallet me add ho gaya."
+    );
+
+
+    // List refresh
+
+    loadDeposits();
+
+}
+
+
+
+// ===============================
+// CANCEL DEPOSIT
+// ===============================
+
+async function cancelDeposit(depositId){
+
+    const confirmCancel =
+        confirm(
+            "Is deposit request ko cancel karna hai?"
+        );
+
+
+    if(!confirmCancel){
+
+        return;
+
+    }
+
+
+    // Current status check
+
+    const { data: request, error: requestError } =
+
+        await supabaseClient
+
+        .from("deposit_requests")
+
+        .select("status")
+
+        .eq("id", depositId)
+
+        .single();
+
+
+    if(requestError){
+
+        alert(
+            "Request check nahi ho payi."
+        );
+
+        console.error(requestError);
+
+        return;
+    }
+
+
+    if(request.status === "approved"){
+
+        alert(
+            "Ye deposit already approved hai."
+        );
+
+        loadDeposits();
+
+        return;
+    }
+
+
+    if(request.status === "cancelled"){
+
+        alert(
+            "Ye deposit already cancelled hai."
+        );
+
+        loadDeposits();
+
+        return;
+    }
+
+
+
+    // Sirf status cancelled hoga
+    // Wallet me kuch add nahi hoga
+
+    const { error } =
+
+        await supabaseClient
+
+        .from("deposit_requests")
+
+        .update({
+            status: "cancelled"
+        })
+
+        .eq("id", depositId);
+
+
+    if(error){
+
+        alert(
+            "Deposit cancel nahi hua."
+        );
+
+        console.error(error);
+
+        return;
+    }
+
+
+    alert(
+        "Deposit Cancelled ❌"
+    );
+
+
+    loadDeposits();
+
+}
+
+
+
+// ===============================
+// PAGE OPEN HOTE HI LOAD
+// ===============================
+
 loadDeposits();
 
 </script>
 
 </body>
 </html>
+```
