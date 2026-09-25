@@ -104,6 +104,7 @@ body{
   position:absolute;
 
   left:65px;
+
   top:57px;
 
   height:39px;
@@ -112,6 +113,7 @@ body{
   max-width:110px;
 
   display:flex;
+
   align-items:center;
   justify-content:center;
 
@@ -287,29 +289,47 @@ body{
 ========================= */
 
 .slogan{
+
   background:white;
+
   border-radius:15px;
+
   padding:13px 0;
+
   font-size:18px;
+
   font-weight:bold;
+
   color:#e52b23;
+
   margin-bottom:17px;
+
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 
   overflow:hidden;
+
   white-space:nowrap;
+
   position:relative;
+
 }
 
 .runningTrack{
+
   display:flex;
+
   width:max-content;
+
   animation:runningText 12s linear infinite;
+
 }
 
 .runningItem{
+
   display:inline-block;
+
   padding-right:50vw;
+
 }
 
 @keyframes runningText{
@@ -325,7 +345,9 @@ body{
 }
 
 .slogan span{
+
   color:#d7a928;
+
 }
 
 
@@ -1295,8 +1317,9 @@ async function loadWallet(){
 
 
 /* =========================
-   GET CLOSE TIME
+   FORMAT TIME AM / PM
 ========================= */
+
 function formatTimeAMPM(time){
 
   if(!time) return "--";
@@ -1325,14 +1348,18 @@ function formatTimeAMPM(time){
   );
 
 }
+
+
+/* =========================
+   GET CLOSE TIME
+========================= */
+
 function getCloseDate(closeTime){
 
   if(!closeTime) return null;
 
-
   const parts =
     closeTime.split(":");
-
 
   const ch =
     Number(parts[0]);
@@ -1340,14 +1367,11 @@ function getCloseDate(closeTime){
   const cm =
     Number(parts[1]);
 
-
   const now =
     new Date();
 
-
-  let close =
+  const close =
     new Date();
-
 
   close.setHours(
     ch,
@@ -1356,23 +1380,16 @@ function getCloseDate(closeTime){
     0
   );
 
-
   /*
-     Agar close time aaj निकल चुका है
-     to next day ka close time.
+     IMPORTANT:
+
+     Close time agar aaj nikal gaya
+     hai to usko next day par nahi
+     bhejna hai.
+
+     Isse game sach me TIME OVER
+     hote hi closed ho jayega.
   */
-
-  if(
-    close.getTime() <
-    now.getTime()
-  ){
-
-    close.setDate(
-      close.getDate() + 1
-    );
-
-  }
-
 
   return close;
 
@@ -1388,7 +1405,6 @@ function getRemainingTime(closeTime){
   const close =
     getCloseDate(closeTime);
 
-
   if(!close){
 
     return {
@@ -1403,10 +1419,8 @@ function getRemainingTime(closeTime){
 
   }
 
-
   const now =
     new Date();
-
 
   let diff =
     Math.floor(
@@ -1577,7 +1591,7 @@ async function loadButtons(){
 
 
       /*
-         Open games sabse upar
+         Active game upar
       */
 
       if(
@@ -1591,7 +1605,7 @@ async function loadButtons(){
 
 
       /*
-         Closed games sabse neeche
+         Closed game neeche
       */
 
       if(
@@ -1606,8 +1620,10 @@ async function loadButtons(){
 
       /*
          Dono active hain:
-         jiski last timing pehle hai
-         wo upar.
+
+         Jiski close timing
+         sabse pehle aayegi
+         wo sabse upar.
       */
 
       if(
@@ -1623,6 +1639,11 @@ async function loadButtons(){
       }
 
 
+      /*
+         Dono closed hain.
+         Original order maintain.
+      */
+
       return 0;
 
     });
@@ -1636,7 +1657,6 @@ async function loadButtons(){
     ========================= */
 
     data.forEach(item=>{
-
 
       const timeInfo =
         getRemainingTime(
@@ -1678,7 +1698,7 @@ async function loadButtons(){
             CLOSE:
 
             <span>
-              ${item.close || "--"}
+              ${formatTimeAMPM(item.close)}
             </span>
 
           </div>
@@ -1834,7 +1854,6 @@ function updateCountdowns(){
     )
     .forEach(box=>{
 
-
       const closeTime =
         box.getAttribute(
           "data-close"
@@ -1849,6 +1868,24 @@ function updateCountdowns(){
 
       if(timeInfo.closed){
 
+        /*
+           Agar pehle countdown tha
+           aur abhi closed hua hai,
+           to list ko ek baar reload
+           karna hai.
+        */
+
+        if(
+          box.classList.contains(
+            "countdown"
+          )
+        ){
+
+          timeOver = true;
+
+        }
+
+
         box.classList.remove(
           "countdown"
         );
@@ -1859,8 +1896,6 @@ function updateCountdowns(){
 
         box.innerText =
           "🔒 बंद";
-
-        timeOver = true;
 
       }
 
@@ -1884,8 +1919,9 @@ function updateCountdowns(){
 
 
   /*
-     Sirf tab game list reload hogi
-     jab koi game time-over hoga.
+     Sirf jab koi game
+     abhi-abhi time-over hua ho
+     tab list reload hogi.
   */
 
   if(timeOver){
