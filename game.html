@@ -1043,63 +1043,245 @@ async function submitAll(){
    GAME AUTO ON / OFF
 ========================= */
 
-const gameSchedule = [
 
-  { off: "23:10", on: "23:11" },
+/* =========================
+   MARKET CLOSE TIME
+   SUPABASE SE
+========================= */
 
-  { off: "14:50", on: "14:51" },
+let marketCloseTime = null;
 
-  { off: "16:15", on: "16:16" },
 
-  { off: "17:50", on: "17:51" },
+/* =========================
+   CLOSE DATE
+   GAME DAY = 5:50 AM
+========================= */
 
-  { off: "21:10", on: "21:11" },
+function getCloseDate(closeTime){
 
-  { off: "03:00", on: "03:01" }
+  if(!closeTime) return null;
 
-];
-
-function checkGameStatus(){
+  const [hour, minute] =
+    closeTime.split(":").map(Number);
 
   const now = new Date();
 
-  const currentMinutes =
-    now.getHours() * 60 +
-    now.getMinutes();
+  const close = new Date(now);
 
-  for(const time of gameSchedule){
+  close.setHours(hour, minute, 0, 0);
 
-    const [offHour, offMinute] =
-      time.off.split(":").map(Number);
 
-    const [onHour, onMinute] =
-      time.on.split(":").map(Number);
+  const beforeGameDayStart =
+    now.getHours() < 5 ||
+    (
+      now.getHours() === 5 &&
+      now.getMinutes() < 50
+    );
 
-    const offMinutes =
-      offHour * 60 + offMinute;
 
-    const onMinutes =
-      onHour * 60 + onMinute;
+  if(beforeGameDayStart){
 
     if(
-      currentMinutes >= offMinutes &&
-      currentMinutes < onMinutes
+      hour > 5 ||
+      (hour === 5 && minute >= 50)
     ){
 
-      window.location.replace("home.html");
+      close.setDate(
+        close.getDate() - 1
+      );
 
-      return;
     }
+
+  }else{
+
+    if(
+      hour < 5 ||
+      (hour === 5 && minute < 50)
+    ){
+
+      close.setDate(
+        close.getDate() + 1
+      );
+
+    }
+
+  }
+
+  return close;
+
+}
+
+
+/* =========================
+   GET MARKET CLOSE
+   SUPABASE
+========================= */
+
+async function loadMarketClose(){
+
+  if(!market || market === "UNKNOWN"){
+
+    console.log("Market nahi mila");
+
+    return;
+
+  }
+
+
+  const {data,error} = await client
+
+    .from("Game result")
+
+    .select("name, close")
+
+    .eq("name", market)
+
+    .limit(1);
+
+
+  if(error){
+
+    console.error(
+      "CLOSE TIME ERROR:",
+      error
+    );
+
+    return;
+
+  }
+
+
+  if(!data || data.length === 0){
+
+    console.log(
+      "Market nahi mila:",
+      market
+    );
+
+    return;
+
+  }
+
+
+  marketCloseTime =
+    data[0].close;
+
+
+  console.log(
+    "Market:",
+    market,
+    "Closing:",
+    marketCloseTime
+  );
+
+}
+
+
+/* =========================
+   CHECK MARKET STATUS
+========================= */
+
+function checkMarketStatus(){
+
+  if(!marketCloseTime){
+
+    return;
+
+  }
+
+
+  const close =
+    getCloseDate(marketCloseTime);
+
+
+  if(!close){
+
+    return;
+
+  }
+
+
+  const now =
+    new Date();
+
+
+  /* MARKET CLOSED */
+
+  if(now >= close){
+
+    /*
+      Game ke saare inputs
+      aur buttons band
+    */
+
+    document
+      .querySelectorAll(
+        ".game input, .game button"
+      )
+      .forEach(el => {
+
+        el.disabled = true;
+
+      });
+
+
+    /*
+      SUBMIT bhi band
+    */
+
+    const submit =
+      document.querySelector(".submit");
+
+
+    if(submit){
+
+      submit.style.pointerEvents =
+        "none";
+
+      submit.innerText =
+        "MARKET CLOSED";
+
+    }
+
+
+    /*
+      User ko home page par bhejo
+    */
+
+    window.location.replace(
+      "home.html"
+    );
+
+    return;
 
   }
 
 }
 
-checkGameStatus();
 
-setInterval(checkGameStatus, 1000);
+/* =========================
+   START
+========================= */
+
+loadMarketClose().then(() => {
+
+  checkMarketStatus();
+
+});
+
+
+/* =========================
+   HAR SECOND CHECK
+========================= */
+
+setInterval(() => {
+
+  checkMarketStatus();
+
+},1000);
 
 </script>
+
 
 </body>
 </html>
