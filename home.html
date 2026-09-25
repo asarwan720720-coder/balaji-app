@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="hi">
-      
+
 <head>
 
 <meta charset="UTF-8">
@@ -393,7 +393,6 @@ body{
   display:flex;
 
   align-items:center;
-
   justify-content:center;
 
   font-size:27px;
@@ -620,18 +619,43 @@ body{
 
   border-radius:15px;
 
-  background:
-    linear-gradient(
-      90deg,
-      #ffe48a,
-      #b88820
-    );
+  background:#ffe48a;
 
   color:#111;
 
   font-size:18px;
 
   font-weight:bold;
+
+}
+
+
+/* =========================
+   LIVE COUNTDOWN
+========================= */
+
+.statusBox.countdown{
+
+  background:#123b20;
+
+  color:#39e75f;
+
+  border:1px solid #1f8f3d;
+
+}
+
+
+/* =========================
+   TIME OVER
+========================= */
+
+.statusBox.closed{
+
+  background:#ffe48a;
+
+  color:#7a5a00;
+
+  border:1px solid #d6ad37;
 
 }
 
@@ -658,7 +682,6 @@ body{
   display:flex;
 
   align-items:center;
-
   justify-content:center;
 
   color:white;
@@ -888,7 +911,7 @@ body{
   <!-- MENU -->
 
   <div id="menuBtn"
-          type="button"
+       type="button"
        onclick="openMenu()">
 
     ☰
@@ -959,25 +982,33 @@ body{
 
   <!-- SLOGAN -->
 
- <div class="slogan">
+  <div class="slogan">
 
-  <div class="runningTrack">
+    <div class="runningTrack">
 
-    <div class="runningItem">
-      किस्मत आपका इंतज़ार कर रही है!
-      <span>🍀💵🛡️</span>
-      सुरक्षित
-    </div>
+      <div class="runningItem">
 
-    <div class="runningItem">
-      किस्मत आपका इंतज़ार कर रही है!
-      <span>🍀💵🛡️</span>
-      सुरक्षित
+        किस्मत आपका इंतज़ार कर रही है!
+
+        <span>🍀💵🛡️</span>
+
+        सुरक्षित
+
+      </div>
+
+      <div class="runningItem">
+
+        किस्मत आपका इंतज़ार कर रही है!
+
+        <span>🍀💵🛡️</span>
+
+        सुरक्षित
+
+      </div>
+
     </div>
 
   </div>
-
-</div>
 
 
 
@@ -1264,46 +1295,27 @@ async function loadWallet(){
 
 
 /* =========================
-   GAME STATUS
+   GET CLOSE TIME
 ========================= */
 
-function checkStatus(
-  openTime,
-  closeTime
-){
+function getCloseDate(closeTime){
 
-  if(
-    !openTime ||
-    !closeTime
-  ){
-
-    return false;
-
-  }
+  if(!closeTime) return null;
 
 
-  let now =
-    new Date();
-
-
-  const [oh,om] =
-    openTime.split(":");
-
-
-  const [ch,cm] =
+  const parts =
     closeTime.split(":");
 
 
-  let open =
+  const ch =
+    Number(parts[0]);
+
+  const cm =
+    Number(parts[1]);
+
+
+  const now =
     new Date();
-
-
-  open.setHours(
-    Number(oh),
-    Number(om),
-    0,
-    0
-  );
 
 
   let close =
@@ -1311,35 +1323,136 @@ function checkStatus(
 
 
   close.setHours(
-    Number(ch),
-    Number(cm),
+    ch,
+    cm,
     0,
     0
   );
 
 
-  if(close < open){
+  /*
+     Agar close time aaj निकल चुका है
+     to next day ka close time.
+  */
+
+  if(
+    close.getTime() <
+    now.getTime()
+  ){
 
     close.setDate(
       close.getDate() + 1
     );
 
+  }
 
-    if(now < open){
 
-      now.setDate(
-        now.getDate() + 1
-      );
+  return close;
 
-    }
+}
+
+
+/* =========================
+   REMAINING TIME
+========================= */
+
+function getRemainingTime(closeTime){
+
+  const close =
+    getCloseDate(closeTime);
+
+
+  if(!close){
+
+    return {
+
+      closed:true,
+
+      text:"बंद",
+
+      seconds:0
+
+    };
 
   }
 
 
-  return (
-    now >= open &&
-    now <= close
-  );
+  const now =
+    new Date();
+
+
+  let diff =
+    Math.floor(
+      (
+        close.getTime() -
+        now.getTime()
+      ) / 1000
+    );
+
+
+  if(diff <= 0){
+
+    return {
+
+      closed:true,
+
+      text:"बंद",
+
+      seconds:0
+
+    };
+
+  }
+
+
+  const hours =
+    Math.floor(
+      diff / 3600
+    );
+
+
+  diff =
+    diff % 3600;
+
+
+  const minutes =
+    Math.floor(
+      diff / 60
+    );
+
+
+  const seconds =
+    diff % 60;
+
+
+  const text =
+
+    String(hours)
+      .padStart(2,"0")
+
+    + ":" +
+
+    String(minutes)
+      .padStart(2,"0")
+
+    + ":" +
+
+    String(seconds)
+      .padStart(2,"0");
+
+
+  return {
+
+    closed:false,
+
+    text:text,
+
+    seconds:
+      hours * 3600 +
+      minutes * 60 +
+      seconds
+
+  };
 
 }
 
@@ -1417,39 +1530,95 @@ async function loadButtons(){
 
     }
 
-/* =========================
-   SORT
-========================= */
 
-data.sort((a, b) => {
+    /* =========================
+       SORT BY LAST TIMING
+    ========================= */
 
-  const aOpen = checkStatus(a.open, a.close);
-  const bOpen = checkStatus(b.open, b.close);
+    data.sort((a,b)=>{
 
-  if (aOpen && !bOpen) return -1;
-
-  if (!aOpen && bOpen) return 1;
-
-  return 0;
-
-});
+      const aTime =
+        getRemainingTime(
+          a.close
+        );
 
 
-container.innerHTML = "";
+      const bTime =
+        getRemainingTime(
+          b.close
+        );
 
 
-/* =========================
-   CREATE CARDS
-========================= */
+      /*
+         Open games sabse upar
+      */
 
-data.forEach(item=>{
+      if(
+        !aTime.closed &&
+        bTime.closed
+      ){
+
+        return -1;
+
+      }
+
+
+      /*
+         Closed games sabse neeche
+      */
+
+      if(
+        aTime.closed &&
+        !bTime.closed
+      ){
+
+        return 1;
+
+      }
+
+
+      /*
+         Dono active hain:
+         jiski last timing pehle hai
+         wo upar.
+      */
+
+      if(
+        !aTime.closed &&
+        !bTime.closed
+      ){
+
+        return (
+          aTime.seconds -
+          bTime.seconds
+        );
+
+      }
+
+
+      return 0;
+
+    });
+
+
+    container.innerHTML = "";
+
+
+    /* =========================
+       CREATE GAME CARDS
+    ========================= */
+
+    data.forEach(item=>{
+
+
+      const timeInfo =
+        getRemainingTime(
+          item.close
+        );
 
 
       const isOpen =
-        checkStatus(
-          item.open,
-          item.close
-        );
+        !timeInfo.closed;
 
 
       const btn =
@@ -1490,7 +1659,6 @@ data.forEach(item=>{
         </div>
 
 
-
         <div class="gameName">
 
           ${item.name || "Game"}
@@ -1500,28 +1668,24 @@ data.forEach(item=>{
         </div>
 
 
-
         <div class="gameNumberRow">
 
 
           <div class="numberBox">
 
-  <div class="gameNumber">
+            <div class="gameNumber">
 
-    ${getKalResult(item.name)}
+              ${getKalResult(item.name)}
 
-  </div>
+            </div>
 
-  <div class="numberLabel">
+            <div class="numberLabel">
 
-    कल
+              कल
 
-  </div>
-
-
+            </div>
 
           </div>
-
 
 
           <div class="arrow">
@@ -1531,12 +1695,11 @@ data.forEach(item=>{
           </div>
 
 
-
           <div class="numberBox">
 
             <div class="gameNumber">
 
-            ${item.number || "XX"}
+              ${item.number || "XX"}
 
             </div>
 
@@ -1552,13 +1715,19 @@ data.forEach(item=>{
         </div>
 
 
-
-        <div class="statusBox">
+        <div
+          class="statusBox ${
+            isOpen
+            ? "countdown"
+            : "closed"
+          }"
+          data-close="${item.close || ""}"
+        >
 
           ${
             isOpen
-            ? "खेलें"
-            : "बंद"
+            ? "⏳ " + timeInfo.text
+            : "🔒 बंद"
           }
 
         </div>
@@ -1620,6 +1789,91 @@ data.forEach(item=>{
   }
 
 }
+
+
+/* =========================
+   LIVE COUNTDOWN
+========================= */
+
+function updateCountdowns(){
+
+  let timeOver =
+    false;
+
+
+  document
+    .querySelectorAll(
+      ".statusBox[data-close]"
+    )
+    .forEach(box=>{
+
+
+      const closeTime =
+        box.getAttribute(
+          "data-close"
+        );
+
+
+      const timeInfo =
+        getRemainingTime(
+          closeTime
+        );
+
+
+      if(timeInfo.closed){
+
+        box.classList.remove(
+          "countdown"
+        );
+
+        box.classList.add(
+          "closed"
+        );
+
+        box.innerText =
+          "🔒 बंद";
+
+        timeOver = true;
+
+      }
+
+      else{
+
+        box.classList.remove(
+          "closed"
+        );
+
+        box.classList.add(
+          "countdown"
+        );
+
+        box.innerText =
+          "⏳ " +
+          timeInfo.text;
+
+      }
+
+    });
+
+
+  /*
+     Sirf tab game list reload hogi
+     jab koi game time-over hoga.
+  */
+
+  if(timeOver){
+
+    loadButtons();
+
+  }
+
+}
+
+
+setInterval(
+  updateCountdowns,
+  1000
+);
 
 
 /* =========================
@@ -1712,23 +1966,41 @@ setInterval(
   },
   60000
 );
+
+
+/* =========================
+   YESTERDAY RESULT
+========================= */
+
 function getKalResult(marketName) {
-  const results = JSON.parse(
-    localStorage.getItem("yesterdayResults") || "{}"
+
+  const results =
+    JSON.parse(
+      localStorage.getItem(
+        "yesterdayResults"
+      ) || "{}"
+    );
+
+
+  return (
+    results[marketName] ||
+    "**"
   );
 
-  return results[marketName] || "**";
 }
-      console.log(
+
+
+console.log(
   "KAL RESULTS:",
-  localStorage.getItem("yesterdayResults")
+  localStorage.getItem(
+    "yesterdayResults"
+  )
 );
+
 </script>
 
 <script src="menu.js"></script>
 
-</body>
-</html>
 </body>
 
 </html>
