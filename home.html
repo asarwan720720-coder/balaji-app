@@ -1358,38 +1358,64 @@ function getCloseDate(closeTime){
 
   if(!closeTime) return null;
 
-  const parts =
-    closeTime.split(":");
+  const parts = closeTime.split(":");
 
-  const ch =
-    Number(parts[0]);
+  const ch = Number(parts[0]);
+  const cm = Number(parts[1]);
 
-  const cm =
-    Number(parts[1]);
+  const now = new Date();
+  const close = new Date(now);
 
-  const now =
-    new Date();
+  close.setHours(ch, cm, 0, 0);
 
-  const close =
-    new Date();
+  // Game day: 5:50 AM से शुरू होता है
+  // और अगले दिन 5:49 AM तक चलता है
 
-  close.setHours(
-    ch,
-    cm,
-    0,
-    0
-  );
+  if(
+    now.getHours() < 5 ||
+    (
+      now.getHours() === 5 &&
+      now.getMinutes() < 50
+    )
+  ){
 
-  /*
-     IMPORTANT:
+    // अभी 5:50 AM नहीं हुआ,
+    // इसलिए आज की 5:50 AM से पहले वाली
+    // timings पिछले game-day की हैं.
 
-     Close time agar aaj nikal gaya
-     hai to usko next day par nahi
-     bhejna hai.
+    if(
+      ch >= 5 &&
+      cm >= 50
+    ){
 
-     Isse game sach me TIME OVER
-     hote hi closed ho jayega.
-  */
+      close.setDate(
+        close.getDate() - 1
+      );
+
+    }
+
+  }
+  else{
+
+    // 5:50 AM के बाद हैं.
+    // 5:50 AM से पहले वाली timing
+    // अगले दिन की मानी जाएगी.
+
+    if(
+      ch < 5 ||
+      (
+        ch === 5 &&
+        cm < 50
+      )
+    ){
+
+      close.setDate(
+        close.getDate() + 1
+      );
+
+    }
+
+  }
 
   return close;
 
