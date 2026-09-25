@@ -650,14 +650,19 @@ async function payNow(){
 
   }
 
+// ===============================
+// REQUEST CREATED
+// ===============================
 
-  // ===============================
-  // REQUEST CREATED
-  // ===============================
+showCurrentRequest(
+  data
+);
 
-  showCurrentRequest(
-    data
-  );
+// Amount box clear
+amountInput.value = "";
+
+// History refresh
+loadHistory();
 
 
   // History refresh
