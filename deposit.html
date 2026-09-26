@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="hi">
 
 <head>
@@ -6,7 +7,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+   content="width=device-width, initial-scale=1.0">
 
 <title>Deposit</title>
 
@@ -276,127 +277,131 @@ label{
 
   <div class="depositCard">
 
-    <div class="title">
+```
+<div class="title">
 
-      <div class="titleIcon">
-        💰
-      </div>
+  <div class="titleIcon">
+    💰
+  </div>
 
-      <h2>Add Money</h2>
+  <h2>Add Money</h2>
 
-      <p>
-        Enter amount and make your payment
-      </p>
+  <p>
+    Enter amount and make your payment
+  </p>
 
-    </div>
+</div>
 
-    <label>
-      Enter Amount
-    </label>
+<label>
+  Enter Amount
+</label>
 
-    <input
-      id="amount"
-      class="amountInput"
-      type="number"
-      inputmode="decimal"
-      min="1"
-      step="1"
-      placeholder="Enter amount">
+<input
+  id="amount"
+  class="amountInput"
+  type="number"
+  inputmode="decimal"
+  min="1"
+  step="1"
+  placeholder="Enter amount">
 
-    <div class="quickTitle">
-      Quick Amount
-    </div>
+<div class="quickTitle">
+  Quick Amount
+</div>
 
-    <div class="quickAmounts">
+<div class="quickAmounts">
 
-      <button
-        class="quickBtn"
-        onclick="setAmount(100)">
-        ₹100
-      </button>
+  <button
+    class="quickBtn"
+    onclick="setAmount(100)">
+    ₹100
+  </button>
 
-      <button
-        class="quickBtn"
-        onclick="setAmount(200)">
-        ₹200
-      </button>
+  <button
+    class="quickBtn"
+    onclick="setAmount(200)">
+    ₹200
+  </button>
 
-      <button
-        class="quickBtn"
-        onclick="setAmount(500)">
-        ₹500
-      </button>
+  <button
+    class="quickBtn"
+    onclick="setAmount(500)">
+    ₹500
+  </button>
 
-      <button
-        class="quickBtn"
-        onclick="setAmount(1000)">
-        ₹1000
-      </button>
+  <button
+    class="quickBtn"
+    onclick="setAmount(1000)">
+    ₹1000
+  </button>
 
-    </div>
+</div>
 
-    <button
-      id="payBtn"
-      class="payBtn"
-      onclick="payNow()">
+<button
+  id="payBtn"
+  class="payBtn"
+  onclick="payNow()">
 
-      Pay Now
+  Pay Now
 
-    </button>
+</button>
 
-    <div class="upiInfo">
+<div class="upiInfo">
 
-      Payment UPI
+  Payment UPI
 
-      <span class="upiId">
-        7KW0568000@mairtel
-      </span>
+  <span class="upiId">
+    7KW0568000@mairtel
+  </span>
 
-    </div>
+</div>
 
-    <div
-      id="errorBox"
-      class="errorBox">
-    </div>
+<div
+  id="errorBox"
+  class="errorBox">
+</div>
 
-    <div
-      id="currentRequest"
-      class="currentRequest">
+<div
+  id="currentRequest"
+  class="currentRequest">
 
-      <div class="currentTitle">
-        🟡 Deposit Request Pending
-      </div>
+  <div class="currentTitle">
+    🟡 Deposit Request Pending
+  </div>
 
-      <div
-        id="currentText"
-        class="currentText">
-      </div>
+  <div
+    id="currentText"
+    class="currentText">
+  </div>
 
-    </div>
+</div>
+```
 
   </div>
 
   <div class="historyCard">
 
-    <div class="historyHeader">
+```
+<div class="historyHeader">
 
-      <h3>
-        Deposit History
-      </h3>
+  <h3>
+    Deposit History
+  </h3>
 
-      <span class="refreshText">
-        Auto refresh
-      </span>
+  <span class="refreshText">
+    Auto refresh
+  </span>
 
-    </div>
+</div>
 
-    <div
-      id="historyList"
-      class="loading">
+<div
+  id="historyList"
+  class="loading">
 
-      Loading history...
+  Loading history...
 
-    </div>
+</div>
+```
 
   </div>
 
@@ -485,9 +490,7 @@ async function payNow(){
     Number(amountInput.value);
 
 
-  // ===============================
   // VALIDATE
-  // ===============================
 
   if(
     !Number.isFinite(amount) ||
@@ -501,7 +504,6 @@ async function payNow(){
     amountInput.focus();
 
     return;
-
   }
 
 
@@ -512,13 +514,10 @@ async function payNow(){
     );
 
     return;
-
   }
 
 
-  // ===============================
   // BUTTON LOADING
-  // ===============================
 
   payBtn.disabled = true;
 
@@ -526,9 +525,9 @@ async function payNow(){
     "Request bheji ja rahi hai...";
 
 
-  // ===============================
-  // CREATE REQUEST
-  // ===============================
+  // ===================================================
+  // CREATE DEPOSIT REQUEST
+  // ===================================================
 
   const {
     data,
@@ -561,13 +560,10 @@ async function payNow(){
     );
 
     return;
-
   }
 
 
-  // ===============================
   // SHOW REQUEST
-  // ===============================
 
   showCurrentRequest(data);
 
@@ -576,45 +572,30 @@ async function payNow(){
   loadHistory();
 
 
-  // =================================================
+  // ===================================================
   // UPI PAYMENT
-  // =================================================
+  // ===================================================
 
   const upiId =
     "7KW0568000@mairtel";
 
   const payeeName =
-    "BALAJIDAS";
-
-  const transactionId =
-    "DEP" + Date.now();
+    "BALAJI DASS";
 
 
-  /*
-    Full UPI intent.
-    Existing parameters retained.
-  */
+  // Simple standard UPI payment URL
 
   const upiUrl =
     "upi://pay" +
-
     "?pa=" +
     encodeURIComponent(upiId) +
-
     "&pn=" +
     encodeURIComponent(payeeName) +
-
     "&am=" +
     encodeURIComponent(
       amount.toFixed(2)
     ) +
-
-    "&cu=INR" +
-
-    "&tr=" +
-    encodeURIComponent(
-      transactionId
-    );
+    "&cu=INR";
 
 
   console.log(
@@ -623,18 +604,16 @@ async function payNow(){
   );
 
 
-  // =================================================
+  // ===================================================
   // OPEN UPI APP
-  // =================================================
+  // ===================================================
 
   try{
 
     window.location.href =
       upiUrl;
 
-  }
-
-  catch(error){
+  }catch(error){
 
     console.error(error);
 
@@ -698,7 +677,6 @@ async function loadHistory(){
       '<div class="emptyHistory">User login nahi hai.</div>';
 
     return;
-
   }
 
 
@@ -729,7 +707,6 @@ async function loadHistory(){
       '<div class="emptyHistory">History load nahi ho saki.</div>';
 
     return;
-
   }
 
 
@@ -739,7 +716,6 @@ async function loadHistory(){
       '<div class="emptyHistory">Abhi koi deposit request nahi hai.</div>';
 
     return;
-
   }
 
 
@@ -773,7 +749,6 @@ async function loadHistory(){
 
       statusText =
         "Accepted";
-
     }
 
 
@@ -788,7 +763,6 @@ async function loadHistory(){
 
       statusText =
         "Cancelled";
-
     }
 
 
@@ -849,9 +823,7 @@ async function loadHistory(){
         latest
       );
 
-    }
-
-    else{
+    }else{
 
       document.getElementById(
         "currentRequest"
