@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 
@@ -34,10 +33,6 @@ body{
   margin:auto;
 }
 
-/* =========================
-   MAIN CARD
-========================= */
-
 .depositCard{
   background:#fff;
   border-radius:22px;
@@ -65,10 +60,6 @@ body{
   font-size:14px;
 }
 
-/* =========================
-   AMOUNT
-========================= */
-
 label{
   display:block;
   font-size:14px;
@@ -90,10 +81,6 @@ label{
 .amountInput:focus{
   border-color:#159447;
 }
-
-/* =========================
-   QUICK AMOUNT
-========================= */
 
 .quickTitle{
   margin-top:18px;
@@ -118,17 +105,9 @@ label{
   cursor:pointer;
 }
 
-.quickBtn:hover{
-  background:#eeeeee;
-}
-
 .quickBtn:active{
   transform:scale(.96);
 }
-
-/* =========================
-   PAY BUTTON
-========================= */
 
 .payBtn{
   width:100%;
@@ -153,10 +132,6 @@ label{
   cursor:not-allowed;
 }
 
-/* =========================
-   UPI INFO
-========================= */
-
 .upiInfo{
   margin-top:15px;
   padding:14px;
@@ -176,10 +151,6 @@ label{
   font-weight:bold;
 }
 
-/* =========================
-   CURRENT REQUEST
-========================= */
-
 .currentRequest{
   display:none;
   margin-top:16px;
@@ -198,10 +169,6 @@ label{
   font-size:13px;
   color:#666;
 }
-
-/* =========================
-   HISTORY
-========================= */
 
 .historyCard{
   margin-top:18px;
@@ -303,16 +270,9 @@ label{
 
 </head>
 
-
 <body>
 
-
 <div class="depositBox">
-
-
-  <!-- =========================
-       DEPOSIT CARD
-  ========================== -->
 
   <div class="depositCard">
 
@@ -330,9 +290,6 @@ label{
 
     </div>
 
-
-    <!-- AMOUNT -->
-
     <label>
       Enter Amount
     </label>
@@ -346,13 +303,9 @@ label{
       step="1"
       placeholder="Enter amount">
 
-
-    <!-- QUICK AMOUNTS -->
-
     <div class="quickTitle">
       Quick Amount
     </div>
-
 
     <div class="quickAmounts">
 
@@ -382,9 +335,6 @@ label{
 
     </div>
 
-
-    <!-- PAY -->
-
     <button
       id="payBtn"
       class="payBtn"
@@ -393,9 +343,6 @@ label{
       Pay Now
 
     </button>
-
-
-    <!-- UPI -->
 
     <div class="upiInfo">
 
@@ -407,16 +354,10 @@ label{
 
     </div>
 
-
-    <!-- ERROR -->
-
     <div
       id="errorBox"
       class="errorBox">
     </div>
-
-
-    <!-- CURRENT REQUEST -->
 
     <div
       id="currentRequest"
@@ -435,12 +376,6 @@ label{
 
   </div>
 
-
-
-  <!-- =========================
-       HISTORY
-  ========================== -->
-
   <div class="historyCard">
 
     <div class="historyHeader">
@@ -455,7 +390,6 @@ label{
 
     </div>
 
-
     <div
       id="historyList"
       class="loading">
@@ -466,13 +400,9 @@ label{
 
   </div>
 
-
 </div>
 
-
-
 <script>
-
 
 // =====================================================
 // SUPABASE
@@ -545,14 +475,11 @@ async function payNow(){
 
   hideError();
 
-
   const amountInput =
     document.getElementById("amount");
 
-
   const payBtn =
     document.getElementById("payBtn");
-
 
   const amount =
     Number(amountInput.value);
@@ -563,7 +490,7 @@ async function payNow(){
   // ===============================
 
   if(
-    !amount ||
+    !Number.isFinite(amount) ||
     amount <= 0
   ){
 
@@ -577,10 +504,6 @@ async function payNow(){
 
   }
 
-
-  // ===============================
-  // USER LOGIN CHECK
-  // ===============================
 
   if(!userId){
 
@@ -612,26 +535,17 @@ async function payNow(){
     error
   } =
     await supabaseClient
-
     .from("deposit_requests")
-
     .insert({
 
       user_id: userId,
-
       amount: amount,
-
       status: "pending"
 
     })
-
     .select()
     .single();
 
-
-  // ===============================
-  // ERROR
-  // ===============================
 
   if(error){
 
@@ -650,41 +564,36 @@ async function payNow(){
 
   }
 
-// ===============================
-// REQUEST CREATED
-// ===============================
 
-showCurrentRequest(
-  data
-);
+  // ===============================
+  // SHOW REQUEST
+  // ===============================
 
-// Amount box clear
-amountInput.value = "";
+  showCurrentRequest(data);
 
-// History refresh
-loadHistory();
-
-
-  // History refresh
+  amountInput.value = "";
 
   loadHistory();
 
 
-  // ===============================
-  // UPI
-  // ===============================
+  // =================================================
+  // UPI PAYMENT
+  // =================================================
 
   const upiId =
     "7KW0568000@mairtel";
 
-
   const payeeName =
-    "Deposit";
-
+    "BALAJI-DAS";
 
   const transactionId =
     "DEP" + Date.now();
 
+
+  /*
+    Full UPI intent.
+    Existing parameters retained.
+  */
 
   const upiUrl =
     "upi://pay" +
@@ -708,12 +617,32 @@ loadHistory();
     );
 
 
-  // ===============================
-  // OPEN UPI
-  // ===============================
+  console.log(
+    "UPI URL:",
+    upiUrl
+  );
 
-  window.location.href =
-    upiUrl;
+
+  // =================================================
+  // OPEN UPI APP
+  // =================================================
+
+  try{
+
+    window.location.href =
+      upiUrl;
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    showError(
+      "UPI payment app open nahi ho saki."
+    );
+
+  }
 
 
   payBtn.disabled = false;
@@ -735,16 +664,13 @@ function showCurrentRequest(request){
       "currentRequest"
     );
 
-
   const text =
     document.getElementById(
       "currentText"
     );
 
-
   box.style.display =
     "block";
-
 
   text.innerText =
     "₹" +
@@ -781,16 +707,12 @@ async function loadHistory(){
     error
   } =
     await supabaseClient
-
     .from("deposit_requests")
-
     .select("*")
-
     .eq(
       "user_id",
       userId
     )
-
     .order(
       "created_at",
       {
@@ -811,10 +733,6 @@ async function loadHistory(){
   }
 
 
-  // ===============================
-  // NO HISTORY
-  // ===============================
-
   if(!data || data.length === 0){
 
     historyList.innerHTML =
@@ -824,10 +742,6 @@ async function loadHistory(){
 
   }
 
-
-  // ===============================
-  // HISTORY HTML
-  // ===============================
 
   let html = "";
 
@@ -842,7 +756,6 @@ async function loadHistory(){
 
     let statusClass =
       "pending";
-
 
     let statusText =
       "Pending";
@@ -916,10 +829,6 @@ async function loadHistory(){
     html;
 
 
-  // ===============================
-  // SHOW LATEST REQUEST
-  // ===============================
-
   const latest =
     data[0];
 
@@ -963,9 +872,7 @@ async function loadHistory(){
 function formatDate(dateValue){
 
   if(!dateValue){
-
     return "";
-
   }
 
 
@@ -998,7 +905,6 @@ loadHistory();
 
 // =====================================================
 // AUTO REFRESH
-// Every 5 seconds
 // =====================================================
 
 setInterval(
@@ -1006,11 +912,8 @@ setInterval(
   5000
 );
 
-
 </script>
-
 
 </body>
 
 </html>
-
