@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="hi">
 
@@ -247,13 +248,13 @@ body{
 
         QR scan karke payment karein.
         <br>
-        Payment ke baad UTR number niche enter karein.
+        Payment ke baad User ID niche enter karein.
 
       </div>
 
 
       <div class="label">
-        Enter UTR Number
+        Enter User ID
       </div>
 
 
@@ -261,9 +262,8 @@ body{
         id="utr"
         class="utrInput"
         type="text"
-        inputmode="numeric"
         autocomplete="off"
-        placeholder="Enter UTR number"
+        placeholder="Enter User ID"
       >
 
 
@@ -273,7 +273,7 @@ body{
         type="button"
         onclick="submitUTR()">
 
-        Submit UTR
+        Submit User ID
 
       </button>
 
@@ -435,11 +435,6 @@ async function loadRequest(){
   data;
 
 
-  /*
-   * Agar request already complete hai
-   * to payment page dobara nahi dikhana.
-   */
-
   if(
     data.status !== "pending"
   ){
@@ -452,10 +447,6 @@ async function loadRequest(){
   }
 
 
-  /*
-   * Amount show
-   */
-
   const amount =
   Number(data.amount);
 
@@ -466,10 +457,6 @@ async function loadRequest(){
     "₹" +
     amount.toFixed(2);
 
-
-  /*
-   * UPI payment data
-   */
 
   const upiId =
   "7KW0568000@mairtel";
@@ -489,10 +476,6 @@ async function loadRequest(){
 
     "&cu=INR";
 
-
-  /*
-   * QR generate
-   */
 
   const qrBox =
   document.getElementById(
@@ -540,36 +523,21 @@ async function submitUTR(){
     "utr"
   );
 
+
   const submitBtn =
   document.getElementById(
     "submitBtn"
   );
 
 
+  /*
+   * User kuch bhi dale
+   * ya bilkul khaali chhode,
+   * dono situation me submit hoga.
+   */
+
   const utr =
-  utrInput.value.trim();
-
-
-  if(!utr){
-
-    showError(
-      "UTR number enter karein."
-    );
-
-    return;
-
-  }
-
-
-  if(utr.length < 6){
-
-    showError(
-      "Valid UTR number enter karein."
-    );
-
-    return;
-
-  }
+  utrInput.value;
 
 
   if(!currentRequest){
@@ -591,7 +559,8 @@ async function submitUTR(){
 
 
   /*
-   * UTR same deposit request me save
+   * User ID / entered text
+   * existing utr column me save hoga.
    */
 
   const {
@@ -604,7 +573,8 @@ async function submitUTR(){
 
       utr:utr,
 
-      updated_at:new Date().toISOString()
+      updated_at:
+        new Date().toISOString()
 
     })
 
@@ -624,14 +594,14 @@ async function submitUTR(){
     console.error(error);
 
     showError(
-      "UTR submit nahi hua."
+      "User ID submit nahi hua."
     );
 
     submitBtn.disabled =
     false;
 
     submitBtn.innerText =
-    "Submit UTR";
+    "Submit User ID";
 
     return;
 
@@ -639,7 +609,7 @@ async function submitUTR(){
 
 
   /*
-   * UTR submit ke baad
+   * Submit ke baad
    * Deposit page par wapas.
    */
 
@@ -657,3 +627,6 @@ loadRequest();
 </body>
 
 </html>
+```
+
+अब इसमें **Submit User ID** पर कोई input validation नहीं है। खाली छोड़कर भी button दबाने पर request submit होगी।
