@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Make Payment</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#fff7e6,#ffe0b2);
+  min-height:100vh;
+  padding:20px 12px;
+}
+
+.container{
+  width:100%;
+  max-width:500px;
+  margin:auto;
+}
+
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 5px 20px rgba(0,0,0,.10);
+}
+
+.title{
+  text-align:center;
+  font-size:24px;
+  font-weight:bold;
+  color:#222;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#777;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.amountBox{
+  text-align:center;
+  background:#fff8e1;
+  border:1px solid #ffe082;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:20px;
+}
+
+.amountLabel{
+  font-size:13px;
+  color:#777;
+}
+
+.amount{
+  font-size:30px;
+  font-weight:bold;
+  color:#e65100;
+  margin-top:5px;
+}
+
+.qrBox{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:15px;
+  min-height:270px;
+}
+
+#qrcode{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.upiBox{
+  background:#f5f5f5;
+  border-radius:10px;
+  padding:13px;
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.upiLabel{
+  font-size:13px;
+  color:#777;
+  margin-bottom:5px;
+}
+
+.upiId{
+  font-size:17px;
+  font-weight:bold;
+  word-break:break-all;
+}
+
+.instruction{
+  text-align:center;
+  color:#555;
+  font-size:14px;
+  line-height:1.5;
+  margin-bottom:20px;
+}
+
+.label{
+  font-size:15px;
+  font-weight:bold;
+  color:#444;
+  margin-bottom:8px;
+}
+
+.utrInput{
+  width:100%;
+  height:52px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:0 14px;
+  font-size:17px;
+  outline:none;
+}
+
+.utrInput:focus{
+  border-color:#ff9800;
+}
+
+.submitBtn{
+  width:100%;
+  height:52px;
+  margin-top:15px;
+  border:0;
+  border-radius:11px;
+  background:#ff9800;
+  color:#fff;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.submitBtn:disabled{
+  background:#aaa;
+}
+
+.errorBox{
+  display:none;
+  margin-top:15px;
+  padding:12px;
+  border-radius:9px;
+  background:#ffebee;
+  color:#c62828;
+  font-size:14px;
+}
+
+.loading{
+  text-align:center;
+  padding:30px;
+  color:#777;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <div class="title">
+      Complete Payment
+    </div>
+
+    <div class="subtitle">
+      Scan QR Code and make payment
+    </div>
+
+
+    <div
+      id="loading"
+      class="loading">
+
+      Loading...
+
+    </div>
+
+
+    <div
+      id="paymentContent"
+      style="display:none;">
+
+
+      <div class="amountBox">
+
+        <div class="amountLabel">
+          Pay Amount
+        </div>
+
+        <div
+          id="amount"
+          class="amount">
+          ₹0
+        </div>
+
+      </div>
+
+
+      <div class="qrBox">
+
+        <div id="qrcode">
+        </div>
+
+      </div>
+
+
+      <div class="upiBox">
+
+        <div class="upiLabel">
+          Payment UPI ID
+        </div>
+
+        <div class="upiId">
+          7KW0568000@mairtel
+        </div>
+
+      </div>
+
+
+      <div class="instruction">
+
+        QR scan karke payment karein.
+        <br>
+        Payment ke baad UTR number niche enter karein.
+
+      </div>
+
+
+      <div class="label">
+        Enter UTR Number
+      </div>
+
+
+      <input
+        id="utr"
+        class="utrInput"
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        placeholder="Enter UTR number"
+      >
+
+
+      <button
+        id="submitBtn"
+        class="submitBtn"
+        type="button"
+        onclick="submitUTR()">
+
+        Submit UTR
+
+      </button>
+
+
+      <div
+        id="errorBox"
+        class="errorBox">
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+"https://katbdbzoufiblnnsoxkk.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+const userId =
+localStorage.getItem("user_id");
+
+
+const params =
+new URLSearchParams(
+  window.location.search
+);
+
+
+const requestId =
+params.get("id");
+
+
+let currentRequest =
+null;
+
+
+function showError(message){
+
+  const box =
+  document.getElementById(
+    "errorBox"
+  );
+
+  box.innerText =
+  message;
+
+  box.style.display =
+  "block";
+
+}
+
+
+function hideError(){
+
+  const box =
+  document.getElementById(
+    "errorBox"
+  );
+
+  box.innerText =
+  "";
+
+  box.style.display =
+  "none";
+
+}
+
+
+async function loadRequest(){
+
+  if(!userId){
+
+    showError(
+      "User login nahi mila."
+    );
+
+    document.getElementById(
+      "loading"
+    ).style.display =
+    "none";
+
+    return;
+
+  }
+
+
+  if(!requestId){
+
+    showError(
+      "Deposit request nahi mili."
+    );
+
+    document.getElementById(
+      "loading"
+    ).style.display =
+    "none";
+
+    return;
+
+  }
+
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+
+    .from("deposit_requests")
+
+    .select(
+      "id,user_id,amount,status,utr"
+    )
+
+    .eq(
+      "id",
+      requestId
+    )
+
+    .eq(
+      "user_id",
+      userId
+    )
+
+    .single();
+
+
+  if(error || !data){
+
+    console.error(error);
+
+    showError(
+      "Deposit request load nahi hui."
+    );
+
+    document.getElementById(
+      "loading"
+    ).style.display =
+    "none";
+
+    return;
+
+  }
+
+
+  currentRequest =
+  data;
+
+
+  /*
+   * Agar request already complete hai
+   * to payment page dobara nahi dikhana.
+   */
+
+  if(
+    data.status !== "pending"
+  ){
+
+    window.location.href =
+      "deposit.html";
+
+    return;
+
+  }
+
+
+  /*
+   * Amount show
+   */
+
+  const amount =
+  Number(data.amount);
+
+
+  document.getElementById(
+    "amount"
+  ).innerText =
+    "₹" +
+    amount.toFixed(2);
+
+
+  /*
+   * UPI payment data
+   */
+
+  const upiId =
+  "7KW0568000@mairtel";
+
+
+  const upiData =
+
+    "upi://pay" +
+
+    "?pa=" +
+    encodeURIComponent(upiId) +
+
+    "&am=" +
+    encodeURIComponent(
+      amount.toFixed(2)
+    ) +
+
+    "&cu=INR";
+
+
+  /*
+   * QR generate
+   */
+
+  const qrBox =
+  document.getElementById(
+    "qrcode"
+  );
+
+
+  qrBox.innerHTML =
+  "";
+
+
+  new QRCode(
+    qrBox,
+    {
+      text:upiData,
+      width:240,
+      height:240,
+      correctLevel:
+        QRCode.CorrectLevel.M
+    }
+  );
+
+
+  document.getElementById(
+    "loading"
+  ).style.display =
+  "none";
+
+
+  document.getElementById(
+    "paymentContent"
+  ).style.display =
+  "block";
+
+}
+
+
+async function submitUTR(){
+
+  hideError();
+
+
+  const utrInput =
+  document.getElementById(
+    "utr"
+  );
+
+  const submitBtn =
+  document.getElementById(
+    "submitBtn"
+  );
+
+
+  const utr =
+  utrInput.value.trim();
+
+
+  if(!utr){
+
+    showError(
+      "UTR number enter karein."
+    );
+
+    return;
+
+  }
+
+
+  if(utr.length < 6){
+
+    showError(
+      "Valid UTR number enter karein."
+    );
+
+    return;
+
+  }
+
+
+  if(!currentRequest){
+
+    showError(
+      "Deposit request nahi mili."
+    );
+
+    return;
+
+  }
+
+
+  submitBtn.disabled =
+  true;
+
+  submitBtn.innerText =
+  "Submitting...";
+
+
+  /*
+   * UTR same deposit request me save
+   */
+
+  const {
+    error
+  } = await supabaseClient
+
+    .from("deposit_requests")
+
+    .update({
+
+      utr:utr,
+
+      updated_at:new Date().toISOString()
+
+    })
+
+    .eq(
+      "id",
+      currentRequest.id
+    )
+
+    .eq(
+      "user_id",
+      userId
+    );
+
+
+  if(error){
+
+    console.error(error);
+
+    showError(
+      "UTR submit nahi hua."
+    );
+
+    submitBtn.disabled =
+    false;
+
+    submitBtn.innerText =
+    "Submit UTR";
+
+    return;
+
+  }
+
+
+  /*
+   * UTR submit ke baad
+   * Deposit page par wapas.
+   */
+
+  window.location.replace(
+    "deposit.html"
+  );
+
+}
+
+
+loadRequest();
+
+</script>
+
+</body>
+
+</html>
