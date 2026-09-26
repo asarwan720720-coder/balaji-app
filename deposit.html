@@ -2,7 +2,6 @@
 <html lang="hi">
 
 <head>
-
 <meta charset="UTF-8">
 
 <meta name="viewport"
@@ -215,14 +214,12 @@ body{
 }
 
 </style>
-
 </head>
+
 
 <body>
 
 <div class="container">
-
-  <!-- DEPOSIT CARD -->
 
   <div class="depositCard">
 
@@ -275,20 +272,20 @@ body{
 
     </div>
 
+
     <button
       type="button"
       id="payBtn"
       class="payBtn"
       onclick="payNow()">
-
       Pay Now
-
     </button>
+
 
     <div class="upiBox">
 
       <div class="upiTitle">
-        UPI ID
+        Payment UPI ID
       </div>
 
       <div class="upiId">
@@ -297,10 +294,12 @@ body{
 
     </div>
 
+
     <div
       id="errorBox"
       class="errorBox">
     </div>
+
 
     <div
       id="currentRequest"
@@ -318,8 +317,6 @@ body{
   </div>
 
 
-  <!-- HISTORY -->
-
   <div class="historyCard">
 
     <div class="historyTitle">
@@ -336,107 +333,94 @@ body{
 
 <script>
 
-// ==========================================
-// SUPABASE
-// ==========================================
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
-  "https://katbdbzoufiblnnsoxkk.supabase.co";
+"https://katbdbzoufiblnnsoxkk.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
+"sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
 
 const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 
-// ==========================================
-// USER ID
-// ==========================================
+/* =========================
+   USER
+========================= */
 
 const userId =
-  localStorage.getItem("user_id");
+localStorage.getItem("user_id");
 
 
-// ==========================================
-// SET AMOUNT
-// ==========================================
+/* =========================
+   AMOUNT
+========================= */
 
 function setAmount(amount){
 
-  document.getElementById(
-    "amount"
-  ).value = amount;
+  document.getElementById("amount").value =
+    amount;
 
 }
 
 
-// ==========================================
-// SHOW ERROR
-// ==========================================
+/* =========================
+   ERROR
+========================= */
 
 function showError(message){
 
   const errorBox =
-    document.getElementById(
-      "errorBox"
-    );
+    document.getElementById("errorBox");
 
   errorBox.innerText =
     message;
 
   errorBox.style.display =
     "block";
+
 }
 
-
-// ==========================================
-// HIDE ERROR
-// ==========================================
 
 function hideError(){
 
   const errorBox =
-    document.getElementById(
-      "errorBox"
-    );
+    document.getElementById("errorBox");
 
   errorBox.innerText =
     "";
 
   errorBox.style.display =
     "none";
+
 }
 
 
-// ==========================================
-// PAY NOW
-// ==========================================
+/* =========================
+   PAY NOW
+========================= */
 
 async function payNow(){
 
   hideError();
 
   const amountInput =
-    document.getElementById(
-      "amount"
-    );
+    document.getElementById("amount");
 
   const payBtn =
-    document.getElementById(
-      "payBtn"
-    );
+    document.getElementById("payBtn");
 
   const amount =
-    Number(
-      amountInput.value
-    );
+    Number(amountInput.value);
 
 
-  // USER CHECK
+  /* USER CHECK */
 
   if(!userId){
 
@@ -448,12 +432,9 @@ async function payNow(){
   }
 
 
-  // AMOUNT CHECK
+  /* AMOUNT CHECK */
 
-  if(
-    !amount ||
-    amount <= 0
-  ){
+  if(!amount || amount <= 0){
 
     showError(
       "Please valid amount enter karein."
@@ -463,33 +444,35 @@ async function payNow(){
   }
 
 
-  payBtn.disabled = true;
+  payBtn.disabled =
+    true;
 
   payBtn.innerText =
     "Processing...";
 
 
-  // ========================================
-  // CREATE DEPOSIT REQUEST
-  // ========================================
+  /* =========================
+     CREATE PENDING REQUEST
+  ========================= */
 
-  const {
-    data,
-    error
-  } =
+  const { data, error } =
     await supabaseClient
-      .from("deposit_requests")
-      .insert({
 
-        user_id: userId,
+    .from("deposit_requests")
 
-        amount: amount,
+    .insert({
 
-        status: "pending"
+      user_id: userId,
 
-      })
-      .select()
-      .single();
+      amount: amount,
+
+      status: "pending"
+
+    })
+
+    .select()
+
+    .single();
 
 
   if(error){
@@ -500,7 +483,8 @@ async function payNow(){
       "Deposit request create nahi hui."
     );
 
-    payBtn.disabled = false;
+    payBtn.disabled =
+      false;
 
     payBtn.innerText =
       "Pay Now";
@@ -509,74 +493,43 @@ async function payNow(){
   }
 
 
-  // ========================================
-  // UPI DETAILS
-  // ========================================
+  /* =========================
+     UPI PAYMENT
+  ========================= */
 
   const upiId =
     "7KW0568000@mairtel";
 
-  const payeeName =
-    "BALAJI DASS";
-
-
-  // ========================================
-  // CREATE UPI URL
-  // ========================================
 
   const upiUrl =
     "upi://pay" +
+
     "?pa=" +
-    encodeURIComponent(
-      upiId
-    ) +
-    "&pn=" +
-    encodeURIComponent(
-      payeeName
-    ) +
+    encodeURIComponent(upiId) +
+
     "&am=" +
     encodeURIComponent(
       amount.toFixed(2)
     ) +
+
     "&cu=INR";
 
 
-  // ========================================
-  // DIRECT UPI OPEN
-  // ========================================
+  /* SHOW PENDING REQUEST */
 
-  try{
-
-    window.location.href =
-      upiUrl;
-
-  }catch(error){
-
-    console.error(error);
-
-    showError(
-      "UPI app open nahi ho pa rahi."
-    );
-  }
-
-
-  // ========================================
-  // CURRENT REQUEST
-  // ========================================
-
-  showCurrentRequest(
-    data
-  );
-
-
-  // ========================================
-  // RELOAD HISTORY
-  // ========================================
+  showCurrentRequest(data);
 
   loadHistory();
 
 
-  payBtn.disabled = false;
+  /* OPEN UPI APP */
+
+  window.location.href =
+    upiUrl;
+
+
+  payBtn.disabled =
+    false;
 
   payBtn.innerText =
     "Pay Now";
@@ -584,9 +537,9 @@ async function payNow(){
 }
 
 
-// ==========================================
-// CURRENT REQUEST
-// ==========================================
+/* =========================
+   CURRENT REQUEST
+========================= */
 
 function showCurrentRequest(request){
 
@@ -615,9 +568,7 @@ function showCurrentRequest(request){
     <div>
       Amount:
       <b>
-        ₹${Number(
-          request.amount
-        ).toFixed(2)}
+        ₹${Number(request.amount).toFixed(2)}
       </b>
     </div>
 
@@ -636,19 +587,19 @@ function showCurrentRequest(request){
 
   box.style.display =
     "block";
+
 }
 
 
-// ==========================================
-// STATUS HTML
-// ==========================================
+/* =========================
+   STATUS
+========================= */
 
 function getStatusHTML(status){
 
   const value =
-    String(
-      status || ""
-    ).toLowerCase();
+    String(status || "")
+    .toLowerCase();
 
 
   if(
@@ -658,12 +609,11 @@ function getStatusHTML(status){
   ){
 
     return `
-
       <span class="status statusAccepted">
         Accepted
       </span>
-
     `;
+
   }
 
 
@@ -674,41 +624,35 @@ function getStatusHTML(status){
   ){
 
     return `
-
       <span class="status statusCancelled">
         Cancelled
       </span>
-
     `;
+
   }
 
 
   return `
-
     <span class="status statusPending">
       Pending
     </span>
-
   `;
+
 }
 
 
-// ==========================================
-// DATE FORMAT
-// ==========================================
+/* =========================
+   DATE
+========================= */
 
 function formatDate(dateValue){
 
-  if(!dateValue){
-
+  if(!dateValue)
     return "-";
-  }
 
 
   const date =
-    new Date(
-      dateValue
-    );
+    new Date(dateValue);
 
 
   if(
@@ -718,6 +662,7 @@ function formatDate(dateValue){
   ){
 
     return dateValue;
+
   }
 
 
@@ -732,12 +677,13 @@ function formatDate(dateValue){
       hour12:true
     }
   );
+
 }
 
 
-// ==========================================
-// LOAD HISTORY
-// ==========================================
+/* =========================
+   HISTORY
+========================= */
 
 async function loadHistory(){
 
@@ -750,34 +696,33 @@ async function loadHistory(){
   if(!userId){
 
     history.innerHTML = `
-
       <div class="noHistory">
         Login required
       </div>
-
     `;
 
     return;
   }
 
 
-  const {
-    data,
-    error
-  } =
+  const { data, error } =
     await supabaseClient
-      .from("deposit_requests")
-      .select("*")
-      .eq(
-        "user_id",
-        userId
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
+
+    .from("deposit_requests")
+
+    .select("*")
+
+    .eq(
+      "user_id",
+      userId
+    )
+
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    );
 
 
   if(error){
@@ -785,11 +730,9 @@ async function loadHistory(){
     console.error(error);
 
     history.innerHTML = `
-
       <div class="noHistory">
         History load nahi hui.
       </div>
-
     `;
 
     return;
@@ -802,11 +745,9 @@ async function loadHistory(){
   ){
 
     history.innerHTML = `
-
       <div class="noHistory">
         No deposit history
       </div>
-
     `;
 
     return;
@@ -817,88 +758,82 @@ async function loadHistory(){
     "";
 
 
-  data.forEach(
-    item => {
+  data.forEach(item => {
 
-      const div =
-        document.createElement(
-          "div"
-        );
-
-
-      div.className =
-        "historyItem";
-
-
-      div.innerHTML = `
-
-        <div class="historyRow">
-
-          <div class="historyLabel">
-            Amount
-          </div>
-
-          <div class="historyValue">
-            ₹${Number(
-              item.amount || 0
-            ).toFixed(2)}
-          </div>
-
-        </div>
-
-
-        <div class="historyRow">
-
-          <div class="historyLabel">
-            Status
-          </div>
-
-          <div class="historyValue">
-            ${getStatusHTML(
-              item.status
-            )}
-          </div>
-
-        </div>
-
-
-        <div class="historyRow">
-
-          <div class="historyLabel">
-            Date
-          </div>
-
-          <div class="historyValue">
-            ${formatDate(
-              item.created_at
-            )}
-          </div>
-
-        </div>
-
-      `;
-
-
-      history.appendChild(
-        div
+    const div =
+      document.createElement(
+        "div"
       );
 
-    }
-  );
+
+    div.className =
+      "historyItem";
+
+
+    div.innerHTML = `
+
+      <div class="historyRow">
+
+        <div class="historyLabel">
+          Amount
+        </div>
+
+        <div class="historyValue">
+          ₹${Number(item.amount || 0).toFixed(2)}
+        </div>
+
+      </div>
+
+
+      <div class="historyRow">
+
+        <div class="historyLabel">
+          Status
+        </div>
+
+        <div class="historyValue">
+
+          ${getStatusHTML(item.status)}
+
+        </div>
+
+      </div>
+
+
+      <div class="historyRow">
+
+        <div class="historyLabel">
+          Date
+        </div>
+
+        <div class="historyValue">
+
+          ${formatDate(item.created_at)}
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    history.appendChild(
+      div
+    );
+
+  });
 
 }
 
 
-// ==========================================
-// FIRST LOAD
-// ==========================================
+/* =========================
+   START
+========================= */
 
 loadHistory();
 
 
-// ==========================================
-// AUTO REFRESH
-// ==========================================
+/* Refresh history every 5 seconds */
 
 setInterval(
   loadHistory,
@@ -908,5 +843,4 @@ setInterval(
 </script>
 
 </body>
-
 </html>
