@@ -1,0 +1,659 @@
+```html
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Typing Image Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  margin:0;
+  background:#f1f5f9;
+}
+
+.header{
+  background:#fff;
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.filters{
+  background:#fff;
+  margin:10px;
+  padding:12px;
+  border-radius:10px;
+}
+
+.filterTitle{
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.filterRow{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.filterBox{
+  flex:1;
+  min-width:150px;
+}
+
+.filterBox label{
+  display:block;
+  font-size:12px;
+  color:#666;
+  margin-bottom:5px;
+}
+
+.filterBox input{
+  width:100%;
+  height:42px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  padding:0 10px;
+  font-size:14px;
+  outline:none;
+}
+
+.filterBox input:focus{
+  border-color:#ff9800;
+}
+
+.buttonRow{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.filterBtn,
+.clearBtn{
+  flex:1;
+  height:42px;
+  border:0;
+  border-radius:8px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.filterBtn{
+  background:#ff9800;
+  color:#fff;
+}
+
+.clearBtn{
+  background:#ddd;
+  color:#333;
+}
+
+.count{
+  margin:10px;
+  font-size:14px;
+  font-weight:bold;
+  color:#555;
+}
+
+.card{
+  background:#fff;
+  margin:10px;
+  padding:12px;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+
+.topRow{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.market{
+  font-weight:bold;
+  color:red;
+}
+
+.date{
+  font-size:12px;
+  color:#666;
+  text-align:right;
+}
+
+.info{
+  margin-top:8px;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.ref{
+  color:#1565c0;
+  font-weight:bold;
+}
+
+.total{
+  margin-top:10px;
+  font-weight:bold;
+  color:green;
+}
+
+.contentImage{
+  width:100%;
+  height:auto;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.text{
+  white-space:pre-wrap;
+  background:#f1f5f9;
+  padding:8px;
+  border-radius:8px;
+  margin-top:10px;
+  word-break:break-word;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#777;
+}
+
+.loading{
+  text-align:center;
+  padding:30px;
+  color:#777;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+  Typing Image Admin
+</div>
+
+
+<div class="filters">
+
+  <div class="filterTitle">
+    Filter Data
+  </div>
+
+
+  <div class="filterRow">
+
+
+    <div class="filterBox">
+
+      <label>
+        Date
+      </label>
+
+      <input
+        type="date"
+        id="dateFilter"
+      >
+
+    </div>
+
+
+    <div class="filterBox">
+
+      <label>
+        User ID
+      </label>
+
+      <input
+        type="text"
+        id="userFilter"
+        placeholder="User ID"
+      >
+
+    </div>
+
+
+    <div class="filterBox">
+
+      <label>
+        Ref By
+      </label>
+
+      <input
+        type="text"
+        id="refFilter"
+        placeholder="Ref By"
+      >
+
+    </div>
+
+
+  </div>
+
+
+  <div class="buttonRow">
+
+    <button
+      class="filterBtn"
+      onclick="applyFilter()">
+
+      Filter
+
+    </button>
+
+
+    <button
+      class="clearBtn"
+      onclick="clearFilter()">
+
+      Clear
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<div
+  id="count"
+  class="count">
+</div>
+
+
+<div
+  id="historyBox">
+
+  <div class="loading">
+    Loading...
+  </div>
+
+</div>
+
+
+<script>
+
+
+const client =
+supabase.createClient(
+
+  "https://katbdbzoufiblnnsoxkk.supabase.co",
+
+  "sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a"
+
+);
+
+
+let allData = [];
+
+
+async function loadData(){
+
+  const {
+    data,
+    error
+  } = await client
+
+    .from("typing_image")
+
+    .select("*")
+
+    .order(
+      "id",
+      {
+        ascending:false
+      }
+    );
+
+
+  if(error){
+
+    console.error(error);
+
+    document.getElementById(
+      "historyBox"
+    ).innerHTML =
+
+      '<div class="empty">Error loading data</div>';
+
+    return;
+
+  }
+
+
+  allData =
+    data || [];
+
+
+  showData(
+    allData
+  );
+
+}
+
+
+function showData(data){
+
+  const box =
+    document.getElementById(
+      "historyBox"
+    );
+
+
+  document.getElementById(
+    "count"
+  ).innerText =
+
+    "Total Records: " +
+    data.length;
+
+
+  if(!data.length){
+
+    box.innerHTML =
+      '<div class="empty">No Data Found</div>';
+
+    return;
+
+  }
+
+
+  let html = "";
+
+
+  data.forEach(item => {
+
+
+    let date =
+      item.created_at
+
+      ? new Date(
+          item.created_at
+        ).toLocaleString()
+
+      : "N/A";
+
+
+    let content = "";
+
+
+    if(
+      item.data &&
+      item.data.includes("http")
+    ){
+
+      content = `
+
+        <img
+          class="contentImage"
+          src="${item.data}"
+        >
+
+      `;
+
+    }
+    else{
+
+      content = `
+
+        <div class="text">
+          ${item.data || ""}
+        </div>
+
+      `;
+
+    }
+
+
+    html += `
+
+      <div class="card">
+
+
+        <div class="topRow">
+
+          <div class="market">
+            ${item.market || ""}
+          </div>
+
+          <div class="date">
+            ${date}
+          </div>
+
+        </div>
+
+
+        <div class="info">
+
+          <div>
+            <b>User ID:</b>
+            ${item.user_id || ""}
+          </div>
+
+
+          <div>
+            <b>Ref By:</b>
+            <span class="ref">
+              ${item.ref_by || ""}
+            </span>
+          </div>
+
+        </div>
+
+
+        ${content}
+
+
+        <div class="total">
+          Total: ₹ ${item.total || 0}
+        </div>
+
+
+      </div>
+
+    `;
+
+  });
+
+
+  box.innerHTML =
+    html;
+
+}
+
+
+function applyFilter(){
+
+  const date =
+    document.getElementById(
+      "dateFilter"
+    ).value;
+
+
+  const userId =
+    document.getElementById(
+      "userFilter"
+    ).value
+    .trim()
+    .toLowerCase();
+
+
+  const refBy =
+    document.getElementById(
+      "refFilter"
+    ).value
+    .trim()
+    .toLowerCase();
+
+
+  let filtered =
+    allData.filter(item => {
+
+
+      let matchDate =
+        true;
+
+
+      let matchUser =
+        true;
+
+
+      let matchRef =
+        true;
+
+
+      /*
+       * DATE FILTER
+       */
+
+      if(date){
+
+        const itemDate =
+          new Date(
+            item.created_at
+          );
+
+
+        const year =
+          itemDate.getFullYear();
+
+
+        const month =
+          String(
+            itemDate.getMonth() + 1
+          ).padStart(
+            2,
+            "0"
+          );
+
+
+        const day =
+          String(
+            itemDate.getDate()
+          ).padStart(
+            2,
+            "0"
+          );
+
+
+        const itemDateString =
+          year +
+          "-" +
+          month +
+          "-" +
+          day;
+
+
+        matchDate =
+          itemDateString === date;
+
+      }
+
+
+      /*
+       * USER ID FILTER
+       */
+
+      if(userId){
+
+        matchUser =
+          String(
+            item.user_id || ""
+          )
+          .toLowerCase()
+          .includes(
+            userId
+          );
+
+      }
+
+
+      /*
+       * REF BY FILTER
+       */
+
+      if(refBy){
+
+        matchRef =
+          String(
+            item.ref_by || ""
+          )
+          .toLowerCase()
+          .includes(
+            refBy
+          );
+
+      }
+
+
+      return (
+        matchDate &&
+        matchUser &&
+        matchRef
+      );
+
+    });
+
+
+  showData(
+    filtered
+  );
+
+}
+
+
+function clearFilter(){
+
+  document.getElementById(
+    "dateFilter"
+  ).value = "";
+
+
+  document.getElementById(
+    "userFilter"
+  ).value = "";
+
+
+  document.getElementById(
+    "refFilter"
+  ).value = "";
+
+
+  showData(
+    allData
+  );
+
+}
+
+
+loadData();
+
+
+</script>
+
+
+</body>
+
+</html>
+```
