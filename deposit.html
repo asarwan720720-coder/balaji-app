@@ -32,8 +32,7 @@ body{
   margin:auto;
 }
 
-.depositCard,
-.historyCard{
+.card{
   background:#fff;
   border-radius:18px;
   padding:20px;
@@ -43,10 +42,10 @@ body{
 
 .title{
   text-align:center;
-  font-size:24px;
+  font-size:25px;
   font-weight:bold;
+  margin-bottom:22px;
   color:#222;
-  margin-bottom:20px;
 }
 
 .label{
@@ -58,11 +57,11 @@ body{
 
 .amountInput{
   width:100%;
-  height:50px;
+  height:52px;
   padding:0 14px;
   border:1px solid #ddd;
   border-radius:10px;
-  font-size:18px;
+  font-size:19px;
   outline:none;
 }
 
@@ -78,55 +77,30 @@ body{
 }
 
 .quickBtn{
-  border:none;
+  border:0;
   background:#fff3e0;
   color:#e65100;
-  padding:11px 5px;
+  padding:11px 4px;
   border-radius:9px;
   font-weight:bold;
   cursor:pointer;
 }
 
-.quickBtn:active{
-  transform:scale(.97);
-}
-
-.payBtn{
+.submitBtn{
   width:100%;
   height:52px;
   margin-top:18px;
-  border:none;
+  border:0;
   border-radius:11px;
   background:#ff9800;
-  color:#fff;
+  color:white;
   font-size:17px;
   font-weight:bold;
   cursor:pointer;
 }
 
-.payBtn:disabled{
+.submitBtn:disabled{
   background:#aaa;
-}
-
-.upiBox{
-  margin-top:18px;
-  padding:14px;
-  border-radius:10px;
-  background:#f5f5f5;
-  text-align:center;
-}
-
-.upiTitle{
-  font-size:13px;
-  color:#777;
-  margin-bottom:5px;
-}
-
-.upiId{
-  font-size:17px;
-  font-weight:bold;
-  color:#222;
-  word-break:break-all;
 }
 
 .errorBox{
@@ -139,20 +113,6 @@ body{
   font-size:14px;
 }
 
-.currentRequest{
-  display:none;
-  margin-top:15px;
-  padding:14px;
-  border-radius:10px;
-  background:#fff8e1;
-  border:1px solid #ffe082;
-}
-
-.currentTitle{
-  font-weight:bold;
-  margin-bottom:7px;
-}
-
 .historyTitle{
   font-size:20px;
   font-weight:bold;
@@ -161,25 +121,25 @@ body{
 
 .historyItem{
   border:1px solid #eee;
-  border-radius:10px;
-  padding:13px;
+  border-radius:11px;
+  padding:14px;
   margin-bottom:10px;
   background:#fafafa;
 }
 
-.historyRow{
+.row{
   display:flex;
   justify-content:space-between;
   gap:10px;
-  margin-bottom:6px;
+  margin-bottom:7px;
 }
 
-.historyLabel{
+.labelSmall{
   color:#777;
   font-size:13px;
 }
 
-.historyValue{
+.value{
   font-weight:bold;
   font-size:14px;
   text-align:right;
@@ -193,17 +153,17 @@ body{
   font-weight:bold;
 }
 
-.statusPending{
+.pending{
   background:#fff3cd;
   color:#856404;
 }
 
-.statusAccepted{
+.accepted{
   background:#d4edda;
   color:#155724;
 }
 
-.statusCancelled{
+.cancelled{
   background:#f8d7da;
   color:#721c24;
 }
@@ -218,11 +178,12 @@ body{
 
 </head>
 
+
 <body>
 
 <div class="container">
 
-  <div class="depositCard">
+  <div class="card">
 
     <div class="title">
       Deposit
@@ -244,29 +205,29 @@ body{
     <div class="quickAmounts">
 
       <button
-        type="button"
         class="quickBtn"
+        type="button"
         onclick="setAmount(100)">
         ₹100
       </button>
 
       <button
-        type="button"
         class="quickBtn"
+        type="button"
         onclick="setAmount(200)">
         ₹200
       </button>
 
       <button
-        type="button"
         class="quickBtn"
+        type="button"
         onclick="setAmount(500)">
         ₹500
       </button>
 
       <button
-        type="button"
         class="quickBtn"
+        type="button"
         onclick="setAmount(1000)">
         ₹1000
       </button>
@@ -274,47 +235,24 @@ body{
     </div>
 
     <button
+      id="submitBtn"
+      class="submitBtn"
       type="button"
-      id="payBtn"
-      class="payBtn"
-      onclick="payNow()">
-      Pay Now
+      onclick="createDeposit()">
+
+      Submit
+
     </button>
-
-    <div class="upiBox">
-
-      <div class="upiTitle">
-        Payment UPI ID
-      </div>
-
-      <div class="upiId">
-        7KW0568000@mairtel
-      </div>
-
-    </div>
 
     <div
       id="errorBox"
       class="errorBox">
     </div>
 
-    <div
-      id="currentRequest"
-      class="currentRequest">
-
-      <div class="currentTitle">
-        Current Deposit
-      </div>
-
-      <div id="currentRequestText">
-      </div>
-
-    </div>
-
   </div>
 
 
-  <div class="historyCard">
+  <div class="card">
 
     <div class="historyTitle">
       Deposit History
@@ -335,7 +273,6 @@ const SUPABASE_URL =
 
 const SUPABASE_KEY =
 "sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
-
 
 const supabaseClient =
 window.supabase.createClient(
@@ -358,13 +295,13 @@ function setAmount(amount){
 
 function showError(message){
 
-  const errorBox =
+  const box =
   document.getElementById("errorBox");
 
-  errorBox.innerText =
+  box.innerText =
   message;
 
-  errorBox.style.display =
+  box.style.display =
   "block";
 
 }
@@ -372,27 +309,27 @@ function showError(message){
 
 function hideError(){
 
-  const errorBox =
+  const box =
   document.getElementById("errorBox");
 
-  errorBox.innerText =
+  box.innerText =
   "";
 
-  errorBox.style.display =
+  box.style.display =
   "none";
 
 }
 
 
-async function payNow(){
+async function createDeposit(){
 
   hideError();
 
   const amountInput =
   document.getElementById("amount");
 
-  const payBtn =
-  document.getElementById("payBtn");
+  const submitBtn =
+  document.getElementById("submitBtn");
 
   const amount =
   Number(amountInput.value);
@@ -412,7 +349,7 @@ async function payNow(){
   if(!amount || amount <= 0){
 
     showError(
-      "Please valid amount enter karein."
+      "Valid amount enter karein."
     );
 
     return;
@@ -420,16 +357,15 @@ async function payNow(){
   }
 
 
-  payBtn.disabled =
+  submitBtn.disabled =
   true;
 
-  payBtn.innerText =
-  "Processing...";
+  submitBtn.innerText =
+  "Please wait...";
 
 
   /*
-   * STEP 1
-   * Supabase me pending request create
+   * Deposit request create
    */
 
   const {
@@ -449,7 +385,7 @@ async function payNow(){
 
     })
 
-    .select()
+    .select("id,amount,status")
 
     .single();
 
@@ -462,11 +398,11 @@ async function payNow(){
       "Deposit request create nahi hui."
     );
 
-    payBtn.disabled =
+    submitBtn.disabled =
     false;
 
-    payBtn.innerText =
-    "Pay Now";
+    submitBtn.innerText =
+    "Submit";
 
     return;
 
@@ -474,108 +410,12 @@ async function payNow(){
 
 
   /*
-   * STEP 2
-   * UPI Intent
-   *
-   * Sirf:
-   * pa = UPI ID
-   * am = Amount
-   * cu = INR
-   */
-
-  const upiId =
-  "7KW0568000@mairtel";
-
-
-  const upiUrl =
-
-    "upi://pay" +
-
-    "?pa=" +
-    encodeURIComponent(upiId) +
-
-    "&am=" +
-    encodeURIComponent(
-      amount.toFixed(2)
-    ) +
-
-    "&cu=INR";
-
-
-  /*
-   * Request screen par dikhao
-   */
-
-  showCurrentRequest(data);
-
-  loadHistory();
-
-
-  /*
-   * Android WebView is URL ko
-   * native UPI Intent me convert karega.
+   * Page 2 open
    */
 
   window.location.href =
-  upiUrl;
-
-
-  payBtn.disabled =
-  false;
-
-  payBtn.innerText =
-  "Pay Now";
-
-}
-
-
-function showCurrentRequest(request){
-
-  const box =
-  document.getElementById(
-    "currentRequest"
-  );
-
-  const text =
-  document.getElementById(
-    "currentRequestText"
-  );
-
-
-  if(!request){
-
-    box.style.display =
-    "none";
-
-    return;
-
-  }
-
-
-  text.innerHTML = `
-
-    <div>
-      Amount:
-      <b>
-        ₹${Number(request.amount).toFixed(2)}
-      </b>
-    </div>
-
-    <div style="margin-top:6px;">
-
-      Status:
-
-      <span class="status statusPending">
-        Pending
-      </span>
-
-    </div>
-
-  `;
-
-
-  box.style.display =
-  "block";
+    "deposit-payment.html?id=" +
+    encodeURIComponent(data.id);
 
 }
 
@@ -594,7 +434,7 @@ function getStatusHTML(status){
   ){
 
     return `
-      <span class="status statusAccepted">
+      <span class="status accepted">
         Accepted
       </span>
     `;
@@ -609,7 +449,7 @@ function getStatusHTML(status){
   ){
 
     return `
-      <span class="status statusCancelled">
+      <span class="status cancelled">
         Cancelled
       </span>
     `;
@@ -618,7 +458,7 @@ function getStatusHTML(status){
 
 
   return `
-    <span class="status statusPending">
+    <span class="status pending">
       Pending
     </span>
   `;
@@ -626,25 +466,18 @@ function getStatusHTML(status){
 }
 
 
-function formatDate(dateValue){
+function formatDate(value){
 
-  if(!dateValue)
+  if(!value)
     return "-";
 
 
   const date =
-  new Date(dateValue);
+  new Date(value);
 
 
-  if(
-    isNaN(
-      date.getTime()
-    )
-  ){
-
-    return dateValue;
-
-  }
+  if(isNaN(date.getTime()))
+    return value;
 
 
   return date.toLocaleString(
@@ -665,19 +498,15 @@ function formatDate(dateValue){
 async function loadHistory(){
 
   const history =
-  document.getElementById(
-    "history"
-  );
+  document.getElementById("history");
 
 
   if(!userId){
 
     history.innerHTML =
-    `
-      <div class="noHistory">
-        Login required
-      </div>
-    `;
+    `<div class="noHistory">
+      Login required
+    </div>`;
 
     return;
 
@@ -691,7 +520,9 @@ async function loadHistory(){
 
     .from("deposit_requests")
 
-    .select("*")
+    .select(
+      "id,amount,utr,status,created_at"
+    )
 
     .eq(
       "user_id",
@@ -711,28 +542,21 @@ async function loadHistory(){
     console.error(error);
 
     history.innerHTML =
-    `
-      <div class="noHistory">
-        History load nahi hui.
-      </div>
-    `;
+    `<div class="noHistory">
+      History load nahi hui.
+    </div>`;
 
     return;
 
   }
 
 
-  if(
-    !data ||
-    data.length === 0
-  ){
+  if(!data || data.length === 0){
 
     history.innerHTML =
-    `
-      <div class="noHistory">
-        No deposit history
-      </div>
-    `;
+    `<div class="noHistory">
+      No deposit history
+    </div>`;
 
     return;
 
@@ -746,10 +570,7 @@ async function loadHistory(){
   data.forEach(item => {
 
     const div =
-    document.createElement(
-      "div"
-    );
-
+    document.createElement("div");
 
     div.className =
     "historyItem";
@@ -757,50 +578,53 @@ async function loadHistory(){
 
     div.innerHTML = `
 
-      <div class="historyRow">
+      <div class="row">
 
-        <div class="historyLabel">
+        <div class="labelSmall">
           Amount
         </div>
 
-        <div class="historyValue">
-          ₹${Number(
-            item.amount || 0
-          ).toFixed(2)}
+        <div class="value">
+          ₹${Number(item.amount || 0).toFixed(2)}
         </div>
 
       </div>
 
 
-      <div class="historyRow">
+      <div class="row">
 
-        <div class="historyLabel">
+        <div class="labelSmall">
+          UTR
+        </div>
+
+        <div class="value">
+          ${item.utr || "-"}
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="labelSmall">
           Status
         </div>
 
-        <div class="historyValue">
-
-          ${getStatusHTML(
-            item.status
-          )}
-
+        <div class="value">
+          ${getStatusHTML(item.status)}
         </div>
 
       </div>
 
 
-      <div class="historyRow">
+      <div class="row">
 
-        <div class="historyLabel">
+        <div class="labelSmall">
           Date
         </div>
 
-        <div class="historyValue">
-
-          ${formatDate(
-            item.created_at
-          )}
-
+        <div class="value">
+          ${formatDate(item.created_at)}
         </div>
 
       </div>
@@ -808,9 +632,7 @@ async function loadHistory(){
     `;
 
 
-    history.appendChild(
-      div
-    );
+    history.appendChild(div);
 
   });
 
