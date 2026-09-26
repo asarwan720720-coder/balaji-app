@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="hi">
 
 <head>
@@ -7,7 +6,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-   content="width=device-width, initial-scale=1.0">
+      content="width=device-width, initial-scale=1.0">
 
 <title>Deposit</title>
 
@@ -22,249 +21,197 @@
 body{
   margin:0;
   font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#f7f8fa,#e9edf2);
+  background:linear-gradient(135deg,#fff7e6,#ffe0b2);
   min-height:100vh;
   padding:20px 12px;
-  color:#222;
 }
 
-.depositBox{
-  width:100%;
-  max-width:430px;
+.container{
+  max-width:500px;
   margin:auto;
 }
 
-.depositCard{
-  background:#fff;
-  border-radius:22px;
-  padding:22px;
-  box-shadow:0 8px 25px rgba(0,0,0,.10);
+.depositCard,
+.historyCard{
+  background:#ffffff;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.10);
 }
 
 .title{
+  font-size:24px;
+  font-weight:bold;
   text-align:center;
-  margin-bottom:22px;
+  margin-bottom:20px;
+  color:#222;
 }
 
-.titleIcon{
-  font-size:42px;
-}
-
-.title h2{
-  margin:7px 0 4px;
-  font-size:25px;
-}
-
-.title p{
-  margin:0;
-  color:#777;
-  font-size:14px;
-}
-
-label{
-  display:block;
-  font-size:14px;
+.label{
+  font-size:15px;
   font-weight:bold;
   margin-bottom:8px;
+  color:#444;
 }
 
 .amountInput{
   width:100%;
-  height:55px;
-  padding:0 15px;
-  border:2px solid #e1e1e1;
-  border-radius:13px;
-  font-size:21px;
+  height:50px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:0 14px;
+  font-size:18px;
   outline:none;
-  transition:.2s;
 }
 
 .amountInput:focus{
-  border-color:#159447;
-}
-
-.quickTitle{
-  margin-top:18px;
-  margin-bottom:9px;
-  font-size:13px;
-  color:#666;
+  border-color:#ff9800;
 }
 
 .quickAmounts{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:8px;
+  margin-top:12px;
 }
 
 .quickBtn{
-  border:1px solid #ddd;
-  background:#fafafa;
-  border-radius:10px;
+  border:none;
+  background:#fff3e0;
+  color:#e65100;
   padding:11px 5px;
-  font-size:14px;
+  border-radius:9px;
   font-weight:bold;
   cursor:pointer;
 }
 
 .quickBtn:active{
-  transform:scale(.96);
+  transform:scale(.97);
 }
 
 .payBtn{
   width:100%;
-  height:54px;
+  height:52px;
   margin-top:18px;
-  border:0;
-  border-radius:13px;
-  background:#159447;
+  border:none;
+  border-radius:11px;
+  background:#ff9800;
   color:white;
   font-size:17px;
   font-weight:bold;
   cursor:pointer;
-  box-shadow:0 4px 10px rgba(21,148,71,.25);
-}
-
-.payBtn:active{
-  transform:scale(.98);
 }
 
 .payBtn:disabled{
-  background:#999;
+  background:#aaa;
   cursor:not-allowed;
 }
 
-.upiInfo{
-  margin-top:15px;
+.upiBox{
+  margin-top:18px;
   padding:14px;
-  background:#f5f7f6;
-  border:1px solid #e4e4e4;
-  border-radius:12px;
+  border-radius:10px;
+  background:#f5f5f5;
   text-align:center;
+}
+
+.upiTitle{
   font-size:13px;
-  color:#666;
+  color:#777;
+  margin-bottom:5px;
 }
 
 .upiId{
-  display:block;
-  margin-top:5px;
+  font-size:17px;
+  font-weight:bold;
   color:#222;
-  font-size:15px;
-  font-weight:bold;
-}
-
-.currentRequest{
-  display:none;
-  margin-top:16px;
-  padding:15px;
-  border-radius:13px;
-  background:#fff8df;
-  border:1px solid #f1d36b;
-}
-
-.currentTitle{
-  font-weight:bold;
-  margin-bottom:6px;
-}
-
-.currentText{
-  font-size:13px;
-  color:#666;
-}
-
-.historyCard{
-  margin-top:18px;
-  background:#fff;
-  border-radius:22px;
-  padding:20px;
-  box-shadow:0 8px 25px rgba(0,0,0,.08);
-}
-
-.historyHeader{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:15px;
-}
-
-.historyHeader h3{
-  margin:0;
-  font-size:19px;
-}
-
-.refreshText{
-  font-size:12px;
-  color:#888;
-}
-
-.historyItem{
-  border:1px solid #e8e8e8;
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:10px;
-  background:#fff;
-}
-
-.historyTop{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.amountText{
-  font-size:18px;
-  font-weight:bold;
-}
-
-.status{
-  padding:6px 10px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:bold;
-}
-
-.pending{
-  background:#fff3cd;
-  color:#9a7200;
-}
-
-.accepted{
-  background:#d9f7e5;
-  color:#087a36;
-}
-
-.cancelled{
-  background:#ffe0e0;
-  color:#b40000;
-}
-
-.historyDate{
-  margin-top:8px;
-  font-size:12px;
-  color:#888;
-}
-
-.emptyHistory{
-  text-align:center;
-  padding:25px 10px;
-  color:#888;
-  font-size:14px;
-}
-
-.loading{
-  text-align:center;
-  padding:20px;
-  color:#777;
-  font-size:14px;
+  word-break:break-all;
 }
 
 .errorBox{
   display:none;
-  margin-top:12px;
+  margin-top:15px;
   padding:12px;
+  border-radius:9px;
+  background:#ffebee;
+  color:#c62828;
+  font-size:14px;
+}
+
+.currentRequest{
+  display:none;
+  margin-top:15px;
+  padding:14px;
   border-radius:10px;
-  background:#ffe5e5;
-  color:#b00000;
+  background:#fff8e1;
+  border:1px solid #ffe082;
+}
+
+.currentTitle{
+  font-weight:bold;
+  margin-bottom:7px;
+}
+
+.historyTitle{
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:15px;
+}
+
+.historyItem{
+  border:1px solid #eee;
+  border-radius:10px;
+  padding:13px;
+  margin-bottom:10px;
+  background:#fafafa;
+}
+
+.historyRow{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:6px;
+}
+
+.historyLabel{
+  color:#777;
   font-size:13px;
+}
+
+.historyValue{
+  font-weight:bold;
+  font-size:14px;
+  text-align:right;
+}
+
+.status{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:7px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.statusPending{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.statusAccepted{
+  background:#d4edda;
+  color:#155724;
+}
+
+.statusCancelled{
+  background:#f8d7da;
+  color:#721c24;
+}
+
+.noHistory{
+  text-align:center;
+  color:#888;
+  padding:20px 0;
 }
 
 </style>
@@ -273,208 +220,186 @@ label{
 
 <body>
 
-<div class="depositBox">
+<div class="container">
+
+  <!-- DEPOSIT -->
 
   <div class="depositCard">
 
-```
-<div class="title">
+    <div class="title">
+      Deposit
+    </div>
 
-  <div class="titleIcon">
-    💰
-  </div>
+    <div class="label">
+      Enter Amount
+    </div>
 
-  <h2>Add Money</h2>
+    <input
+      id="amount"
+      class="amountInput"
+      type="number"
+      min="1"
+      placeholder="Enter amount"
+    >
 
-  <p>
-    Enter amount and make your payment
-  </p>
+    <div class="quickAmounts">
 
-</div>
+      <button
+        class="quickBtn"
+        onclick="setAmount(100)">
+        ₹100
+      </button>
 
-<label>
-  Enter Amount
-</label>
+      <button
+        class="quickBtn"
+        onclick="setAmount(200)">
+        ₹200
+      </button>
 
-<input
-  id="amount"
-  class="amountInput"
-  type="number"
-  inputmode="decimal"
-  min="1"
-  step="1"
-  placeholder="Enter amount">
+      <button
+        class="quickBtn"
+        onclick="setAmount(500)">
+        ₹500
+      </button>
 
-<div class="quickTitle">
-  Quick Amount
-</div>
+      <button
+        class="quickBtn"
+        onclick="setAmount(1000)">
+        ₹1000
+      </button>
 
-<div class="quickAmounts">
+    </div>
 
-  <button
-    class="quickBtn"
-    onclick="setAmount(100)">
-    ₹100
-  </button>
+    <button
+      id="payBtn"
+      class="payBtn"
+      onclick="payNow()">
 
-  <button
-    class="quickBtn"
-    onclick="setAmount(200)">
-    ₹200
-  </button>
+      Pay Now
 
-  <button
-    class="quickBtn"
-    onclick="setAmount(500)">
-    ₹500
-  </button>
+    </button>
 
-  <button
-    class="quickBtn"
-    onclick="setAmount(1000)">
-    ₹1000
-  </button>
+    <div class="upiBox">
 
-</div>
+      <div class="upiTitle">
+        UPI ID
+      </div>
 
-<button
-  id="payBtn"
-  class="payBtn"
-  onclick="payNow()">
+      <div class="upiId">
+        7KW0568000@mairtel
+      </div>
 
-  Pay Now
+    </div>
 
-</button>
+    <div
+      id="errorBox"
+      class="errorBox">
+    </div>
 
-<div class="upiInfo">
+    <div
+      id="currentRequest"
+      class="currentRequest">
 
-  Payment UPI
+      <div class="currentTitle">
+        Current Deposit
+      </div>
 
-  <span class="upiId">
-    7KW0568000@mairtel
-  </span>
+      <div id="currentRequestText">
+      </div>
 
-</div>
-
-<div
-  id="errorBox"
-  class="errorBox">
-</div>
-
-<div
-  id="currentRequest"
-  class="currentRequest">
-
-  <div class="currentTitle">
-    🟡 Deposit Request Pending
-  </div>
-
-  <div
-    id="currentText"
-    class="currentText">
-  </div>
-
-</div>
-```
+    </div>
 
   </div>
+
+
+  <!-- HISTORY -->
 
   <div class="historyCard">
 
-```
-<div class="historyHeader">
+    <div class="historyTitle">
+      Deposit History
+    </div>
 
-  <h3>
-    Deposit History
-  </h3>
-
-  <span class="refreshText">
-    Auto refresh
-  </span>
-
-</div>
-
-<div
-  id="historyList"
-  class="loading">
-
-  Loading history...
-
-</div>
-```
+    <div id="history">
+    </div>
 
   </div>
 
 </div>
 
+
 <script>
 
-// =====================================================
+// ======================================
 // SUPABASE
-// =====================================================
+// ======================================
 
 const SUPABASE_URL =
-"https://katbdbzoufiblnnsoxkk.supabase.co";
+  "https://katbdbzoufiblnnsoxkk.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
+  "sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
 
 const supabaseClient =
-supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
-// =====================================================
+// ======================================
 // USER ID
-// =====================================================
+// ======================================
 
 const userId =
-localStorage.getItem("user_id");
+  localStorage.getItem("user_id");
 
 
-// =====================================================
-// QUICK AMOUNT
-// =====================================================
+// ======================================
+// AMOUNT BUTTON
+// ======================================
 
-function setAmount(value){
+function setAmount(amount){
 
   document.getElementById("amount").value =
-    value;
+    amount;
 
 }
 
 
-// =====================================================
+// ======================================
 // ERROR
-// =====================================================
+// ======================================
 
 function showError(message){
 
-  const box =
+  const errorBox =
     document.getElementById("errorBox");
 
-  box.innerText =
+  errorBox.innerText =
     message;
 
-  box.style.display =
+  errorBox.style.display =
     "block";
-
 }
 
 
 function hideError(){
 
-  document.getElementById("errorBox")
-    .style.display = "none";
+  const errorBox =
+    document.getElementById("errorBox");
 
+  errorBox.innerText =
+    "";
+
+  errorBox.style.display =
+    "none";
 }
 
 
-// =====================================================
+// ======================================
 // PAY NOW
-// =====================================================
+// ======================================
 
 async function payNow(){
 
@@ -490,91 +415,72 @@ async function payNow(){
     Number(amountInput.value);
 
 
-  // VALIDATE
-
-  if(
-    !Number.isFinite(amount) ||
-    amount <= 0
-  ){
-
-    showError(
-      "Pehle valid amount enter karein."
-    );
-
-    amountInput.focus();
-
-    return;
-  }
-
+  // CHECK USER
 
   if(!userId){
 
     showError(
-      "User ID nahi mili. Pehle login karein."
+      "User login nahi mila."
     );
 
     return;
   }
 
 
-  // BUTTON LOADING
+  // CHECK AMOUNT
+
+  if(!amount || amount <= 0){
+
+    showError(
+      "Please valid amount enter karein."
+    );
+
+    return;
+  }
+
 
   payBtn.disabled = true;
 
   payBtn.innerText =
-    "Request bheji ja rahi hai...";
+    "Processing...";
 
 
-  // ===================================================
+  // ====================================
   // CREATE DEPOSIT REQUEST
-  // ===================================================
+  // ====================================
 
-  const {
-    data,
-    error
-  } =
+  const { data, error } =
     await supabaseClient
-    .from("deposit_requests")
-    .insert({
-
-      user_id: userId,
-      amount: amount,
-      status: "pending"
-
-    })
-    .select()
-    .single();
+      .from("deposit_requests")
+      .insert({
+        user_id: userId,
+        amount: amount,
+        status: "pending"
+      })
+      .select()
+      .single();
 
 
   if(error){
 
     console.error(error);
 
+    showError(
+      "Deposit request create nahi hui."
+    );
+
     payBtn.disabled = false;
 
     payBtn.innerText =
       "Pay Now";
 
-    showError(
-      "Deposit request nahi ja saki."
-    );
-
     return;
   }
 
 
-  // SHOW REQUEST
-
-  showCurrentRequest(data);
-
-  amountInput.value = "";
-
-  loadHistory();
-
-
-  // ===================================================
-  // UPI PAYMENT
-  // ===================================================
+  // ====================================
+  // UPI DETAILS
+  // ====================================
 
   const upiId =
     "7KW0568000@mairtel";
@@ -583,7 +489,9 @@ async function payNow(){
     "BALAJI DASS";
 
 
-  // Simple standard UPI payment URL
+  // ====================================
+  // UPI URL
+  // ====================================
 
   const upiUrl =
     "upi://pay" +
@@ -598,27 +506,45 @@ async function payNow(){
     "&cu=INR";
 
 
-  console.log(
-    "UPI URL:",
-    upiUrl
-  );
-
-
-  // ===================================================
+  // ====================================
   // OPEN UPI APP
-  // ===================================================
+  // ====================================
 
   try{
 
-    window.location.href =
-      upiUrl;
+    /*
+      Android app ke andar:
+      AndroidUPI.pay()
+      direct Android ko UPI URL dega.
+    */
+
+    if(
+      window.AndroidUPI &&
+      typeof window.AndroidUPI.pay ===
+      "function"
+    ){
+
+      window.AndroidUPI.pay(
+        upiUrl
+      );
+
+    }else{
+
+      /*
+        Normal browser ke liye
+        fallback.
+      */
+
+      window.location.href =
+        upiUrl;
+    }
 
   }catch(error){
 
     console.error(error);
 
     showError(
-      "UPI payment app open nahi ho saki."
+      "UPI app open nahi ho pa rahi."
     );
 
   }
@@ -629,12 +555,23 @@ async function payNow(){
   payBtn.innerText =
     "Pay Now";
 
+
+  // ====================================
+  // CURRENT REQUEST
+  // ====================================
+
+  showCurrentRequest(data);
+
+  // History reload
+
+  loadHistory();
+
 }
 
 
-// =====================================================
+// ======================================
 // CURRENT REQUEST
-// =====================================================
+// ======================================
 
 function showCurrentRequest(request){
 
@@ -645,36 +582,140 @@ function showCurrentRequest(request){
 
   const text =
     document.getElementById(
-      "currentText"
+      "currentRequestText"
     );
+
+  if(!request){
+
+    box.style.display =
+      "none";
+
+    return;
+  }
+
+
+  text.innerHTML =
+    `
+      <div>
+        Amount:
+        <b>₹${Number(
+          request.amount
+        ).toFixed(2)}</b>
+      </div>
+
+      <div style="margin-top:5px;">
+        Status:
+        <span class="status statusPending">
+          Pending
+        </span>
+      </div>
+    `;
+
 
   box.style.display =
     "block";
-
-  text.innerText =
-    "₹" +
-    Number(request.amount).toFixed(0) +
-    " request bheji gayi hai. Admin ke accept karne tak Pending rahegi.";
-
 }
 
 
-// =====================================================
+// ======================================
+// STATUS
+// ======================================
+
+function getStatusHTML(status){
+
+  const value =
+    String(
+      status || ""
+    ).toLowerCase();
+
+
+  if(
+    value === "accepted" ||
+    value === "approved" ||
+    value === "success"
+  ){
+
+    return `
+      <span class="status statusAccepted">
+        Accepted
+      </span>
+    `;
+  }
+
+
+  if(
+    value === "cancelled" ||
+    value === "canceled" ||
+    value === "rejected"
+  ){
+
+    return `
+      <span class="status statusCancelled">
+        Cancelled
+      </span>
+    `;
+  }
+
+
+  return `
+    <span class="status statusPending">
+      Pending
+    </span>
+  `;
+}
+
+
+// ======================================
+// DATE FORMAT
+// ======================================
+
+function formatDate(dateValue){
+
+  if(!dateValue){
+    return "-";
+  }
+
+  const date =
+    new Date(dateValue);
+
+  if(isNaN(date.getTime())){
+    return dateValue;
+  }
+
+  return date.toLocaleString(
+    "en-IN",
+    {
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit",
+      hour12:true
+    }
+  );
+}
+
+
+// ======================================
 // LOAD HISTORY
-// =====================================================
+// ======================================
 
 async function loadHistory(){
 
-  const historyList =
+  const history =
     document.getElementById(
-      "historyList"
+      "history"
     );
 
 
   if(!userId){
 
-    historyList.innerHTML =
-      '<div class="emptyHistory">User login nahi hai.</div>';
+    history.innerHTML =
+      `
+        <div class="noHistory">
+          Login required
+        </div>
+      `;
 
     return;
   }
@@ -685,26 +726,27 @@ async function loadHistory(){
     error
   } =
     await supabaseClient
-    .from("deposit_requests")
-    .select("*")
-    .eq(
-      "user_id",
-      userId
-    )
-    .order(
-      "created_at",
-      {
-        ascending:false
-      }
-    );
+      .from("deposit_requests")
+      .select("*")
+      .eq("user_id", userId)
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
 
   if(error){
 
     console.error(error);
 
-    historyList.innerHTML =
-      '<div class="emptyHistory">History load nahi ho saki.</div>';
+    history.innerHTML =
+      `
+        <div class="noHistory">
+          History load nahi hui.
+        </div>
+      `;
 
     return;
   }
@@ -712,172 +754,99 @@ async function loadHistory(){
 
   if(!data || data.length === 0){
 
-    historyList.innerHTML =
-      '<div class="emptyHistory">Abhi koi deposit request nahi hai.</div>';
+    history.innerHTML =
+      `
+        <div class="noHistory">
+          No deposit history
+        </div>
+      `;
 
     return;
   }
 
 
-  let html = "";
+  history.innerHTML =
+    "";
 
 
   data.forEach(item => {
 
-    const status =
-      String(
-        item.status || "pending"
-      ).toLowerCase();
-
-
-    let statusClass =
-      "pending";
-
-    let statusText =
-      "Pending";
-
-
-    if(
-      status === "accepted" ||
-      status === "accept" ||
-      status === "clear" ||
-      status === "approved"
-    ){
-
-      statusClass =
-        "accepted";
-
-      statusText =
-        "Accepted";
-    }
-
-
-    if(
-      status === "cancelled" ||
-      status === "canceled" ||
-      status === "cancel"
-    ){
-
-      statusClass =
-        "cancelled";
-
-      statusText =
-        "Cancelled";
-    }
-
-
-    const date =
-      formatDate(
-        item.created_at
+    const div =
+      document.createElement(
+        "div"
       );
 
+    div.className =
+      "historyItem";
 
-    html += `
 
-      <div class="historyItem">
+    div.innerHTML =
+      `
+        <div class="historyRow">
 
-        <div class="historyTop">
-
-          <div class="amountText">
-            ₹${Number(item.amount).toFixed(0)}
+          <div class="historyLabel">
+            Amount
           </div>
 
-          <div class="status ${statusClass}">
-            ${statusText}
+          <div class="historyValue">
+            ₹${Number(
+              item.amount || 0
+            ).toFixed(2)}
           </div>
 
         </div>
 
-        <div class="historyDate">
-          ${date}
+
+        <div class="historyRow">
+
+          <div class="historyLabel">
+            Status
+          </div>
+
+          <div class="historyValue">
+            ${getStatusHTML(
+              item.status
+            )}
+          </div>
+
         </div>
 
-      </div>
 
-    `;
+        <div class="historyRow">
+
+          <div class="historyLabel">
+            Date
+          </div>
+
+          <div class="historyValue">
+            ${formatDate(
+              item.created_at
+            )}
+          </div>
+
+        </div>
+      `;
+
+
+    history.appendChild(
+      div
+    );
 
   });
 
-
-  historyList.innerHTML =
-    html;
-
-
-  const latest =
-    data[0];
-
-
-  if(latest){
-
-    const latestStatus =
-      String(
-        latest.status || "pending"
-      ).toLowerCase();
-
-
-    if(
-      latestStatus === "pending"
-    ){
-
-      showCurrentRequest(
-        latest
-      );
-
-    }else{
-
-      document.getElementById(
-        "currentRequest"
-      ).style.display =
-        "none";
-
-    }
-
-  }
-
 }
 
 
-// =====================================================
-// DATE FORMAT
-// =====================================================
-
-function formatDate(dateValue){
-
-  if(!dateValue){
-    return "";
-  }
-
-
-  const date =
-    new Date(
-      dateValue
-    );
-
-
-  return date.toLocaleString(
-    "en-IN",
-    {
-      day:"2-digit",
-      month:"short",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit"
-    }
-  );
-
-}
-
-
-// =====================================================
+// ======================================
 // INITIAL LOAD
-// =====================================================
+// ======================================
 
 loadHistory();
 
 
-// =====================================================
+// ======================================
 // AUTO REFRESH
-// =====================================================
+// ======================================
 
 setInterval(
   loadHistory,
