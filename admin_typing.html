@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="hi">
 
@@ -41,11 +41,6 @@ body{
   border-radius:10px;
 }
 
-.filterTitle{
-  font-weight:bold;
-  margin-bottom:10px;
-}
-
 .filterRow{
   display:flex;
   gap:8px;
@@ -64,7 +59,8 @@ body{
   margin-bottom:5px;
 }
 
-.filterBox input{
+.filterBox input,
+.filterBox select{
   width:100%;
   height:42px;
   border:1px solid #ddd;
@@ -72,37 +68,12 @@ body{
   padding:0 10px;
   font-size:14px;
   outline:none;
+  background:#fff;
 }
 
-.filterBox input:focus{
+.filterBox input:focus,
+.filterBox select:focus{
   border-color:#ff9800;
-}
-
-.buttonRow{
-  display:flex;
-  gap:8px;
-  margin-top:10px;
-}
-
-.filterBtn,
-.clearBtn{
-  flex:1;
-  height:42px;
-  border:0;
-  border-radius:8px;
-  font-size:15px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.filterBtn{
-  background:#ff9800;
-  color:#fff;
-}
-
-.clearBtn{
-  background:#ddd;
-  color:#333;
 }
 
 .count{
@@ -182,6 +153,14 @@ body{
   color:#777;
 }
 
+@media(max-width:600px){
+
+  .filterBox{
+    min-width:100%;
+  }
+
+}
+
 </style>
 
 </head>
@@ -195,15 +174,14 @@ body{
 </div>
 
 
+<!-- AUTO FILTERS -->
+
 <div class="filters">
-
-  <div class="filterTitle">
-    Filter Data
-  </div>
-
 
   <div class="filterRow">
 
+
+    <!-- DATE -->
 
     <div class="filterBox">
 
@@ -219,20 +197,26 @@ body{
     </div>
 
 
+    <!-- USER ID -->
+
     <div class="filterBox">
 
       <label>
         User ID
       </label>
 
-      <input
-        type="text"
-        id="userFilter"
-        placeholder="User ID"
-      >
+      <select id="userFilter">
+
+        <option value="">
+          All User ID
+        </option>
+
+      </select>
 
     </div>
 
+
+    <!-- REF BY -->
 
     <div class="filterBox">
 
@@ -240,36 +224,16 @@ body{
         Ref By
       </label>
 
-      <input
-        type="text"
-        id="refFilter"
-        placeholder="Ref By"
-      >
+      <select id="refFilter">
+
+        <option value="">
+          All Ref By
+        </option>
+
+      </select>
 
     </div>
 
-
-  </div>
-
-
-  <div class="buttonRow">
-
-    <button
-      class="filterBtn"
-      onclick="applyFilter()">
-
-      Filter
-
-    </button>
-
-
-    <button
-      class="clearBtn"
-      onclick="clearFilter()">
-
-      Clear
-
-    </button>
 
   </div>
 
@@ -282,8 +246,7 @@ body{
 </div>
 
 
-<div
-  id="historyBox">
+<div id="historyBox">
 
   <div class="loading">
     Loading...
@@ -295,6 +258,10 @@ body{
 <script>
 
 
+/* =========================
+   SUPABASE
+========================= */
+
 const client =
 supabase.createClient(
 
@@ -305,8 +272,16 @@ supabase.createClient(
 );
 
 
+/* =========================
+   ALL DATA
+========================= */
+
 let allData = [];
 
+
+/* =========================
+   LOAD DATA
+========================= */
 
 async function loadData(){
 
@@ -334,7 +309,6 @@ async function loadData(){
     document.getElementById(
       "historyBox"
     ).innerHTML =
-
       '<div class="empty">Error loading data</div>';
 
     return;
@@ -346,12 +320,293 @@ async function loadData(){
     data || [];
 
 
+  createUserList();
+
+  createRefList();
+
+  applyFilter();
+
+}
+
+
+/* =========================
+   USER ID LIST
+========================= */
+
+function createUserList(){
+
+  const select =
+    document.getElementById(
+      "userFilter"
+    );
+
+
+  const users =
+    [
+      ...new Set(
+
+        allData
+
+          .map(item =>
+            item.user_id
+          )
+
+          .filter(value =>
+            value !== null &&
+            value !== undefined &&
+            value !== ""
+          )
+
+      )
+    ];
+
+
+  users.sort(
+    (a,b) =>
+      String(a).localeCompare(
+        String(b)
+      )
+  );
+
+
+  select.innerHTML = `
+    <option value="">
+      All User ID
+    </option>
+  `;
+
+
+  users.forEach(userId => {
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value =
+      userId;
+
+    option.textContent =
+      userId;
+
+    select.appendChild(
+      option
+    );
+
+  });
+
+}
+
+
+/* =========================
+   REF BY LIST
+========================= */
+
+function createRefList(){
+
+  const select =
+    document.getElementById(
+      "refFilter"
+    );
+
+
+  const refs =
+    [
+      ...new Set(
+
+        allData
+
+          .map(item =>
+            item.ref_by
+          )
+
+          .filter(value =>
+            value !== null &&
+            value !== undefined &&
+            value !== ""
+          )
+
+      )
+    ];
+
+
+  refs.sort(
+    (a,b) =>
+      String(a).localeCompare(
+        String(b)
+      )
+  );
+
+
+  select.innerHTML = `
+    <option value="">
+      All Ref By
+    </option>
+  `;
+
+
+  refs.forEach(refBy => {
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value =
+      refBy;
+
+    option.textContent =
+      refBy;
+
+    select.appendChild(
+      option
+    );
+
+  });
+
+}
+
+
+/* =========================
+   AUTO FILTER
+========================= */
+
+function applyFilter(){
+
+  const date =
+    document.getElementById(
+      "dateFilter"
+    ).value;
+
+
+  const userId =
+    document.getElementById(
+      "userFilter"
+    ).value;
+
+
+  const refBy =
+    document.getElementById(
+      "refFilter"
+    ).value;
+
+
+  const filtered =
+    allData.filter(item => {
+
+
+      /* DATE */
+
+      let matchDate =
+        true;
+
+
+      if(date){
+
+        if(!item.created_at){
+
+          matchDate = false;
+
+        }
+        else{
+
+          const itemDate =
+            new Date(
+              item.created_at
+            );
+
+
+          const year =
+            itemDate.getFullYear();
+
+
+          const month =
+            String(
+              itemDate.getMonth() + 1
+            ).padStart(
+              2,
+              "0"
+            );
+
+
+          const day =
+            String(
+              itemDate.getDate()
+            ).padStart(
+              2,
+              "0"
+            );
+
+
+          const itemDateString =
+            year +
+            "-" +
+            month +
+            "-" +
+            day;
+
+
+          matchDate =
+            itemDateString === date;
+
+        }
+
+      }
+
+
+      /* USER ID */
+
+      let matchUser =
+        true;
+
+
+      if(userId){
+
+        matchUser =
+          String(
+            item.user_id || ""
+          ) ===
+          String(userId);
+
+      }
+
+
+      /* REF BY */
+
+      let matchRef =
+        true;
+
+
+      if(refBy){
+
+        matchRef =
+          String(
+            item.ref_by || ""
+          ) ===
+          String(refBy);
+
+      }
+
+
+      return (
+        matchDate &&
+        matchUser &&
+        matchRef
+      );
+
+    });
+
+
   showData(
-    allData
+    filtered
   );
 
 }
 
+
+/* =========================
+   SHOW DATA
+========================= */
 
 function showData(data){
 
@@ -364,7 +619,6 @@ function showData(data){
   document.getElementById(
     "count"
   ).innerText =
-
     "Total Records: " +
     data.length;
 
@@ -400,7 +654,7 @@ function showData(data){
 
     if(
       item.data &&
-      item.data.includes("http")
+      String(item.data).includes("http")
     ){
 
       content = `
@@ -453,11 +707,15 @@ function showData(data){
 
 
           <div>
+
             <b>Ref By:</b>
+
             <span class="ref">
               ${item.ref_by || ""}
             </span>
+
           </div>
+
 
         </div>
 
@@ -466,7 +724,10 @@ function showData(data){
 
 
         <div class="total">
-          Total: ₹ ${item.total || 0}
+
+          Total: ₹
+          ${item.total || 0}
+
         </div>
 
 
@@ -483,169 +744,45 @@ function showData(data){
 }
 
 
-function applyFilter(){
+/* =========================
+   DATE AUTO FILTER
+========================= */
 
-  const date =
-    document.getElementById(
-      "dateFilter"
-    ).value;
-
-
-  const userId =
-    document.getElementById(
-      "userFilter"
-    ).value
-    .trim()
-    .toLowerCase();
+document.getElementById(
+  "dateFilter"
+).addEventListener(
+  "change",
+  applyFilter
+);
 
 
-  const refBy =
-    document.getElementById(
-      "refFilter"
-    ).value
-    .trim()
-    .toLowerCase();
+/* =========================
+   USER AUTO FILTER
+========================= */
+
+document.getElementById(
+  "userFilter"
+).addEventListener(
+  "change",
+  applyFilter
+);
 
 
-  let filtered =
-    allData.filter(item => {
+/* =========================
+   REF BY AUTO FILTER
+========================= */
+
+document.getElementById(
+  "refFilter"
+).addEventListener(
+  "change",
+  applyFilter
+);
 
 
-      let matchDate =
-        true;
-
-
-      let matchUser =
-        true;
-
-
-      let matchRef =
-        true;
-
-
-      /*
-       * DATE FILTER
-       */
-
-      if(date){
-
-        const itemDate =
-          new Date(
-            item.created_at
-          );
-
-
-        const year =
-          itemDate.getFullYear();
-
-
-        const month =
-          String(
-            itemDate.getMonth() + 1
-          ).padStart(
-            2,
-            "0"
-          );
-
-
-        const day =
-          String(
-            itemDate.getDate()
-          ).padStart(
-            2,
-            "0"
-          );
-
-
-        const itemDateString =
-          year +
-          "-" +
-          month +
-          "-" +
-          day;
-
-
-        matchDate =
-          itemDateString === date;
-
-      }
-
-
-      /*
-       * USER ID FILTER
-       */
-
-      if(userId){
-
-        matchUser =
-          String(
-            item.user_id || ""
-          )
-          .toLowerCase()
-          .includes(
-            userId
-          );
-
-      }
-
-
-      /*
-       * REF BY FILTER
-       */
-
-      if(refBy){
-
-        matchRef =
-          String(
-            item.ref_by || ""
-          )
-          .toLowerCase()
-          .includes(
-            refBy
-          );
-
-      }
-
-
-      return (
-        matchDate &&
-        matchUser &&
-        matchRef
-      );
-
-    });
-
-
-  showData(
-    filtered
-  );
-
-}
-
-
-function clearFilter(){
-
-  document.getElementById(
-    "dateFilter"
-  ).value = "";
-
-
-  document.getElementById(
-    "userFilter"
-  ).value = "";
-
-
-  document.getElementById(
-    "refFilter"
-  ).value = "";
-
-
-  showData(
-    allData
-  );
-
-}
-
+/* =========================
+   START
+========================= */
 
 loadData();
 
