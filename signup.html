@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -90,14 +91,14 @@
     placeholder="Full Name"
   >
 
- <input
-  id="mobile"
-  type="tel"
-  inputmode="numeric"
-  maxlength="10"
-  placeholder="Mobile Number"
-  oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
->
+  <input
+    id="mobile"
+    type="tel"
+    inputmode="numeric"
+    maxlength="10"
+    placeholder="Mobile Number"
+    oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
+  >
 
   <input
     id="password"
@@ -168,12 +169,15 @@ async function signup() {
 
     return;
   }
-if (!/^\d{10}$/.test(mobile)) {
 
-  alert("Mobile number exactly 10 digits ka hona chahiye");
 
-  return;
-}
+  if (!/^\d{10}$/.test(mobile)) {
+
+    alert("Mobile number exactly 10 digits ka hona chahiye");
+
+    return;
+  }
+
 
   // ================================
   // INSERT INTO SUPABASE
@@ -187,7 +191,7 @@ if (!/^\d{10}$/.test(mobile)) {
         mobile: mobile,
         password: password,
         balance: 0,
-        ref_code: ref_code || null
+      ref_by: ref_code || null
       }
     ])
     .select();
@@ -197,20 +201,19 @@ if (!/^\d{10}$/.test(mobile)) {
   // ERROR
   // ================================
 
-if (error) {
+  if (error) {
 
-  if (error.code === "23505") {
+    if (error.code === "23505") {
 
-    alert("Ye mobile number already registered hai.");
+      alert("Ye mobile number already registered hai.");
 
-  } else {
+    } else {
 
-    alert("Error: " + error.message);
+      alert("Error: " + error.message);
 
-  }
+    }
 
-  return;
-}
+    return;
   }
 
 
@@ -238,3 +241,4 @@ function goLogin() {
 
 </body>
 </html>
+```
