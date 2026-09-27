@@ -267,9 +267,12 @@ body{
         BALAJI-DAS
       </div>
 
-      <div class="header-id"
-           id="userId">
+      <div
+        class="header-id"
+        id="userId">
+
         ID: --
+
       </div>
 
     </div>
@@ -278,7 +281,9 @@ body{
 
 
   <div class="wallet">
+
     ₹<span id="walletBalance">0</span>
+
   </div>
 
 </div>
@@ -300,7 +305,9 @@ body{
 <!-- SLOGAN -->
 
 <div class="slogan">
+
   जय श्री बालाजी महाराज 🙏
+
 </div>
 
 
@@ -312,25 +319,36 @@ body{
   <button
     class="action-btn"
     onclick="goDeposit()">
+
     💰 Deposit
+
   </button>
+
 
   <button
     class="action-btn"
     onclick="goWithdraw()">
+
     💸 Withdraw
+
   </button>
+
 
   <button
     class="action-btn"
     onclick="goHistory()">
+
     📜 History
+
   </button>
+
 
   <button
     class="action-btn"
     onclick="goProfile()">
+
     👤 Profile
+
   </button>
 
 </div>
@@ -340,7 +358,9 @@ body{
 <!-- GAMES TITLE -->
 
 <div class="games-title">
+
   🎮 Games
+
 </div>
 
 
@@ -356,7 +376,9 @@ body{
     padding:20px;
     color:#777;
   ">
+
     Loading...
+
   </div>
 
 </div>
@@ -470,7 +492,6 @@ if(!user){
 }
 
 
-
 document.getElementById(
   "userId"
 ).innerText =
@@ -487,16 +508,19 @@ async function loadWallet(){
 
   if(!user) return;
 
-  const { data, error } =
-    await client
 
-      .from("login")
+  const {
+    data,
+    error
+  } = await client
 
-      .select("balance")
+    .from("login")
 
-      .eq("id", user.id)
+    .select("balance")
 
-      .single();
+    .eq("id",user.id)
+
+    .single();
 
 
   if(error){
@@ -534,8 +558,10 @@ function formatTimeAMPM(time){
   const parts =
     time.split(":");
 
+
   let hour =
     Number(parts[0]);
+
 
   const minute =
     Number(parts[1] || 0);
@@ -570,10 +596,10 @@ function formatTimeAMPM(time){
 
 
 /* =====================================================
-   NEW GAME-DAY SYSTEM
+   GAME DAY
    -----------------------------------------------
-   07:00 AM = DAY START
-   06:59:59 AM = DAY END
+   07:00 AM = NEW DAY
+   06:59:59 AM = OLD DAY
 ===================================================== */
 
 function getGameDay(){
@@ -583,11 +609,8 @@ function getGameDay(){
 
 
   /*
-    Agar time 00:00 se 06:59:59 AM ke
-    beech hai, to abhi bhi previous
-    game-day chal raha hai.
-
-    Isliye date ek din peeche hogi.
+    रात 12 बजे से सुबह 6:59 तक
+    अभी previous game-day चलेगा।
   */
 
   if(
@@ -604,10 +627,12 @@ function getGameDay(){
   const year =
     now.getFullYear();
 
+
   const month =
     String(
       now.getMonth() + 1
     ).padStart(2,"0");
+
 
   const day =
     String(
@@ -630,10 +655,289 @@ function getGameDay(){
 
 
 /* =====================================================
+   LOCAL STORAGE KEY
+===================================================== */
+
+function getLocalResultKey(
+  marketName
+){
+
+  return (
+    "kalResult_" +
+    marketName
+  );
+
+}
+
+
+
+/* =====================================================
+   SAVE TODAY RESULT AS KAL
+   -----------------------------------------------
+   यह काम 7 AM के बाद होगा।
+===================================================== */
+
+function saveTodayAsKal(
+  marketName,
+  todayNumber
+){
+
+  if(!marketName) return;
+
+
+  /*
+    ** को कल में save नहीं करना
+  */
+
+  if(
+    !todayNumber ||
+    todayNumber === "**"
+  ){
+
+    return;
+
+  }
+
+
+  const key =
+    getLocalResultKey(
+      marketName
+    );
+
+
+  const gameDay =
+    getGameDay();
+
+
+  const savedData = {
+
+    result:
+      todayNumber,
+
+    gameDay:
+      gameDay
+
+  };
+
+
+  localStorage.setItem(
+
+    key,
+
+    JSON.stringify(
+      savedData
+    )
+
+  );
+
+}
+
+
+
+/* =====================================================
+   GET KAL RESULT
+===================================================== */
+
+function getKalResult(
+  marketName
+){
+
+  if(!marketName){
+
+    return "**";
+
+  }
+
+
+  const key =
+    getLocalResultKey(
+      marketName
+    );
+
+
+  const saved =
+    localStorage.getItem(
+      key
+    );
+
+
+  if(!saved){
+
+    return "**";
+
+  }
+
+
+  try{
+
+    const data =
+      JSON.parse(
+        saved
+      );
+
+
+    return (
+      data.result ||
+      "**"
+    );
+
+  }
+  catch(error){
+
+    return "**";
+
+  }
+
+}
+
+
+
+/* =====================================================
+   PREPARE TODAY / KAL
+===================================================== */
+
+function prepareLocalResults(
+  games
+){
+
+  if(!games ||
+     !games.length){
+
+    return;
+
+  }
+
+
+  const currentGameDay =
+    getGameDay();
+
+
+  games.forEach(
+
+    item => {
+
+      if(!item.name){
+
+        return;
+
+      }
+
+
+      /*
+        अगर किसी पुराने game-day का
+        result पहले save नहीं हुआ है,
+        तो अभी save नहीं करेंगे।
+
+        आज का result Supabase से आएगा।
+      */
+
+      const todayNumber =
+        item.number;
+
+
+      if(
+        todayNumber &&
+        todayNumber !== "**"
+      ){
+
+        /*
+          Current game-day में
+          result save रहेगा।
+
+          अगली बार 7 AM के बाद
+          यही previous result
+          "कल" के रूप में रहेगा।
+        */
+
+        const key =
+          getLocalResultKey(
+            item.name
+          );
+
+
+        const old =
+          localStorage.getItem(
+            key
+          );
+
+
+        /*
+          अगर saved result का gameDay
+          current game-day से अलग है,
+          तो नया result kal में save करें।
+        */
+
+        if(old){
+
+          try{
+
+            const oldData =
+              JSON.parse(old);
+
+
+            if(
+              oldData.gameDay !==
+              currentGameDay
+            ){
+
+              saveTodayAsKal(
+
+                item.name,
+
+                item.number
+
+              );
+
+            }
+
+          }
+          catch(e){
+
+            saveTodayAsKal(
+
+              item.name,
+
+              item.number
+
+            );
+
+          }
+
+        }
+        else{
+
+          /*
+            पहली बार result मिलने पर
+            local में save.
+          */
+
+          saveTodayAsKal(
+
+            item.name,
+
+            item.number
+
+          );
+
+        }
+
+      }
+
+    }
+
+  );
+
+}
+
+
+
+/* =====================================================
    CLOSE DATE
 ===================================================== */
 
-function getCloseDate(closeTime){
+function getCloseDate(
+  closeTime
+){
 
   if(!closeTime){
 
@@ -658,7 +962,11 @@ function getCloseDate(closeTime){
     getGameDay();
 
 
-  const [year,month,day] =
+  const [
+    year,
+    month,
+    day
+  ] =
     gameDay
       .split("-")
       .map(Number);
@@ -685,17 +993,8 @@ function getCloseDate(closeTime){
 
 
   /*
-    00:00 AM से 06:59 AM तक की games
-    अगले calendar day की morning में
-    बंद होंगी।
-
-    Example:
-
-    Game Day = 26 Sep
-    Close = 02:00 AM
-
-    Actual close =
-    27 Sep 02:00 AM
+    00:00 से 06:59 तक की timing
+    अगले calendar date की morning होगी।
   */
 
   if(
@@ -719,7 +1018,9 @@ function getCloseDate(closeTime){
    REMAINING TIME
 ===================================================== */
 
-function getRemainingTime(closeTime){
+function getRemainingTime(
+  closeTime
+){
 
   const close =
     getCloseDate(
@@ -758,7 +1059,8 @@ function getRemainingTime(closeTime){
 
 
   /*
-    Time खत्म होते ही बंद
+    जैसे ही close time cross होगा,
+    तुरंत बंद।
   */
 
   if(diff <= 0){
@@ -831,33 +1133,6 @@ function getRemainingTime(closeTime){
 
 
 /* =====================================================
-   KAL RESULT
-===================================================== */
-
-function getKalResult(marketName){
-
-  const results =
-    JSON.parse(
-
-      localStorage.getItem(
-        "yesterdayResults"
-      ) || "{}"
-
-    );
-
-
-  return (
-
-    results[marketName] ||
-    "**"
-
-  );
-
-}
-
-
-
-/* =====================================================
    LOAD GAMES
 ===================================================== */
 
@@ -908,7 +1183,10 @@ async function loadButtons(){
   }
 
 
-  if(!data || !data.length){
+  if(
+    !data ||
+    !data.length
+  ){
 
     gamesBox.innerHTML = `
 
@@ -931,9 +1209,19 @@ async function loadButtons(){
 
 
   /*
-    ACTIVE games पहले
-    CLOSED games बाद में
+    सबसे पहले local result system
+    prepare करें।
   */
+
+  prepareLocalResults(
+    data
+  );
+
+
+
+  /* =================================================
+     SORT
+  ================================================= */
 
   const games =
     [...data];
@@ -947,6 +1235,7 @@ async function loadButtons(){
         getRemainingTime(
           a.close
         );
+
 
       const bTime =
         getRemainingTime(
@@ -974,12 +1263,6 @@ async function loadButtons(){
       }
 
 
-      /*
-        दोनों active हैं तो
-        जिसको पहले बंद होना है
-        वो ऊपर।
-      */
-
       if(
         !aTime.closed &&
         !bTime.closed
@@ -1001,9 +1284,14 @@ async function loadButtons(){
 
 
 
-  gamesBox.innerHTML = "";
+  gamesBox.innerHTML =
+    "";
 
 
+
+  /* =================================================
+     CREATE CARDS
+  ================================================= */
 
   games.forEach(
 
@@ -1025,7 +1313,19 @@ async function loadButtons(){
         "game-card";
 
 
-      if(timeInfo.closed){
+      card.setAttribute(
+        "data-close",
+        item.close || ""
+      );
+
+
+      /*
+        बंद game हल्की रहेगी।
+      */
+
+      if(
+        timeInfo.closed
+      ){
 
         card.style.opacity =
           "0.70";
@@ -1033,14 +1333,24 @@ async function loadButtons(){
       }
 
 
-      card.setAttribute(
-        "data-close",
-        item.close || ""
-      );
-
-
       const active =
         !timeInfo.closed;
+
+
+      /*
+        आज = Supabase number
+        कल = localStorage
+      */
+
+      const todayResult =
+        item.number ||
+        "**";
+
+
+      const kalResult =
+        getKalResult(
+          item.name
+        );
 
 
       card.innerHTML = `
@@ -1050,6 +1360,7 @@ async function loadButtons(){
           <div class="game-name">
 
             ${active ? "🔥 " : ""}
+
             ${item.name || "--"}
 
           </div>
@@ -1076,7 +1387,7 @@ async function loadButtons(){
 
             <div class="result-number">
 
-              ${getKalResult(item.name)}
+              ${kalResult}
 
             </div>
 
@@ -1105,7 +1416,7 @@ async function loadButtons(){
 
             <div class="result-number">
 
-              ${item.number || "XX"}
+              ${todayResult}
 
             </div>
 
@@ -1124,7 +1435,7 @@ async function loadButtons(){
 
 
       /*
-        सिर्फ active game पर click
+        Closed game click नहीं होगी।
       */
 
       if(active){
@@ -1186,7 +1497,11 @@ function updateCountdowns(){
         );
 
 
-      if(!closeTime) return;
+      if(!closeTime){
+
+        return;
+
+      }
 
 
       const timeInfo =
@@ -1201,15 +1516,21 @@ function updateCountdowns(){
         );
 
 
-      if(!countdown) return;
+      if(!countdown){
+
+        return;
+
+      }
 
 
 
       /*
-        Countdown चल रही है
+        ACTIVE
       */
 
-      if(!timeInfo.closed){
+      if(
+        !timeInfo.closed
+      ){
 
         countdown.innerText =
           timeInfo.text;
@@ -1226,8 +1547,9 @@ function updateCountdowns(){
       }
 
 
+
       /*
-        Time खत्म
+        CLOSED
       */
 
       else{
@@ -1257,10 +1579,6 @@ function updateCountdowns(){
           "0.70";
 
 
-        /*
-          पुराना click हटाना
-        */
-
         card.onclick =
           null;
 
@@ -1271,14 +1589,69 @@ function updateCountdowns(){
   );
 
 
+
   /*
-    कोई game बंद हुई तो
-    sorting फिर से करें
+    7 AM आने पर पूरा page reload
+    ताकि नया game-day और नया
+    local result system लागू हो।
   */
+
+  const now =
+    new Date();
+
+
+  if(
+    now.getHours() === 7 &&
+    now.getMinutes() === 0 &&
+    now.getSeconds() < 2
+  ){
+
+    loadButtons();
+
+  }
+
 
   if(becameClosed){
 
     loadButtons();
+
+  }
+
+}
+
+
+
+/* =====================================================
+   CHECK 7 AM GAME DAY
+===================================================== */
+
+let lastGameDay =
+  getGameDay();
+
+
+function checkGameDay(){
+
+  const currentGameDay =
+    getGameDay();
+
+
+  /*
+    जैसे ही game-day बदलता है,
+    games फिर से load होंगे।
+  */
+
+  if(
+    currentGameDay !==
+    lastGameDay
+  ){
+
+    lastGameDay =
+      currentGameDay;
+
+
+    loadButtons();
+
+    loadWallet();
 
   }
 
@@ -1332,7 +1705,7 @@ function goProfile(){
 
 
 /* =====================================================
-   INITIAL LOAD
+   START
 ===================================================== */
 
 loadWallet();
@@ -1340,9 +1713,8 @@ loadWallet();
 loadButtons();
 
 
-
 /*
-  हर second countdown update
+  हर second countdown
 */
 
 setInterval(
@@ -1354,10 +1726,22 @@ setInterval(
 );
 
 
+/*
+  हर second check:
+  क्या नया game-day शुरू हुआ?
+*/
+
+setInterval(
+
+  checkGameDay,
+
+  1000
+
+);
+
 
 /*
-  हर 60 second database से
-  games + wallet refresh
+  हर 60 second Supabase refresh
 */
 
 setInterval(
@@ -1376,8 +1760,6 @@ setInterval(
 
 </script>
 
-
-<!-- MENU -->
 
 <script src="menu.js"></script>
 
