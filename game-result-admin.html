@@ -1,1155 +1,1162 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<title>Game Result Admin</title>
+  <title>Game Result Admin</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
+  <!-- Supabase library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>
+  <!-- Tumhari existing Supabase file -->
+  <script src="supabase.js"></script>
 
-*{
-    box-sizing:border-box;
-}
+  <style>
 
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f3f5f9;
-    color:#222;
-}
-
-.container{
-    width:100%;
-    max-width:1100px;
-    margin:auto;
-    padding:18px;
-}
-
-.header{
-    background:#111827;
-    color:white;
-    padding:18px;
-    border-radius:14px;
-    margin-bottom:18px;
-}
-
-.header h1{
-    margin:0 0 6px;
-    font-size:23px;
-}
-
-.header p{
-    margin:0;
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-/* ADD MARKET */
-
-.add-box{
-    background:white;
-    border-radius:14px;
-    padding:18px;
-    margin-bottom:20px;
-    box-shadow:0 3px 12px rgba(0,0,0,.07);
-}
-
-.section-title{
-    font-size:18px;
-    font-weight:bold;
-    margin-bottom:15px;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-}
-
-.field{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-}
-
-.field label{
-    font-size:13px;
-    font-weight:bold;
-    color:#555;
-}
-
-input{
-    width:100%;
-    min-height:44px;
-    padding:10px 12px;
-    border:1px solid #d1d5db;
-    border-radius:9px;
-    font-size:16px;
-    outline:none;
-    background:white;
-}
-
-input:focus{
-    border-color:#2563eb;
-}
-
-.add-btn{
-    width:100%;
-    min-height:46px;
-    margin-top:14px;
-    border:0;
-    border-radius:9px;
-    background:#2563eb;
-    color:white;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-/* STATUS */
-
-.status{
-    min-height:20px;
-    margin:10px 0;
-    font-size:14px;
-    font-weight:bold;
-}
-
-/* MARKET */
-
-.market-list{
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-}
-
-.market-card{
-    background:white;
-    border-radius:14px;
-    padding:17px;
-    box-shadow:0 3px 12px rgba(0,0,0,.07);
-}
-
-.market-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    margin-bottom:15px;
-}
-
-.market-title{
-    font-size:19px;
-    font-weight:bold;
-}
-
-.market-id{
-    font-size:12px;
-    color:#777;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-}
-
-.result-box{
-    border:2px solid #16a34a;
-    border-radius:10px;
-    padding:12px;
-    background:#f0fdf4;
-}
-
-.result-box label{
-    display:block;
-    font-size:12px;
-    font-weight:bold;
-    color:#166534;
-    margin-bottom:6px;
-}
-
-.result-input{
-    border:0;
-    background:transparent;
-    font-size:20px;
-    font-weight:bold;
-    padding:4px 0;
-}
-
-.buttons{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:15px;
-}
-
-.update-btn,
-.delete-btn{
-    min-height:44px;
-    border:0;
-    border-radius:9px;
-    font-size:15px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.update-btn{
-    background:#16a34a;
-    color:white;
-}
-
-.delete-btn{
-    background:#dc2626;
-    color:white;
-}
-
-.kal-box{
-    margin-top:12px;
-    padding:10px 12px;
-    background:#f8fafc;
-    border-radius:8px;
-    font-size:14px;
-}
-
-.empty{
-    text-align:center;
-    background:white;
-    padding:30px;
-    border-radius:14px;
-    color:#777;
-}
-
-@media(max-width:600px){
-
-    .container{
-        padding:12px;
+    * {
+      box-sizing: border-box;
     }
 
-    .form-grid,
-    .grid{
-        grid-template-columns:1fr;
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f4f5f7;
+      color: #222;
     }
 
-    .market-top{
-        align-items:flex-start;
-        flex-direction:column;
+    .container {
+      max-width: 1200px;
+      margin: auto;
     }
 
-}
+    h1 {
+      margin: 0 0 20px;
+      font-size: 26px;
+    }
 
-</style>
+    .box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .box-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #333;
+    }
+
+    button {
+      border: 0;
+      border-radius: 7px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .add-btn {
+      background: #111;
+      color: white;
+      margin-top: 15px;
+    }
+
+    .update-btn {
+      background: #198754;
+      color: white;
+    }
+
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .reload-btn {
+      background: #444;
+      color: white;
+      margin-left: 8px;
+    }
+
+    .message {
+      display: none;
+      padding: 11px;
+      border-radius: 7px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    .success {
+      display: block;
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .error {
+      display: block;
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .market {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background: #fff;
+    }
+
+    .market-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .market-id {
+      font-size: 13px;
+      color: #777;
+    }
+
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .kal-box {
+      background: #f1f1f1;
+      padding: 11px;
+      border-radius: 7px;
+      min-height: 42px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      margin-top: 15px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
+    @media (max-width: 800px) {
+
+      body {
+        padding: 10px;
+      }
+
+      .form-grid,
+      .market-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .market-header {
+        align-items: flex-start;
+        gap: 10px;
+        flex-direction: column;
+      }
+
+    }
+
+  </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <div class="header">
-        <h1>Game Result Admin</h1>
-        <p>Market add, edit, result update aur delete</p>
+  <h1>Game Result Admin</h1>
+
+  <div id="message" class="message"></div>
+
+
+  <!-- NEW MARKET -->
+
+  <div class="box">
+
+    <div class="box-title">
+      New Market
     </div>
 
+    <div class="form-grid">
 
-    <!-- ADD MARKET -->
+      <div class="field">
+        <label>Market Name</label>
 
-    <div class="add-box">
+        <input
+          type="text"
+          id="newName"
+          placeholder="Market name"
+        >
+      </div>
 
-        <div class="section-title">
-            ➕ New Market
-        </div>
 
-        <div class="form-grid">
+      <div class="field">
+        <label>Open Time</label>
 
-            <div class="field">
-                <label>Market Name</label>
-                <input
-                    type="text"
-                    id="newName"
-                    placeholder="Gaziabad">
-            </div>
+        <input
+          type="time"
+          id="newOpen"
+        >
+      </div>
 
-            <div class="field">
-                <label>Result</label>
-                <input
-                    type="text"
-                    id="newNumber"
-                    value="**"
-                    placeholder="**">
-            </div>
 
-            <div class="field">
-                <label>Open Time</label>
-                <input
-                    type="time"
-                    id="newOpen">
-            </div>
+      <div class="field">
+        <label>Close Time</label>
 
-            <div class="field">
-                <label>Close Time</label>
-                <input
-                    type="time"
-                    id="newClose">
-            </div>
+        <input
+          type="time"
+          id="newClose"
+        >
+      </div>
 
-            <div class="field">
-                <label>Close 2 Time</label>
-                <input
-                    type="time"
-                    id="newClose2">
-            </div>
 
-            <div class="field">
-                <label>Date</label>
-                <input
-                    type="date"
-                    id="newDate">
-            </div>
+      <div class="field">
+        <label>Close2 Time</label>
 
-        </div>
+        <input
+          type="time"
+          id="newClose2"
+        >
+      </div>
 
-        <button
-            type="button"
-            class="add-btn"
-            id="addMarketBtn">
-            ADD MARKET
-        </button>
 
-        <div
-            id="status"
-            class="status">
-        </div>
+      <div class="field">
+        <label>Date</label>
+
+        <input
+          type="date"
+          id="newDate"
+        >
+      </div>
 
     </div>
 
 
-    <!-- MARKET LIST -->
+    <button
+      class="add-btn"
+      onclick="addMarket()"
+    >
+      + Add Market
+    </button>
 
-    <div class="section-title">
-        📋 All Markets
+  </div>
+
+
+  <!-- MESSAGE -->
+
+  <div id="message2" class="message"></div>
+
+
+  <!-- MARKET LIST -->
+
+  <div class="box">
+
+    <div class="box-title">
+      Existing Markets
+
+      <button
+        class="reload-btn"
+        onclick="loadMarkets()"
+      >
+        Refresh
+      </button>
+
     </div>
 
-    <div
-        id="marketList"
-        class="market-list">
+    <div id="markets">
+      Loading...
     </div>
+
+  </div>
 
 </div>
 
 
 <script>
 
-const TABLE_NAME = "Game result";
+/* =========================================================
+   SUPABASE CONNECTION
+   ========================================================= */
 
-const statusBox =
-    document.getElementById("status");
-
-const marketList =
-    document.getElementById("marketList");
+const db = window.supabaseClient;
 
 
-/*
-    SUPABASE
+/* =========================================================
+   CHECK CONNECTION
+   ========================================================= */
 
-    supabase.js me ye hona chahiye:
+if (!db) {
 
-    const SUPABASE_URL = "...";
-    const SUPABASE_ANON_KEY = "...";
+  showMessage(
+    "Supabase connection nahi mila. supabase.js check karo.",
+    "error"
+  );
 
-    const supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_ANON_KEY
-        );
-*/
-
-const db =
-    window.supabaseClient;
-
-
-/* --------------------------------
-   STATUS
--------------------------------- */
-
-function showStatus(message, success = true){
-
-    statusBox.textContent = message;
-
-    statusBox.style.color =
-        success ? "#15803d" : "#dc2626";
-
-    setTimeout(() => {
-        statusBox.textContent = "";
-    }, 3500);
 }
 
 
-/* --------------------------------
-   DATE
--------------------------------- */
+/* =========================================================
+   INDIA DATE
+   ========================================================= */
 
-function todayString(){
+function getIndiaToday() {
 
-    const now = new Date();
+  const formatter = new Intl.DateTimeFormat(
+    "en-CA",
+    {
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }
+  );
 
-    const year =
-        now.getFullYear();
+  return formatter.format(new Date());
 
-    const month =
-        String(now.getMonth() + 1)
-        .padStart(2,"0");
-
-    const day =
-        String(now.getDate())
-        .padStart(2,"0");
-
-    return `${year}-${month}-${day}`;
 }
 
 
-/* --------------------------------
+/* =========================================================
+   HTML ESCAPE
+   ========================================================= */
+
+function escapeHtml(value) {
+
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================================================
+   TIME VALUE
+   ========================================================= */
+
+function timeValue(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  return String(value).substring(0, 5);
+
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+function showMessage(text, type = "success") {
+
+  const box = document.getElementById("message");
+
+  box.textContent = text;
+
+  box.className = "message " + type;
+
+  setTimeout(() => {
+
+    box.className = "message";
+
+  }, 4000);
+
+}
+
+
+/* =========================================================
+   INITIAL DATE
+   ========================================================= */
+
+document.getElementById("newDate").value =
+  getIndiaToday();
+
+
+/* =========================================================
+   DAILY RESULT ROLL
+   =========================================================
+
+   Agar:
+
+   date = aaj
+   -> kuch nahi
+
+   date purani hai
+   -> number ka result kal mein jayega
+   -> number ** ho jayega
+   -> date aaj ho jayegi
+
+   date NULL hai
+   -> sirf aaj ki date set hogi
+   -> result ko kal mein nahi bhejenge
+   ========================================================= */
+
+async function rollMarketIfNeeded(market) {
+
+  const today = getIndiaToday();
+
+  /* Date nahi hai */
+  if (!market.date) {
+
+    const { error } = await db
+      .from("Game result")
+      .update({
+        date: today
+      })
+      .eq("id", market.id);
+
+    if (error) {
+      console.error(error);
+    }
+
+    return;
+
+  }
+
+
+  /* Date already today hai */
+  if (market.date === today) {
+    return;
+  }
+
+
+  /* Purana result */
+  const oldNumber = market.number;
+
+  let newKal = market.kal;
+
+
+  /*
+    Agar number actual result hai
+    to kal mein save karo.
+
+    ** ko kal mein nahi bhejna.
+  */
+
+  if (
+    oldNumber &&
+    oldNumber !== "**"
+  ) {
+
+    newKal = oldNumber;
+
+  }
+
+
+  /* Database update */
+
+  const { error } = await db
+    .from("Game result")
+    .update({
+
+      number: "**",
+
+      kal: newKal,
+
+      date: today
+
+    })
+    .eq("id", market.id);
+
+
+  if (error) {
+
+    console.error(
+      "Daily result roll error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CHECK ALL MARKETS
+   ========================================================= */
+
+async function checkDailyRoll() {
+
+  if (!db) {
+    return;
+  }
+
+
+  const { data, error } = await db
+    .from("Game result")
+    .select("*")
+    .order("id", {
+      ascending: true
+    });
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Game result load nahi hua: " +
+      error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  for (const market of data) {
+
+    await rollMarketIfNeeded(market);
+
+  }
+
+}
+
+
+/* =========================================================
    LOAD MARKETS
--------------------------------- */
+   ========================================================= */
 
-async function loadMarkets(){
+async function loadMarkets() {
 
-    marketList.innerHTML =
-        `<div class="empty">Loading...</div>`;
-
-    const { data, error } =
-        await db
-            .from(TABLE_NAME)
-            .select("*")
-            .order("id", {
-                ascending:true
-            });
-
-    if(error){
-
-        console.error(error);
-
-        marketList.innerHTML =
-            `<div class="empty">
-                Data load nahi hua.<br>
-                ${error.message}
-             </div>`;
-
-        return;
-    }
-
-    if(!data || data.length === 0){
-
-        marketList.innerHTML =
-            `<div class="empty">
-                Koi market nahi hai.
-             </div>`;
-
-        return;
-    }
-
-    /*
-       Daily automatic system
-    */
-
-    await checkDailyReset(data);
-
-    /*
-       Reset ke baad fresh data
-    */
-
-    const { data: freshData } =
-        await db
-            .from(TABLE_NAME)
-            .select("*")
-            .order("id", {
-                ascending:true
-            });
-
-    renderMarkets(freshData || data);
-}
+  if (!db) {
+    return;
+  }
 
 
-/* --------------------------------
-   DAILY RESET
--------------------------------- */
+  const container =
+    document.getElementById("markets");
 
-async function checkDailyReset(markets){
-
-    const today =
-        todayString();
-
-    for(const market of markets){
-
-        /*
-          Date NULL hai to usko
-          aaj ki date set kar denge.
-        */
-
-        if(!market.date){
-
-            const { error } =
-                await db
-                    .from(TABLE_NAME)
-                    .update({
-                        date: today
-                    })
-                    .eq("id", market.id);
-
-            if(error){
-                console.error(
-                    "Date update error:",
-                    error
-                );
-            }
-
-            continue;
-        }
+  container.innerHTML = "Loading...";
 
 
-        /*
-          Agar stored date purani hai,
-          current result -> kal
-          current result -> **
-        */
+  /*
+    Pehle daily result check
+  */
 
-        if(market.date !== today){
+  await checkDailyRoll();
 
-            let previousResult =
-                market.number;
 
-            /*
-              Agar already ** hai,
-              to kal me ** save nahi karenge.
-            */
+  /*
+    Phir latest data load
+  */
 
-            if(
-                previousResult !== null &&
-                previousResult !== undefined &&
-                previousResult !== "" &&
-                previousResult !== "**"
-            ){
+  const { data, error } = await db
+    .from("Game result")
+    .select("*")
+    .order("id", {
+      ascending: true
+    });
 
-                const { error } =
-                    await db
-                        .from(TABLE_NAME)
-                        .update({
 
-                            kal: previousResult,
+  if (error) {
 
-                            number: "**",
+    container.innerHTML = "";
 
-                            date: today
+    showMessage(
+      "Data load nahi hua: " +
+      error.message,
+      "error"
+    );
 
-                        })
-                        .eq("id", market.id);
+    return;
 
-                if(error){
+  }
 
-                    console.error(
-                        "Daily reset error:",
-                        error
-                    );
 
-                }
+  if (!data || data.length === 0) {
 
-            }else{
+    container.innerHTML =
+      '<div class="empty">Koi market nahi hai.</div>';
 
-                const { error } =
-                    await db
-                        .from(TABLE_NAME)
-                        .update({
+    return;
 
-                            number: "**",
+  }
 
-                            date: today
 
-                        })
-                        .eq("id", market.id);
+  container.innerHTML = "";
 
-                if(error){
 
-                    console.error(
-                        "Daily reset error:",
-                        error
-                    );
+  data.forEach(market => {
 
-                }
+    container.innerHTML += createMarketHtml(market);
 
-            }
-
-        }
-
-    }
+  });
 
 }
 
 
-/* --------------------------------
-   RENDER
--------------------------------- */
+/* =========================================================
+   MARKET HTML
+   ========================================================= */
 
-function renderMarkets(markets){
+function createMarketHtml(market) {
 
-    marketList.innerHTML = "";
+  return `
 
-    markets.forEach(market => {
+    <div class="market">
 
-        const card =
-            document.createElement("div");
+      <div class="market-header">
 
-        card.className =
-            "market-card";
+        <div>
 
-        card.innerHTML = `
+          <strong>
+            ${escapeHtml(market.name)}
+          </strong>
 
-            <div class="market-top">
+          <div class="market-id">
+            ID: ${escapeHtml(market.id)}
+          </div>
 
-                <div>
-                    <div class="market-title">
-                        ${escapeHtml(
-                            market.name || ""
-                        )}
-                    </div>
+        </div>
 
-                    <div class="market-id">
-                        ID: ${market.id}
-                    </div>
-                </div>
+      </div>
 
-            </div>
 
+      <div class="market-grid">
 
-            <div class="grid">
 
-                <div class="field">
+        <div class="field">
 
-                    <label>Market Name</label>
+          <label>Market Name</label>
 
-                    <input
-                        type="text"
-                        class="name-input"
-                        value="${escapeAttr(
-                            market.name || ""
-                        )}">
+          <input
+            type="text"
+            id="name_${market.id}"
+            value="${escapeHtml(market.name)}"
+          >
 
-                </div>
+        </div>
 
 
-                <div class="result-box">
+        <div class="field">
 
-                    <label>Result / Number</label>
+          <label>Result</label>
 
-                    <input
-                        type="text"
-                        class="result-input"
-                        value="${escapeAttr(
-                            market.number || "**"
-                        )}">
+          <input
+            type="text"
+            id="number_${market.id}"
+            value="${escapeHtml(market.number)}"
+          >
 
-                </div>
+        </div>
 
 
-                <div class="field">
+        <div class="field">
 
-                    <label>Open Time</label>
+          <label>Open Time</label>
 
-                    <input
-                        type="time"
-                        class="open-input"
-                        value="${formatTime(
-                            market.open
-                        )}">
+          <input
+            type="time"
+            id="open_${market.id}"
+            value="${timeValue(market.open)}"
+          >
 
-                </div>
+        </div>
 
 
-                <div class="field">
+        <div class="field">
 
-                    <label>Close Time</label>
+          <label>Close Time</label>
 
-                    <input
-                        type="time"
-                        class="close-input"
-                        value="${formatTime(
-                            market.close
-                        )}">
+          <input
+            type="time"
+            id="close_${market.id}"
+            value="${timeValue(market.close)}"
+          >
 
-                </div>
+        </div>
 
 
-                <div class="field">
+        <div class="field">
 
-                    <label>Close 2 Time</label>
+          <label>Close2 Time</label>
 
-                    <input
-                        type="time"
-                        class="close2-input"
-                        value="${formatTime(
-                            market.close2
-                        )}">
+          <input
+            type="time"
+            id="close2_${market.id}"
+            value="${timeValue(market.close2)}"
+          >
 
-                </div>
+        </div>
 
 
-                <div class="field">
+        <div class="field">
 
-                    <label>Date</label>
+          <label>Date</label>
 
-                    <input
-                        type="date"
-                        class="date-input"
-                        value="${market.date || ""}">
+          <input
+            type="date"
+            id="date_${market.id}"
+            value="${market.date || ""}"
+          >
 
-                </div>
+        </div>
 
-            </div>
 
+        <div class="field">
 
-            <div class="kal-box">
+          <label>Kal Ka Result</label>
 
-                <strong>Kal ka Result:</strong>
+          <div class="kal-box">
 
-                ${
-                    market.kal
-                    ? escapeHtml(market.kal)
-                    : "--"
-                }
+            ${escapeHtml(market.kal || "--")}
 
-            </div>
+          </div>
 
+        </div>
 
-            <div class="buttons">
 
-                <button
-                    type="button"
-                    class="update-btn">
-                    UPDATE
-                </button>
+      </div>
 
-                <button
-                    type="button"
-                    class="delete-btn">
-                    DELETE
-                </button>
 
-            </div>
+      <div class="buttons">
 
-        `;
+        <button
+          class="update-btn"
+          onclick="updateMarket(${market.id})"
+        >
+          Update
+        </button>
 
 
-        /*
-          UPDATE
-        */
+        <button
+          class="delete-btn"
+          onclick="deleteMarket(${market.id})"
+        >
+          Delete
+        </button>
 
-        card
-            .querySelector(".update-btn")
-            .addEventListener(
-                "click",
-                async () => {
+      </div>
 
-                    await updateMarket(
-                        market.id,
-                        card
-                    );
+    </div>
 
-                }
-            );
+  `;
 
+}
 
-        /*
-          DELETE
-        */
 
-        card
-            .querySelector(".delete-btn")
-            .addEventListener(
-                "click",
-                async () => {
+/* =========================================================
+   ADD NEW MARKET
+   ========================================================= */
 
-                    await deleteMarket(
-                        market.id,
-                        market.name
-                    );
+async function addMarket() {
 
-                }
-            );
+  if (!db) {
 
+    showMessage(
+      "Supabase connection nahi mila.",
+      "error"
+    );
 
-        marketList.appendChild(card);
+    return;
+
+  }
+
+
+  const name =
+    document.getElementById("newName").value.trim();
+
+
+  const open =
+    document.getElementById("newOpen").value || null;
+
+
+  const close =
+    document.getElementById("newClose").value || null;
+
+
+  const close2 =
+    document.getElementById("newClose2").value || null;
+
+
+  const date =
+    document.getElementById("newDate").value ||
+    getIndiaToday();
+
+
+  if (!name) {
+
+    showMessage(
+      "Market name bharna zaroori hai.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const { error } = await db
+    .from("Game result")
+    .insert({
+
+      name: name,
+
+      number: "**",
+
+      open: open,
+
+      close: close,
+
+      close2: close2,
+
+      date: date,
+
+      kal: null
 
     });
 
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Market add nahi hua: " +
+      error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  /* Form clear */
+
+  document.getElementById("newName").value = "";
+
+  document.getElementById("newOpen").value = "";
+
+  document.getElementById("newClose").value = "";
+
+  document.getElementById("newClose2").value = "";
+
+  document.getElementById("newDate").value =
+    getIndiaToday();
+
+
+  showMessage(
+    "New market successfully add ho gaya.",
+    "success"
+  );
+
+
+  await loadMarkets();
+
 }
 
 
-/* --------------------------------
+/* =========================================================
    UPDATE MARKET
--------------------------------- */
+   ========================================================= */
 
-async function updateMarket(id, card){
+async function updateMarket(id) {
 
-    const name =
-        card
-            .querySelector(".name-input")
-            .value
-            .trim();
+  if (!db) {
 
-    const number =
-        card
-            .querySelector(".result-input")
-            .value
-            .trim();
+    showMessage(
+      "Supabase connection nahi mila.",
+      "error"
+    );
 
-    const open =
-        card
-            .querySelector(".open-input")
-            .value || null;
+    return;
 
-    const close =
-        card
-            .querySelector(".close-input")
-            .value || null;
-
-    const close2 =
-        card
-            .querySelector(".close2-input")
-            .value || null;
-
-    const date =
-        card
-            .querySelector(".date-input")
-            .value || null;
+  }
 
 
-    if(!name){
-
-        alert("Market name bharo.");
-
-        return;
-    }
+  const name =
+    document.getElementById(
+      `name_${id}`
+    ).value.trim();
 
 
-    if(!number){
-
-        alert("Result bharo.");
-
-        return;
-    }
+  const number =
+    document.getElementById(
+      `number_${id}`
+    ).value.trim();
 
 
-    const { error } =
-        await db
-            .from(TABLE_NAME)
-            .update({
-
-                name: name,
-
-                number: number,
-
-                open: open,
-
-                close: close,
-
-                close2: close2,
-
-                date: date
-
-            })
-            .eq("id", id);
+  const open =
+    document.getElementById(
+      `open_${id}`
+    ).value || null;
 
 
-    if(error){
-
-        console.error(error);
-
-        alert(
-            "Update failed:\n" +
-            error.message
-        );
-
-        return;
-    }
+  const close =
+    document.getElementById(
+      `close_${id}`
+    ).value || null;
 
 
-    alert("Market successfully update ho gaya.");
+  const close2 =
+    document.getElementById(
+      `close2_${id}`
+    ).value || null;
 
-    await loadMarkets();
+
+  const date =
+    document.getElementById(
+      `date_${id}`
+    ).value || null;
+
+
+  if (!name) {
+
+    showMessage(
+      "Market name empty nahi ho sakta.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (!number) {
+
+    showMessage(
+      "Result empty nahi ho sakta.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const { error } = await db
+    .from("Game result")
+    .update({
+
+      name: name,
+
+      number: number,
+
+      open: open,
+
+      close: close,
+
+      close2: close2,
+
+      date: date
+
+    })
+    .eq("id", id);
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Market update nahi hua: " +
+      error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  showMessage(
+    "Market successfully update ho gaya.",
+    "success"
+  );
+
+
+  await loadMarkets();
 
 }
 
 
-/* --------------------------------
+/* =========================================================
    DELETE MARKET
--------------------------------- */
+   ========================================================= */
 
-async function deleteMarket(id, name){
+async function deleteMarket(id) {
 
-    const confirmDelete =
-        confirm(
-            `"${name}" market delete karna hai?`
-        );
+  if (!db) {
 
-    if(!confirmDelete){
+    showMessage(
+      "Supabase connection nahi mila.",
+      "error"
+    );
 
-        return;
-    }
+    return;
 
-
-    const { error } =
-        await db
-            .from(TABLE_NAME)
-            .delete()
-            .eq("id", id);
+  }
 
 
-    if(error){
-
-        console.error(error);
-
-        alert(
-            "Delete failed:\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    alert("Market delete ho gaya.");
-
-    await loadMarkets();
-
-}
-
-
-/* --------------------------------
-   ADD MARKET
--------------------------------- */
-
-document
-    .getElementById("addMarketBtn")
-    .addEventListener(
-        "click",
-        async () => {
-
-            const name =
-                document
-                    .getElementById("newName")
-                    .value
-                    .trim();
-
-            const number =
-                document
-                    .getElementById("newNumber")
-                    .value
-                    .trim() || "**";
-
-            const open =
-                document
-                    .getElementById("newOpen")
-                    .value || null;
-
-            const close =
-                document
-                    .getElementById("newClose")
-                    .value || null;
-
-            const close2 =
-                document
-                    .getElementById("newClose2")
-                    .value || null;
-
-            const date =
-                document
-                    .getElementById("newDate")
-                    .value ||
-                    todayString();
-
-
-            if(!name){
-
-                showStatus(
-                    "Market name bharo.",
-                    false
-                );
-
-                return;
-            }
-
-
-            const { error } =
-                await db
-                    .from(TABLE_NAME)
-                    .insert({
-
-                        name: name,
-
-                        number: number,
-
-                        open: open,
-
-                        close: close,
-
-                        close2: close2,
-
-                        date: date,
-
-                        kal: null
-
-                    });
-
-
-            if(error){
-
-                console.error(error);
-
-                showStatus(
-                    "Market add nahi hua: " +
-                    error.message,
-                    false
-                );
-
-                return;
-            }
-
-
-            showStatus(
-                "New market successfully add ho gaya."
-            );
-
-
-            document
-                .getElementById("newName")
-                .value = "";
-
-            document
-                .getElementById("newNumber")
-                .value = "**";
-
-            document
-                .getElementById("newOpen")
-                .value = "";
-
-            document
-                .getElementById("newClose")
-                .value = "";
-
-            document
-                .getElementById("newClose2")
-                .value = "";
-
-            document
-                .getElementById("newDate")
-                .value =
-                    todayString();
-
-
-            await loadMarkets();
-
-        }
+  const confirmDelete =
+    confirm(
+      "Kya aap is market ko permanently delete karna chahte ho?"
     );
 
 
-/* --------------------------------
-   TIME FORMAT
--------------------------------- */
-
-function formatTime(value){
-
-    if(!value){
-        return "";
-    }
-
-    /*
-      Supabase:
-      06:00:00
-
-      Input:
-      06:00
-    */
-
-    return value.substring(0,5);
-
-}
+  if (!confirmDelete) {
+    return;
+  }
 
 
-/* --------------------------------
-   HTML SAFETY
--------------------------------- */
+  const { error } = await db
+    .from("Game result")
+    .delete()
+    .eq("id", id);
 
-function escapeHtml(value){
 
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Market delete nahi hua: " +
+      error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  showMessage(
+    "Market delete ho gaya.",
+    "success"
+  );
+
+
+  await loadMarkets();
 
 }
 
 
-function escapeAttr(value){
+/* =========================================================
+   NEXT INDIA MIDNIGHT
+   ========================================================= */
 
-    return escapeHtml(value);
+function scheduleMidnightCheck() {
 
-}
-
-
-/* --------------------------------
-   START
--------------------------------- */
-
-document
-    .getElementById("newDate")
-    .value =
-        todayString();
+  const now = new Date();
 
 
-if(!db){
-
-    marketList.innerHTML =
-        `<div class="empty">
-            Supabase connection nahi mili.<br><br>
-            <strong>supabase.js</strong>
-            check karo.
-         </div>`;
-
-}else{
-
-    loadMarkets();
-
-}
+  const indiaNowString =
+    now.toLocaleString(
+      "en-US",
+      {
+        timeZone: "Asia/Kolkata"
+      }
+    );
 
 
-/*
-  Page khuli rahe to har 1 minute
-  daily reset check hoga.
+  const indiaNow =
+    new Date(indiaNowString);
 
-  Page band ho aur next day khule,
-  tab bhi loadMarkets() reset kar dega.
-*/
 
-setInterval(
-    async () => {
+  const nextMidnight =
+    new Date(indiaNow);
 
-        if(db){
 
-            await loadMarkets();
+  nextMidnight.setDate(
+    nextMidnight.getDate() + 1
+  );
 
-        }
+
+  nextMidnight.setHours(
+    0,
+    0,
+    2,
+    0
+  );
+
+
+  const delay =
+    nextMidnight.getTime() -
+    indiaNow.getTime();
+
+
+  setTimeout(
+    async function () {
+
+      await loadMarkets();
+
+      scheduleMidnightCheck();
 
     },
-    60 * 1000
-);
+    Math.max(delay, 1000)
+  );
+
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+(async function () {
+
+  await loadMarkets();
+
+  scheduleMidnightCheck();
+
+})();
 
 </script>
 
 </body>
+
 </html>
