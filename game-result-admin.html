@@ -2,18 +2,21 @@
 <html lang="hi">
 
 <head>
+
   <meta charset="UTF-8">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>Game Result Admin</title>
 
-  <!-- Supabase library -->
+
+  <!-- ================= SUPABASE LIBRARY ================= -->
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Tumhari existing Supabase file -->
-  <script src="supabase.js"></script>
 
   <style>
 
@@ -203,16 +206,20 @@
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
+
   <h1>Game Result Admin</h1>
+
 
   <div id="message" class="message"></div>
 
 
-  <!-- NEW MARKET -->
+  <!-- ================= NEW MARKET ================= -->
 
   <div class="box">
 
@@ -220,9 +227,12 @@
       New Market
     </div>
 
+
     <div class="form-grid">
 
+
       <div class="field">
+
         <label>Market Name</label>
 
         <input
@@ -230,47 +240,57 @@
           id="newName"
           placeholder="Market name"
         >
+
       </div>
 
 
       <div class="field">
+
         <label>Open Time</label>
 
         <input
           type="time"
           id="newOpen"
         >
+
       </div>
 
 
       <div class="field">
+
         <label>Close Time</label>
 
         <input
           type="time"
           id="newClose"
         >
+
       </div>
 
 
       <div class="field">
+
         <label>Close2 Time</label>
 
         <input
           type="time"
           id="newClose2"
         >
+
       </div>
 
 
       <div class="field">
+
         <label>Date</label>
 
         <input
           type="date"
           id="newDate"
         >
+
       </div>
+
 
     </div>
 
@@ -282,19 +302,16 @@
       + Add Market
     </button>
 
+
   </div>
 
 
-  <!-- MESSAGE -->
-
-  <div id="message2" class="message"></div>
-
-
-  <!-- MARKET LIST -->
+  <!-- ================= MARKET LIST ================= -->
 
   <div class="box">
 
     <div class="box-title">
+
       Existing Markets
 
       <button
@@ -306,22 +323,42 @@
 
     </div>
 
+
     <div id="markets">
       Loading...
     </div>
 
+
   </div>
 
+
 </div>
+
 
 
 <script>
 
 /* =========================================================
-   SUPABASE CONNECTION
+   DIRECT SUPABASE CONNECTION
    ========================================================= */
 
-const db = window.supabaseClient;
+/*
+   Yahan supabase.js ki zaroorat nahi hai.
+   Direct isi page se Supabase connect hoga.
+*/
+
+const SUPABASE_URL =
+  "https://katbdbzoufiblnnsoxkk.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
+
+
+const db =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
 
 /* =========================================================
@@ -331,7 +368,7 @@ const db = window.supabaseClient;
 if (!db) {
 
   showMessage(
-    "Supabase connection nahi mila. supabase.js check karo.",
+    "Supabase connection nahi bana.",
     "error"
   );
 
@@ -344,15 +381,16 @@ if (!db) {
 
 function getIndiaToday() {
 
-  const formatter = new Intl.DateTimeFormat(
-    "en-CA",
-    {
-      timeZone: "Asia/Kolkata",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    }
-  );
+  const formatter =
+    new Intl.DateTimeFormat(
+      "en-CA",
+      {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }
+    );
 
   return formatter.format(new Date());
 
@@ -365,15 +403,25 @@ function getIndiaToday() {
 
 function escapeHtml(value) {
 
-  if (value === null || value === undefined) {
+  if (
+    value === null ||
+    value === undefined
+  ) {
+
     return "";
+
   }
 
   return String(value)
+
     .replace(/&/g, "&amp;")
+
     .replace(/</g, "&lt;")
+
     .replace(/>/g, "&gt;")
+
     .replace(/"/g, "&quot;")
+
     .replace(/'/g, "&#039;");
 
 }
@@ -386,7 +434,9 @@ function escapeHtml(value) {
 function timeValue(value) {
 
   if (!value) {
+
     return "";
+
   }
 
   return String(value).substring(0, 5);
@@ -398,13 +448,19 @@ function timeValue(value) {
    MESSAGE
    ========================================================= */
 
-function showMessage(text, type = "success") {
+function showMessage(
+  text,
+  type = "success"
+) {
 
-  const box = document.getElementById("message");
+  const box =
+    document.getElementById("message");
 
   box.textContent = text;
 
-  box.className = "message " + type;
+  box.className =
+    "message " + type;
+
 
   setTimeout(() => {
 
@@ -425,63 +481,69 @@ document.getElementById("newDate").value =
 
 /* =========================================================
    DAILY RESULT ROLL
-   =========================================================
-
-   Agar:
-
-   date = aaj
-   -> kuch nahi
-
-   date purani hai
-   -> number ka result kal mein jayega
-   -> number ** ho jayega
-   -> date aaj ho jayegi
-
-   date NULL hai
-   -> sirf aaj ki date set hogi
-   -> result ko kal mein nahi bhejenge
    ========================================================= */
 
 async function rollMarketIfNeeded(market) {
 
-  const today = getIndiaToday();
+  const today =
+    getIndiaToday();
 
-  /* Date nahi hai */
+
+  /* ================= DATE NULL ================= */
+
   if (!market.date) {
 
-    const { error } = await db
-      .from("Game result")
-      .update({
-        date: today
-      })
-      .eq("id", market.id);
+    const { error } =
+      await db
+
+        .from("Game result")
+
+        .update({
+          date: today
+        })
+
+        .eq("id", market.id);
+
 
     if (error) {
-      console.error(error);
+
+      console.error(
+        "Date update error:",
+        error
+      );
+
     }
 
+
     return;
 
   }
 
 
-  /* Date already today hai */
+  /* ================= ALREADY TODAY ================= */
+
   if (market.date === today) {
+
     return;
+
   }
 
 
-  /* Purana result */
-  const oldNumber = market.number;
+  /* ================= OLD RESULT ================= */
 
-  let newKal = market.kal;
+  const oldNumber =
+    market.number;
+
+
+  let newKal =
+    market.kal;
 
 
   /*
-    Agar number actual result hai
-    to kal mein save karo.
+    Agar purana number actual result hai
+    to Kal Ka Result mein save hoga.
 
-    ** ko kal mein nahi bhejna.
+    Agar ** hai to Kal mein nahi jayega.
   */
 
   if (
@@ -489,25 +551,30 @@ async function rollMarketIfNeeded(market) {
     oldNumber !== "**"
   ) {
 
-    newKal = oldNumber;
+    newKal =
+      oldNumber;
 
   }
 
 
-  /* Database update */
+  /* ================= UPDATE ================= */
 
-  const { error } = await db
-    .from("Game result")
-    .update({
+  const { error } =
+    await db
 
-      number: "**",
+      .from("Game result")
 
-      kal: newKal,
+      .update({
 
-      date: today
+        number: "**",
 
-    })
-    .eq("id", market.id);
+        kal: newKal,
+
+        date: today
+
+      })
+
+      .eq("id", market.id);
 
 
   if (error) {
@@ -528,17 +595,16 @@ async function rollMarketIfNeeded(market) {
 
 async function checkDailyRoll() {
 
-  if (!db) {
-    return;
-  }
+  const { data, error } =
+    await db
 
+      .from("Game result")
 
-  const { data, error } = await db
-    .from("Game result")
-    .select("*")
-    .order("id", {
-      ascending: true
-    });
+      .select("*")
+
+      .order("id", {
+        ascending: true
+      });
 
 
   if (error) {
@@ -556,9 +622,20 @@ async function checkDailyRoll() {
   }
 
 
-  for (const market of data) {
+  if (!data) {
 
-    await rollMarketIfNeeded(market);
+    return;
+
+  }
+
+
+  for (
+    const market of data
+  ) {
+
+    await rollMarketIfNeeded(
+      market
+    );
 
   }
 
@@ -571,39 +648,37 @@ async function checkDailyRoll() {
 
 async function loadMarkets() {
 
-  if (!db) {
-    return;
-  }
-
-
   const container =
     document.getElementById("markets");
 
-  container.innerHTML = "Loading...";
+
+  container.innerHTML =
+    "Loading...";
 
 
-  /*
-    Pehle daily result check
-  */
+  /* Daily result check */
 
   await checkDailyRoll();
 
 
-  /*
-    Phir latest data load
-  */
+  /* Latest data */
 
-  const { data, error } = await db
-    .from("Game result")
-    .select("*")
-    .order("id", {
-      ascending: true
-    });
+  const { data, error } =
+    await db
+
+      .from("Game result")
+
+      .select("*")
+
+      .order("id", {
+        ascending: true
+      });
 
 
   if (error) {
 
-    container.innerHTML = "";
+    container.innerHTML =
+      "";
 
     showMessage(
       "Data load nahi hua: " +
@@ -616,7 +691,10 @@ async function loadMarkets() {
   }
 
 
-  if (!data || data.length === 0) {
+  if (
+    !data ||
+    data.length === 0
+  ) {
 
     container.innerHTML =
       '<div class="empty">Koi market nahi hai.</div>';
@@ -626,14 +704,20 @@ async function loadMarkets() {
   }
 
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
 
-  data.forEach(market => {
+  data.forEach(
+    market => {
 
-    container.innerHTML += createMarketHtml(market);
+      container.innerHTML +=
+        createMarketHtml(
+          market
+        );
 
-  });
+    }
+  );
 
 }
 
@@ -642,11 +726,14 @@ async function loadMarkets() {
    MARKET HTML
    ========================================================= */
 
-function createMarketHtml(market) {
+function createMarketHtml(
+  market
+) {
 
   return `
 
     <div class="market">
+
 
       <div class="market-header">
 
@@ -665,12 +752,15 @@ function createMarketHtml(market) {
       </div>
 
 
+
       <div class="market-grid">
 
 
         <div class="field">
 
-          <label>Market Name</label>
+          <label>
+            Market Name
+          </label>
 
           <input
             type="text"
@@ -681,9 +771,12 @@ function createMarketHtml(market) {
         </div>
 
 
+
         <div class="field">
 
-          <label>Result</label>
+          <label>
+            Result
+          </label>
 
           <input
             type="text"
@@ -694,9 +787,12 @@ function createMarketHtml(market) {
         </div>
 
 
+
         <div class="field">
 
-          <label>Open Time</label>
+          <label>
+            Open Time
+          </label>
 
           <input
             type="time"
@@ -707,9 +803,12 @@ function createMarketHtml(market) {
         </div>
 
 
+
         <div class="field">
 
-          <label>Close Time</label>
+          <label>
+            Close Time
+          </label>
 
           <input
             type="time"
@@ -720,9 +819,12 @@ function createMarketHtml(market) {
         </div>
 
 
+
         <div class="field">
 
-          <label>Close2 Time</label>
+          <label>
+            Close2 Time
+          </label>
 
           <input
             type="time"
@@ -733,9 +835,12 @@ function createMarketHtml(market) {
         </div>
 
 
+
         <div class="field">
 
-          <label>Date</label>
+          <label>
+            Date
+          </label>
 
           <input
             type="date"
@@ -746,13 +851,18 @@ function createMarketHtml(market) {
         </div>
 
 
+
         <div class="field">
 
-          <label>Kal Ka Result</label>
+          <label>
+            Kal Ka Result
+          </label>
 
           <div class="kal-box">
 
-            ${escapeHtml(market.kal || "--")}
+            ${escapeHtml(
+              market.kal || "--"
+            )}
 
           </div>
 
@@ -762,7 +872,9 @@ function createMarketHtml(market) {
       </div>
 
 
+
       <div class="buttons">
+
 
         <button
           class="update-btn"
@@ -779,7 +891,9 @@ function createMarketHtml(market) {
           Delete
         </button>
 
+
       </div>
+
 
     </div>
 
@@ -794,36 +908,35 @@ function createMarketHtml(market) {
 
 async function addMarket() {
 
-  if (!db) {
-
-    showMessage(
-      "Supabase connection nahi mila.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
   const name =
-    document.getElementById("newName").value.trim();
+    document
+      .getElementById("newName")
+      .value
+      .trim();
 
 
   const open =
-    document.getElementById("newOpen").value || null;
+    document
+      .getElementById("newOpen")
+      .value || null;
 
 
   const close =
-    document.getElementById("newClose").value || null;
+    document
+      .getElementById("newClose")
+      .value || null;
 
 
   const close2 =
-    document.getElementById("newClose2").value || null;
+    document
+      .getElementById("newClose2")
+      .value || null;
 
 
   const date =
-    document.getElementById("newDate").value ||
+    document
+      .getElementById("newDate")
+      .value ||
     getIndiaToday();
 
 
@@ -839,25 +952,28 @@ async function addMarket() {
   }
 
 
-  const { error } = await db
-    .from("Game result")
-    .insert({
+  const { error } =
+    await db
 
-      name: name,
+      .from("Game result")
 
-      number: "**",
+      .insert({
 
-      open: open,
+        name: name,
 
-      close: close,
+        number: "**",
 
-      close2: close2,
+        open: open,
 
-      date: date,
+        close: close,
 
-      kal: null
+        close2: close2,
 
-    });
+        date: date,
+
+        kal: null
+
+      });
 
 
   if (error) {
@@ -877,15 +993,29 @@ async function addMarket() {
 
   /* Form clear */
 
-  document.getElementById("newName").value = "";
+  document.getElementById(
+    "newName"
+  ).value = "";
 
-  document.getElementById("newOpen").value = "";
 
-  document.getElementById("newClose").value = "";
+  document.getElementById(
+    "newOpen"
+  ).value = "";
 
-  document.getElementById("newClose2").value = "";
 
-  document.getElementById("newDate").value =
+  document.getElementById(
+    "newClose"
+  ).value = "";
+
+
+  document.getElementById(
+    "newClose2"
+  ).value = "";
+
+
+  document.getElementById(
+    "newDate"
+  ).value =
     getIndiaToday();
 
 
@@ -906,52 +1036,54 @@ async function addMarket() {
 
 async function updateMarket(id) {
 
-  if (!db) {
-
-    showMessage(
-      "Supabase connection nahi mila.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
   const name =
-    document.getElementById(
-      `name_${id}`
-    ).value.trim();
+    document
+      .getElementById(
+        `name_${id}`
+      )
+      .value
+      .trim();
 
 
   const number =
-    document.getElementById(
-      `number_${id}`
-    ).value.trim();
+    document
+      .getElementById(
+        `number_${id}`
+      )
+      .value
+      .trim();
 
 
   const open =
-    document.getElementById(
-      `open_${id}`
-    ).value || null;
+    document
+      .getElementById(
+        `open_${id}`
+      )
+      .value || null;
 
 
   const close =
-    document.getElementById(
-      `close_${id}`
-    ).value || null;
+    document
+      .getElementById(
+        `close_${id}`
+      )
+      .value || null;
 
 
   const close2 =
-    document.getElementById(
-      `close2_${id}`
-    ).value || null;
+    document
+      .getElementById(
+        `close2_${id}`
+      )
+      .value || null;
 
 
   const date =
-    document.getElementById(
-      `date_${id}`
-    ).value || null;
+    document
+      .getElementById(
+        `date_${id}`
+      )
+      .value || null;
 
 
   if (!name) {
@@ -978,24 +1110,28 @@ async function updateMarket(id) {
   }
 
 
-  const { error } = await db
-    .from("Game result")
-    .update({
+  const { error } =
+    await db
 
-      name: name,
+      .from("Game result")
 
-      number: number,
+      .update({
 
-      open: open,
+        name: name,
 
-      close: close,
+        number: number,
 
-      close2: close2,
+        open: open,
 
-      date: date
+        close: close,
 
-    })
-    .eq("id", id);
+        close2: close2,
+
+        date: date
+
+      })
+
+      .eq("id", id);
 
 
   if (error) {
@@ -1030,18 +1166,6 @@ async function updateMarket(id) {
 
 async function deleteMarket(id) {
 
-  if (!db) {
-
-    showMessage(
-      "Supabase connection nahi mila.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
   const confirmDelete =
     confirm(
       "Kya aap is market ko permanently delete karna chahte ho?"
@@ -1049,14 +1173,20 @@ async function deleteMarket(id) {
 
 
   if (!confirmDelete) {
+
     return;
+
   }
 
 
-  const { error } = await db
-    .from("Game result")
-    .delete()
-    .eq("id", id);
+  const { error } =
+    await db
+
+      .from("Game result")
+
+      .delete()
+
+      .eq("id", id);
 
 
   if (error) {
@@ -1091,7 +1221,8 @@ async function deleteMarket(id) {
 
 function scheduleMidnightCheck() {
 
-  const now = new Date();
+  const now =
+    new Date();
 
 
   const indiaNowString =
@@ -1104,7 +1235,9 @@ function scheduleMidnightCheck() {
 
 
   const indiaNow =
-    new Date(indiaNowString);
+    new Date(
+      indiaNowString
+    );
 
 
   const nextMidnight =
@@ -1137,7 +1270,10 @@ function scheduleMidnightCheck() {
       scheduleMidnightCheck();
 
     },
-    Math.max(delay, 1000)
+    Math.max(
+      delay,
+      1000
+    )
   );
 
 }
@@ -1156,6 +1292,7 @@ function scheduleMidnightCheck() {
 })();
 
 </script>
+
 
 </body>
 
