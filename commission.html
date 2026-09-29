@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -139,6 +139,13 @@ body{
   color:#16a34a;
 }
 
+.status{
+  margin-top:8px;
+  text-align:center;
+  font-size:12px;
+  font-weight:bold;
+}
+
 
 /* ================= LOADING ================= */
 
@@ -186,8 +193,6 @@ body{
 <div class="container">
 
 
-  <!-- TOTAL COMMISSION -->
-
   <div class="total-box">
 
     <div class="total-title">
@@ -203,8 +208,6 @@ body{
 
   </div>
 
-
-  <!-- REFERRAL INFO -->
 
   <div class="ref-box">
 
@@ -242,8 +245,6 @@ body{
   </div>
 
 
-  <!-- PLAY LIST -->
-
   <div id="userList">
 
     <div class="loading">
@@ -278,17 +279,15 @@ const client =
 
 
 
-/* ================= GET CURRENT USER ================= */
+/* ================= CURRENT USER ================= */
 
 function getCurrentUser(){
 
   const keys = [
-
     "user",
     "currentUser",
     "loginUser",
     "loggedUser"
-
   ];
 
 
@@ -301,9 +300,7 @@ function getCurrentUser(){
 
 
     if(!data){
-
       continue;
-
     }
 
 
@@ -314,9 +311,7 @@ function getCurrentUser(){
 
 
       if(user){
-
         return user;
-
       }
 
     }
@@ -343,9 +338,7 @@ function getCurrentUser(){
 function lastFourMobile(mobile){
 
   if(!mobile){
-
     return "****";
-
   }
 
 
@@ -354,14 +347,12 @@ function lastFourMobile(mobile){
 
 
   if(value.length <= 4){
-
     return value;
-
   }
 
 
   return "****" +
-    value.slice(-4);
+         value.slice(-4);
 
 }
 
@@ -437,13 +428,12 @@ async function loadCommission(){
     const {
       data: currentUser,
       error: userError
-
     } = await client
 
       .from("login")
 
       .select(
-        "id,name,mobile,refer_code,ref_by"
+        "id,name,mobile,refer_code"
       )
 
       .eq(
@@ -454,18 +444,9 @@ async function loadCommission(){
       .maybeSingle();
 
 
-
     if(userError){
-
-      console.log(
-        "CURRENT USER ERROR:",
-        userError
-      );
-
       throw userError;
-
     }
-
 
 
     if(!currentUser){
@@ -496,14 +477,7 @@ async function loadCommission(){
       myReferCode || "-";
 
 
-
     if(!myReferCode){
-
-      document.getElementById(
-        "userCount"
-      ).textContent =
-        "0";
-
 
       userList.innerHTML = `
 
@@ -519,164 +493,127 @@ async function loadCommission(){
 
 
 
-    /* ================= REFERRED USERS ================= */
+    /* ================= COMMISSION RECORDS ================= */
 
     const {
-
-      data: referredUsers,
-      error: refError
-
+      data: records,
+      error: recordError
     } = await client
 
-      .from("login")
+      .from("commission_records")
 
       .select(
-        "id,name,mobile,refer_code,ref_by"
+        "id,referral_id,commission_amount,commission_percent,status,user_id,history_id,created_at"
       )
 
       .eq(
-        "ref_by",
+        "referral_id",
         myReferCode
       )
 
       .order(
-        "id",
+        "created_at",
         {
           ascending:false
         }
       );
 
 
-
-    if(refError){
-
-      console.log(
-        "REFERRED USERS ERROR:",
-        refError
-      );
-
-      throw refError;
-
+    if(recordError){
+      throw recordError;
     }
 
 
 
-    console.log(
-      "MY REFER CODE:",
-      myReferCode
-    );
-
-
-    console.log(
-      "REFERRED USERS:",
-      referredUsers
-    );
-
-
-
-    /*
-      Sirf wahi users count honge
-      jinhone play kiya hai.
-    */
-
-    let playRows = [];
-
-
-
-    /* ================= EACH REFERRED USER ================= */
-
-    for(
-      const referredUser
-      of referredUsers || []
+    if(
+      !records ||
+      records.length === 0
     ){
 
-
-      /* ================= HISTORY ================= */
-
-      const {
-
-        data: history,
-        error: historyError
-
-      } = await client
-
-        .from("history")
-
-        .select(
-          "id,user_id,total,market,created_at,status,commission,ref_by"
-        )
-
-        .eq(
-          "user_id",
-          String(referredUser.id)
-        )
-
-        .eq(
-          "ref_by",
-          myReferCode
-        )
-
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
+      document.getElementById(
+        "userCount"
+      ).textContent = "0";
 
 
-
-      if(historyError){
-
-        console.log(
-          "HISTORY ERROR:",
-          historyError
-        );
-
-        continue;
-
-      }
+      document.getElementById(
+        "totalCommission"
+      ).textContent = "₹0";
 
 
+      userList.innerHTML = `
 
-      /*
-        Sirf play ki hui history
-        rows list me add hongi.
-      */
+        <div class="empty">
+          Abhi koi commission record nahi hai.
+        </div>
 
-      if(
-        history &&
-        history.length > 0
-      ){
+      `;
 
-        history.forEach(row => {
-
-          playRows.push({
-
-            name:
-              referredUser.name ||
-              "Customer",
-
-            mobile:
-              referredUser.mobile ||
-              "",
-
-            market:
-              row.market ||
-              "-",
-
-            commission:
-              Number(row.commission) || 0,
-
-            created_at:
-              row.created_at
-
-          });
-
-        });
-
-      }
+      return;
 
     }
+
+
+
+    /* ================= USER IDs ================= */
+
+    const userIds = [
+      ...new Set(
+        records
+          .map(row => row.user_id)
+          .filter(Boolean)
+          .map(id => String(id))
+      )
+    ];
+
+
+
+    /* ================= USERS ================= */
+
+    let users = [];
+
+
+    if(userIds.length > 0){
+
+      const {
+        data,
+        error
+      } = await client
+
+        .from("login")
+
+        .select(
+          "id,name,mobile"
+        )
+
+        .in(
+          "id",
+          userIds
+        );
+
+
+      if(error){
+        throw error;
+      }
+
+
+      users = data || [];
+
+    }
+
+
+
+    const userMap =
+      new Map();
+
+
+    users.forEach(user => {
+
+      userMap.set(
+        String(user.id),
+        user
+      );
+
+    });
 
 
 
@@ -684,11 +621,9 @@ async function loadCommission(){
 
     const uniqueUsers =
       new Set(
-        playRows.map(
+        records.map(
           row =>
-            row.name +
-            "|" +
-            row.mobile
+            String(row.user_id)
         )
       );
 
@@ -700,44 +635,30 @@ async function loadCommission(){
 
 
 
-    /* ================= EMPTY ================= */
-
-    if(
-      playRows.length === 0
-    ){
-
-      document.getElementById(
-        "totalCommission"
-      ).textContent =
-        "₹0";
-
-
-      userList.innerHTML = `
-
-        <div class="empty">
-          Abhi kisi referred user ne play nahi kiya.
-        </div>
-
-      `;
-
-      return;
-
-    }
-
-
-
     /* ================= TOTAL ================= */
 
     let totalCommission = 0;
 
 
-    playRows.forEach(row => {
+    records.forEach(row => {
 
-      totalCommission +=
-        Number(row.commission) || 0;
+      /*
+        Total commission mein
+        sirf accepted commission count hogi.
+      */
+
+      if(
+        row.status === "accepted"
+      ){
+
+        totalCommission +=
+          Number(
+            row.commission_amount
+          ) || 0;
+
+      }
 
     });
-
 
 
     document.getElementById(
@@ -752,18 +673,68 @@ async function loadCommission(){
     let html = "";
 
 
-    playRows.forEach(row => {
+    records.forEach(row => {
 
 
-      const mobile =
-        lastFourMobile(
-          row.mobile
+      const user =
+        userMap.get(
+          String(row.user_id)
         );
 
 
+      if(!user){
+        return;
+      }
+
+
+      const commission =
+        Number(
+          row.commission_amount
+        ) || 0;
+
+
+      let statusText =
+        "PENDING";
+
+
+      let statusColor =
+        "#f59e0b";
+
+
+      if(row.status === "accepted"){
+
+        statusText =
+          "ACCEPTED";
+
+        statusColor =
+          "#16a34a";
+
+      }
+
+
+      if(row.status === "cancelled"){
+
+        statusText =
+          "CANCELLED";
+
+        statusColor =
+          "#dc2626";
+
+      }
+
+
+      /*
+        History se market name lene ke liye
+        history_id available hai.
+        Neeche market separately load hoga.
+      */
+
       html += `
 
-        <div class="play-row">
+        <div
+          class="play-row"
+          data-history-id="${row.history_id}"
+        >
 
           <div class="play-top">
 
@@ -771,27 +742,39 @@ async function loadCommission(){
             <div class="user-info">
 
               <div class="user-name">
-                ${row.name}
+                ${user.name || "Customer"}
               </div>
 
               <div class="user-mobile">
-                ${mobile}
+                ${lastFourMobile(user.mobile)}
               </div>
 
             </div>
 
 
-            <div class="market">
-              ${row.market}
+            <div
+              class="market"
+              id="market-${row.id}"
+            >
+              Loading...
             </div>
 
 
             <div class="commission">
-              ₹${row.commission}
+              ₹${commission}
             </div>
 
 
           </div>
+
+
+          <div
+            class="status"
+            style="color:${statusColor};"
+          >
+            ${statusText}
+          </div>
+
 
         </div>
 
@@ -800,17 +783,80 @@ async function loadCommission(){
     });
 
 
-
     userList.innerHTML =
       html;
+
+
+
+    /* ================= MARKET NAMES ================= */
+
+    const historyIds =
+      records
+        .map(
+          row => row.history_id
+        )
+        .filter(Boolean)
+        .map(
+          id => String(id)
+        );
+
+
+    if(historyIds.length > 0){
+
+      const {
+        data: histories
+      } = await client
+
+        .from("history")
+
+        .select(
+          "id,market"
+        )
+
+        .in(
+          "id",
+          historyIds
+        );
+
+
+      (histories || [])
+        .forEach(history => {
+
+          const record =
+            records.find(
+              row =>
+                String(row.history_id)
+                === String(history.id)
+            );
+
+
+          if(record){
+
+            const market =
+              document.getElementById(
+                "market-" + record.id
+              );
+
+
+            if(market){
+
+              market.textContent =
+                history.market || "-";
+
+            }
+
+          }
+
+        });
+
+    }
 
 
   }
   catch(error){
 
-
     console.log(
-      "COMMISSION PAGE ERROR:",
+      "COMMISSION ERROR:",
       error
     );
 
@@ -832,7 +878,6 @@ async function loadCommission(){
   }
 
 }
-
 
 
 /* ================= START ================= */
