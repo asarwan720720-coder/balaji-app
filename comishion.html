@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -15,330 +15,141 @@
 <style>
 
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
+  box-sizing:border-box;
 }
 
 body{
-    background:#f4f6fb;
-    color:#1f2937;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f6f9;
+  color:#222;
 }
-
-/* =========================
-   HEADER
-========================= */
 
 .header{
-    background:linear-gradient(135deg,#111827,#2563eb);
-    color:white;
-    padding:22px 18px 28px;
-    border-radius:0 0 25px 25px;
-    box-shadow:0 5px 18px rgba(0,0,0,.15);
+  background:linear-gradient(135deg,#ff9800,#ff5722);
+  color:white;
+  padding:18px;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
 }
 
-.header-top{
-    display:flex;
-    align-items:center;
-    gap:12px;
+.container{
+  padding:15px;
 }
 
-.back-btn{
-    width:40px;
-    height:40px;
-    border-radius:12px;
-    border:none;
-    background:rgba(255,255,255,.15);
-    color:white;
-    font-size:22px;
-    cursor:pointer;
-}
-
-.header h1{
-    font-size:22px;
-}
-
-.header p{
-    margin-top:5px;
-    font-size:13px;
-    opacity:.8;
-}
-
-/* =========================
-   TOTAL COMMISSION
-========================= */
-
-.total-card{
-    margin:18px;
-    margin-top:-5px;
-    background:white;
-    border-radius:20px;
-    padding:22px;
-    box-shadow:0 7px 25px rgba(0,0,0,.08);
+.total-box{
+  background:white;
+  border-radius:15px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+  margin-bottom:15px;
 }
 
 .total-title{
-    color:#6b7280;
-    font-size:13px;
+  font-size:15px;
+  color:#777;
 }
 
-.total-money{
-    margin-top:8px;
-    font-size:32px;
-    font-weight:bold;
-    color:#16a34a;
+.total-amount{
+  font-size:30px;
+  font-weight:bold;
+  color:#ff5722;
+  margin-top:8px;
 }
-
-.total-bottom{
-    margin-top:12px;
-    display:flex;
-    justify-content:space-between;
-    color:#6b7280;
-    font-size:13px;
-}
-
-/* =========================
-   SECTION
-========================= */
-
-.section{
-    padding:0 18px;
-}
-
-.section-title{
-    font-size:18px;
-    font-weight:bold;
-    margin-bottom:12px;
-}
-
-/* =========================
-   USER CARD
-========================= */
-
-.user-card{
-    background:white;
-    border-radius:18px;
-    padding:16px;
-    margin-bottom:12px;
-    box-shadow:0 4px 16px rgba(0,0,0,.06);
-}
-
-.user-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.user-left{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.avatar{
-    width:44px;
-    height:44px;
-    border-radius:50%;
-    background:linear-gradient(135deg,#2563eb,#7c3aed);
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-weight:bold;
-}
-
-.user-name{
-    font-weight:bold;
-    font-size:15px;
-}
-
-.user-id{
-    color:#9ca3af;
-    font-size:12px;
-    margin-top:3px;
-}
-
-.commission{
-    color:#16a34a;
-    font-size:17px;
-    font-weight:bold;
-}
-
-.user-details{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:15px;
-    padding-top:13px;
-    border-top:1px solid #eee;
-}
-
-.detail{
-    background:#f8fafc;
-    border-radius:10px;
-    padding:10px;
-}
-
-.detail-label{
-    color:#9ca3af;
-    font-size:11px;
-}
-
-.detail-value{
-    margin-top:4px;
-    font-size:14px;
-    font-weight:bold;
-}
-
-/* =========================
-   HISTORY ITEM
-========================= */
-
-.history-item{
-    background:#f8fafc;
-    border-radius:12px;
-    padding:10px;
-    margin-top:10px;
-}
-
-.history-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-}
-
-.history-market{
-    font-size:13px;
-    font-weight:bold;
-}
-
-.history-commission{
-    color:#16a34a;
-    font-weight:bold;
-    font-size:14px;
-}
-
-.history-bottom{
-    display:flex;
-    justify-content:space-between;
-    margin-top:6px;
-    color:#6b7280;
-    font-size:11px;
-}
-
-/* =========================
-   LOADING
-========================= */
-
-.loading{
-    text-align:center;
-    padding:35px 10px;
-    color:#6b7280;
-}
-
-.spinner{
-    width:35px;
-    height:35px;
-    border:4px solid #e5e7eb;
-    border-top:4px solid #2563eb;
-    border-radius:50%;
-    animation:spin .8s linear infinite;
-    margin:auto;
-    margin-bottom:12px;
-}
-
-@keyframes spin{
-    to{
-        transform:rotate(360deg);
-    }
-}
-
-/* =========================
-   EMPTY
-========================= */
-
-.empty{
-    background:white;
-    border-radius:18px;
-    padding:30px 15px;
-    text-align:center;
-    color:#6b7280;
-}
-
-.empty-icon{
-    font-size:38px;
-    margin-bottom:10px;
-}
-
-/* =========================
-   ERROR
-========================= */
-
-.error{
-    background:#fff1f2;
-    color:#be123c;
-    border:1px solid #fecdd3;
-    padding:15px;
-    border-radius:14px;
-    font-size:13px;
-}
-
-/* =========================
-   REFERRAL CODE
-========================= */
 
 .ref-box{
-    margin:18px;
-    background:linear-gradient(135deg,#7c3aed,#2563eb);
-    color:white;
-    border-radius:18px;
-    padding:18px;
-    box-shadow:0 7px 20px rgba(37,99,235,.22);
+  background:white;
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:15px;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
 }
 
-.ref-label{
-    font-size:12px;
-    opacity:.8;
+.ref-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
 }
 
 .ref-code{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-top:8px;
+  font-size:20px;
+  font-weight:bold;
+  color:#ff5722;
 }
 
-.ref-code strong{
-    font-size:22px;
-    letter-spacing:1px;
+.count{
+  font-weight:bold;
 }
 
-.copy-btn{
-    border:0;
-    background:white;
-    color:#2563eb;
-    padding:8px 13px;
-    border-radius:10px;
-    font-weight:bold;
-    cursor:pointer;
+.user-card{
+  background:white;
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:12px;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
 }
 
-/* =========================
-   MOBILE
-========================= */
+.user-name{
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom:6px;
+}
 
-@media(max-width:420px){
+.user-mobile{
+  color:#666;
+  font-size:14px;
+}
 
-    .total-money{
-        font-size:29px;
-    }
+.user-ref{
+  font-size:13px;
+  color:#777;
+  margin-top:5px;
+}
 
-    .header h1{
-        font-size:20px;
-    }
+.user-commission{
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid #eee;
+  display:flex;
+  justify-content:space-between;
+  font-weight:bold;
+}
 
+.commission{
+  color:#16a34a;
+}
+
+.history-item{
+  margin-top:10px;
+  padding:10px;
+  background:#f7f7f7;
+  border-radius:10px;
+  font-size:13px;
+}
+
+.loading{
+  text-align:center;
+  padding:30px;
+  color:#777;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#777;
+  background:white;
+  border-radius:15px;
+}
+
+.error{
+  text-align:center;
+  padding:20px;
+  color:#d32f2f;
+  background:#fff;
+  border-radius:15px;
 }
 
 </style>
@@ -347,135 +158,76 @@ body{
 
 <body>
 
-
-<!-- =========================
-     HEADER
-========================= -->
-
 <div class="header">
-
-    <div class="header-top">
-
-        <button class="back-btn"
-                onclick="history.back()">
-            ‹
-        </button>
-
-        <div>
-
-            <h1>My Commission</h1>
-
-            <p>
-                Earn 5% from your referred users
-            </p>
-
-        </div>
-
-    </div>
-
+  My Commission
 </div>
 
+<div class="container">
 
-<!-- =========================
-     TOTAL CARD
-========================= -->
-
-<div class="total-card">
+  <div class="total-box">
 
     <div class="total-title">
-        Total Commission
+      Total Commission
     </div>
 
-    <div class="total-money"
-         id="totalCommission">
-        ₹0.00
+    <div class="total-amount" id="totalCommission">
+      ₹0
     </div>
 
-    <div class="total-bottom">
-
-        <span>
-            Referred Users:
-            <b id="userCount">0</b>
-        </span>
-
-        <span>
-            Rate:
-            <b>5%</b>
-        </span>
-
-    </div>
-
-</div>
+  </div>
 
 
-<!-- =========================
-     REFERRAL CODE
-========================= -->
+  <div class="ref-box">
 
-<div class="ref-box">
+    <div class="ref-row">
 
-    <div class="ref-label">
-        Your Referral Code
-    </div>
+      <span>
+        My Referral Code
+      </span>
 
-    <div class="ref-code">
-
-        <strong id="myReferCode">
-            Loading...
-        </strong>
-
-        <button class="copy-btn"
-                onclick="copyCode()">
-            COPY
-        </button>
+      <span class="ref-code"
+            id="myReferCode">
+        -
+      </span>
 
     </div>
 
-</div>
+    <div class="ref-row">
 
-
-<!-- =========================
-     USERS
-========================= -->
-
-<div class="section">
-
-    <div class="section-title">
+      <span>
         Referred Users
-    </div>
+      </span>
 
-    <div id="commissionList">
-
-        <div class="loading">
-
-            <div class="spinner"></div>
-
-            Loading commission...
-
-        </div>
+      <span class="count"
+            id="userCount">
+        0
+      </span>
 
     </div>
+
+  </div>
+
+
+  <div id="userList">
+
+    <div class="loading">
+      Loading...
+    </div>
+
+  </div>
 
 </div>
 
 
 <script>
 
-/* =====================================================
-   SUPABASE
-===================================================== */
+/* ================= SUPABASE ================= */
 
 const SUPABASE_URL =
     "https://katbdbzoufiblnnsoxkk.supabase.co";
 
-
-/*
-   YAHAN APNI WAHI PUBLISHABLE KEY LAGAO
-   JO TUMHARE SUPABASE.JS ME HAI.
-*/
-
 const SUPABASE_KEY =
-    "YOUR_SUPABASE_ANON_KEY";
+    "sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
 
 
 const client =
@@ -485,841 +237,472 @@ const client =
     );
 
 
-/* =====================================================
-   GLOBAL
-===================================================== */
-
-let myUser = null;
-
-let myReferCode = "";
-
-let totalCommission = 0;
-
-
-/* =====================================================
-   GET CURRENT USER
-===================================================== */
+/* ================= GET CURRENT USER ================= */
 
 function getCurrentUser(){
 
-    let user = null;
+  const keys = [
+    "user",
+    "currentUser",
+    "loginUser",
+    "loggedUser"
+  ];
 
+  for(const key of keys){
+
+    const data =
+      localStorage.getItem(key);
+
+    if(!data) continue;
 
     try{
 
-        const saved =
-            localStorage.getItem("user");
+      const user =
+        JSON.parse(data);
 
-        if(saved){
+      if(user){
+        return user;
+      }
 
-            user =
-                JSON.parse(saved);
+    }
+    catch(e){
 
-        }
-
-    }catch(error){
-
-        console.log(
-            "USER PARSE ERROR:",
-            error
-        );
+      console.log(
+        "LocalStorage parse error:",
+        e
+      );
 
     }
 
+  }
 
-    /*
-       Agar user "user" key me nahi mila
-    */
-
-    if(!user){
-
-        const possibleKeys = [
-
-            "currentUser",
-            "loginUser",
-            "loggedUser"
-
-        ];
-
-
-        for(
-            const key of possibleKeys
-        ){
-
-            try{
-
-                const saved =
-                    localStorage.getItem(key);
-
-                if(saved){
-
-                    user =
-                        JSON.parse(saved);
-
-                    break;
-
-                }
-
-            }catch(error){}
-
-        }
-
-    }
-
-
-    return user;
+  return null;
 
 }
 
 
-/* =====================================================
-   LOAD COMMISSION
-===================================================== */
+/* ================= LOAD COMMISSION ================= */
 
 async function loadCommission(){
 
-    const list =
-        document.getElementById(
-            "commissionList"
-        );
+  const userList =
+    document.getElementById("userList");
 
+  userList.innerHTML = `
+    <div class="loading">
+      Loading...
+    </div>
+  `;
 
-    try{
 
-        /* =========================================
-           CURRENT USER
-        ========================================= */
+  try{
 
-        myUser =
-            getCurrentUser();
+    /* ================= CURRENT USER ================= */
 
+    const myUser =
+      getCurrentUser();
 
-        console.log(
-            "CURRENT USER:",
-            myUser
-        );
 
+    if(!myUser){
 
-        if(!myUser){
+      userList.innerHTML = `
+        <div class="error">
+          User login information not found.
+        </div>
+      `;
 
-            list.innerHTML =
-
-                `<div class="error">
-
-                    User login information nahi mili.
-
-                 </div>`;
-
-            return;
-
-        }
-
-
-        /* =========================================
-           CURRENT USER ID
-        ========================================= */
-
-        const currentId =
-
-            myUser.id ||
-            myUser.user_id ||
-            myUser.userId;
-
-
-        if(!currentId){
-
-            list.innerHTML =
-
-                `<div class="error">
-
-                    Current user ID nahi mili.
-
-                 </div>`;
-
-            return;
-
-        }
-
-
-        /* =========================================
-           GET CURRENT USER
-           LOGIN TABLE
-        ========================================= */
-
-        const {
-            data:currentUser,
-            error:userError
-        } =
-
-            await client
-
-                .from("login")
-
-                .select(
-                    "id,name,mobile,refer_code,ref_by"
-                )
-
-                .eq(
-                    "id",
-                    currentId
-                )
-
-                .maybeSingle();
-
-
-        if(userError){
-
-            console.log(
-                "CURRENT USER ERROR:",
-                userError
-            );
-
-
-            list.innerHTML =
-
-                `<div class="error">
-
-                    Current user load nahi hua.
-
-                 </div>`;
-
-            return;
-
-        }
-
-
-        if(!currentUser){
-
-            list.innerHTML =
-
-                `<div class="error">
-
-                    Database mein user nahi mila.
-
-                 </div>`;
-
-            return;
-
-        }
-
-
-        /* =========================================
-           CURRENT USER KA REFER CODE
-        ========================================= */
-
-        myReferCode =
-
-            String(
-                currentUser.refer_code || ""
-            ).trim();
-
-
-        document.getElementById(
-            "myReferCode"
-        ).textContent =
-
-            myReferCode || "N/A";
-
-
-        if(!myReferCode){
-
-            list.innerHTML =
-
-                `<div class="empty">
-
-                    <div class="empty-icon">
-                        🔗
-                    </div>
-
-                    Referral code nahi mila.
-
-                 </div>`;
-
-            return;
-
-        }
-
-
-        /* =========================================
-           REFERRED USERS
-           
-           IMPORTANT:
-           current user's refer_code
-           ke against login.ref_by
-        ========================================= */
-
-        const {
-
-            data:referredUsers,
-            error:refError
-
-        } =
-
-            await client
-
-                .from("login")
-
-                .select(
-                    "id,name,mobile,refer_code,ref_by"
-                )
-
-                .eq(
-                    "ref_by",
-                    myReferCode
-                )
-
-                .order(
-                    "id",
-                    {
-                        ascending:false
-                    }
-                );
-
-
-        if(refError){
-
-            console.log(
-                "REFERRED USERS ERROR:",
-                refError
-            );
-
-
-            list.innerHTML =
-
-                `<div class="error">
-
-                    Referred users load nahi hue.
-
-                 </div>`;
-
-            return;
-
-        }
-
-
-        document.getElementById(
-            "userCount"
-        ).textContent =
-
-            referredUsers
-                ? referredUsers.length
-                : 0;
-
-
-        if(
-            !referredUsers ||
-            referredUsers.length === 0
-        ){
-
-            document.getElementById(
-                "totalCommission"
-            ).textContent =
-
-                "₹0.00";
-
-
-            list.innerHTML =
-
-                `<div class="empty">
-
-                    <div class="empty-icon">
-                        👥
-                    </div>
-
-                    <div>
-                        Abhi koi referred user nahi mila.
-                    </div>
-
-                 </div>`;
-
-            return;
-
-        }
-
-
-        /* =========================================
-           CLEAR LIST
-        ========================================= */
-
-        list.innerHTML = "";
-
-        totalCommission = 0;
-
-
-        /* =========================================
-           EACH REFERRED USER
-        ========================================= */
-
-        for(
-            const user of referredUsers
-        ){
-
-            /* =====================================
-               USER KI HISTORY
-            ===================================== */
-
-            const {
-
-                data:historyData,
-                error:historyError
-
-            } =
-
-                await client
-
-                    .from("history")
-
-                    .select(
-                        "id,user_id,total,market,created_at,status,commission,ref_by"
-                    )
-
-                    .eq(
-                        "user_id",
-                        String(user.id)
-                    )
-
-                    .eq(
-                        "ref_by",
-                        myReferCode
-                    )
-
-                    .order(
-                        "created_at",
-                        {
-                            ascending:false
-                        }
-                    );
-
-
-            if(historyError){
-
-                console.log(
-                    "HISTORY ERROR:",
-                    historyError
-                );
-
-                continue;
-
-            }
-
-
-            /* =====================================
-               USER COMMISSION
-            ===================================== */
-
-            let userCommission = 0;
-
-            let userTotal = 0;
-
-
-            if(historyData){
-
-                historyData.forEach(
-                    function(row){
-
-                        const total =
-                            Number(
-                                row.total
-                            ) || 0;
-
-
-                        const commission =
-                            Number(
-                                row.commission
-                            ) || 0;
-
-
-                        userTotal += total;
-
-                        userCommission +=
-                            commission;
-
-                    }
-                );
-
-            }
-
-
-            totalCommission +=
-                userCommission;
-
-
-            /* =====================================
-               USER NAME
-            ===================================== */
-
-            const name =
-                user.name ||
-                "User";
-
-
-            const firstLetter =
-                name
-                    .charAt(0)
-                    .toUpperCase();
-
-
-            /* =====================================
-               USER CARD
-            ===================================== */
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-
-            card.className =
-                "user-card";
-
-
-            let historyHTML = "";
-
-
-            /* =====================================
-               HISTORY LIST
-            ===================================== */
-
-            if(
-                historyData &&
-                historyData.length > 0
-            ){
-
-                historyData.forEach(
-                    function(row){
-
-                        const rowCommission =
-                            Number(
-                                row.commission
-                            ) || 0;
-
-
-                        const rowTotal =
-                            Number(
-                                row.total
-                            ) || 0;
-
-
-                        let dateText = "";
-
-
-                        if(row.created_at){
-
-                            const date =
-                                new Date(
-                                    row.created_at
-                                );
-
-
-                            dateText =
-                                date.toLocaleString(
-                                    "en-IN",
-                                    {
-                                        day:"2-digit",
-                                        month:"2-digit",
-                                        year:"numeric",
-                                        hour:"2-digit",
-                                        minute:"2-digit"
-                                    }
-                                );
-
-                        }
-
-
-                        historyHTML += `
-
-                            <div class="history-item">
-
-                                <div class="history-top">
-
-                                    <div class="history-market">
-
-                                        ${escapeHTML(
-                                            row.market ||
-                                            "History"
-                                        )}
-
-                                    </div>
-
-                                    <div class="history-commission">
-
-                                        ₹${rowCommission.toFixed(2)}
-
-                                    </div>
-
-                                </div>
-
-
-                                <div class="history-bottom">
-
-                                    <span>
-                                        Total: ₹${rowTotal.toFixed(2)}
-                                    </span>
-
-                                    <span>
-                                        ${dateText}
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        `;
-
-                    }
-                );
-
-            }else{
-
-                historyHTML = `
-
-                    <div class="history-item">
-
-                        <div class="history-bottom">
-
-                            <span>
-                                No commission history
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                `;
-
-            }
-
-
-            card.innerHTML = `
-
-                <div class="user-top">
-
-                    <div class="user-left">
-
-                        <div class="avatar">
-
-                            ${firstLetter}
-
-                        </div>
-
-
-                        <div>
-
-                            <div class="user-name">
-
-                                ${escapeHTML(
-                                    name
-                                )}
-
-                            </div>
-
-
-                            <div class="user-id">
-
-                                ID: ${user.id}
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="commission">
-
-                        ₹${userCommission.toFixed(2)}
-
-                    </div>
-
-                </div>
-
-
-                <div class="user-details">
-
-                    <div class="detail">
-
-                        <div class="detail-label">
-
-                            Total Amount
-
-                        </div>
-
-
-                        <div class="detail-value">
-
-                            ₹${userTotal.toFixed(2)}
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="detail">
-
-                        <div class="detail-label">
-
-                            Commission
-
-                        </div>
-
-
-                        <div class="detail-value">
-
-                            ₹${userCommission.toFixed(2)}
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                ${historyHTML}
-
-            `;
-
-
-            list.appendChild(
-                card
-            );
-
-        }
-
-
-        /* =========================================
-           TOTAL COMMISSION
-        ========================================= */
-
-        document.getElementById(
-            "totalCommission"
-        ).textContent =
-
-            "₹" +
-            totalCommission.toFixed(2);
-
-
-    }catch(error){
-
-        console.log(
-            "COMMISSION PAGE ERROR:",
-            error
-        );
-
-
-        list.innerHTML =
-
-            `<div class="error">
-
-                Something went wrong.
-                Console check karo.
-
-             </div>`;
+      return;
 
     }
 
-}
+
+    const currentId =
+      myUser.id ||
+      myUser.user_id ||
+      myUser.userId;
 
 
-/* =====================================================
-   COPY REFERRAL CODE
-===================================================== */
+    if(!currentId){
 
-function copyCode(){
+      userList.innerHTML = `
+        <div class="error">
+          User ID not found.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    /* ================= CURRENT USER DATA ================= */
+
+    const {
+      data: currentUser,
+      error: userError
+    } = await client
+
+      .from("login")
+
+      .select(
+        "id,name,mobile,refer_code,ref_by"
+      )
+
+      .eq(
+        "id",
+        currentId
+      )
+
+      .maybeSingle();
+
+
+    if(userError){
+
+      console.log(
+        "CURRENT USER ERROR:",
+        userError
+      );
+
+      throw userError;
+
+    }
+
+
+    if(!currentUser){
+
+      userList.innerHTML = `
+        <div class="error">
+          Current user record not found.
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    /* ================= MY REFERRAL CODE ================= */
+
+    const myReferCode =
+      currentUser.refer_code;
+
+
+    document.getElementById(
+      "myReferCode"
+    ).textContent =
+      myReferCode || "-";
+
 
     if(!myReferCode){
 
-        return;
+      document.getElementById(
+        "userCount"
+      ).textContent = "0";
+
+
+      userList.innerHTML = `
+        <div class="empty">
+          Your referral code is not available.
+        </div>
+      `;
+
+      return;
 
     }
+
+
+    /* ================= REFERRED USERS ================= */
+
+    const {
+      data: referredUsers,
+      error: refError
+    } = await client
+
+      .from("login")
+
+      .select(
+        "id,name,mobile,refer_code,ref_by"
+      )
+
+      .eq(
+        "ref_by",
+        myReferCode
+      )
+
+      .order(
+        "id",
+        {
+          ascending:false
+        }
+      );
+
+
+    if(refError){
+
+      console.log(
+        "REFERRED USERS ERROR:",
+        refError
+      );
+
+      throw refError;
+
+    }
+
+
+    console.log(
+      "MY REFER CODE:",
+      myReferCode
+    );
+
+    console.log(
+      "REFERRED USERS:",
+      referredUsers
+    );
+
+
+    document.getElementById(
+      "userCount"
+    ).textContent =
+      referredUsers
+        ? referredUsers.length
+        : 0;
 
 
     if(
-        navigator.clipboard &&
-        navigator.clipboard.writeText
+      !referredUsers ||
+      referredUsers.length === 0
     ){
 
-        navigator.clipboard
-            .writeText(
-                myReferCode
-            )
+      userList.innerHTML = `
+        <div class="empty">
+          No referred customers found.
+        </div>
+      `;
 
-            .then(
-                function(){
+      document.getElementById(
+        "totalCommission"
+      ).textContent =
+        "₹0";
 
-                    alert(
-                        "Referral code copied!"
-                    );
-
-                }
-            )
-
-            .catch(
-                function(){
-
-                    alert(
-                        "Code: " +
-                        myReferCode
-                    );
-
-                }
-            );
-
-    }else{
-
-        alert(
-            "Code: " +
-            myReferCode
-        );
+      return;
 
     }
 
-}
+
+    /* ================= COMMISSION ================= */
+
+    let totalCommission = 0;
+
+    let html = "";
 
 
-/* =====================================================
-   HTML SAFE TEXT
-===================================================== */
+    for(
+      const referredUser
+      of referredUsers
+    ){
 
-function escapeHTML(text){
+      const {
+        data: history,
+        error: historyError
+      } = await client
 
-    return String(text)
+        .from("history")
 
-        .replace(
-            /&/g,
-            "&amp;"
+        .select(
+          "id,user_id,total,market,created_at,status,commission,ref_by"
         )
 
-        .replace(
-            /</g,
-            "&lt;"
+        .eq(
+          "user_id",
+          String(referredUser.id)
         )
 
-        .replace(
-            />/g,
-            "&gt;"
+        .eq(
+          "ref_by",
+          myReferCode
         )
 
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
+        .order(
+          "created_at",
+          {
+            ascending:false
+          }
         );
 
+
+      if(historyError){
+
+        console.log(
+          "HISTORY ERROR:",
+          historyError
+        );
+
+      }
+
+
+      let userCommission = 0;
+
+      let historyHtml = "";
+
+
+      if(
+        history &&
+        history.length > 0
+      ){
+
+        history.forEach(row => {
+
+          const commission =
+            Number(row.commission) || 0;
+
+
+          userCommission +=
+            commission;
+
+
+          totalCommission +=
+            commission;
+
+
+          historyHtml += `
+
+            <div class="history-item">
+
+              <div>
+                Market:
+                <b>
+                  ${row.market || "-"}
+                </b>
+              </div>
+
+              <div>
+                Total:
+                ₹${Number(row.total || 0)}
+              </div>
+
+              <div>
+                Status:
+                ${row.status || "-"}
+              </div>
+
+              <div>
+                Commission:
+                <b class="commission">
+                  ₹${commission}
+                </b>
+              </div>
+
+            </div>
+
+          `;
+
+        });
+
+      }
+
+
+      /* ================= USER CARD ================= */
+
+      html += `
+
+        <div class="user-card">
+
+          <div class="user-name">
+            ${referredUser.name || "Customer"}
+          </div>
+
+          <div class="user-mobile">
+            Mobile:
+            ${referredUser.mobile || "-"}
+          </div>
+
+          <div class="user-ref">
+            Referral Code:
+            ${referredUser.refer_code || "-"}
+          </div>
+
+          <div class="user-ref">
+            Referred By:
+            ${referredUser.ref_by || "-"}
+          </div>
+
+
+          <div class="user-commission">
+
+            <span>
+              Commission
+            </span>
+
+            <span class="commission">
+              ₹${userCommission}
+            </span>
+
+          </div>
+
+
+          ${
+            historyHtml
+              ? historyHtml
+              : `
+                <div class="history-item">
+                  No commission history
+                </div>
+              `
+          }
+
+        </div>
+
+      `;
+
+    }
+
+
+    /* ================= SHOW DATA ================= */
+
+    userList.innerHTML =
+      html;
+
+
+    document.getElementById(
+      "totalCommission"
+    ).textContent =
+      "₹" + totalCommission;
+
+
+  }
+  catch(error){
+
+    console.log(
+      "COMMISSION PAGE ERROR:",
+      error
+    );
+
+
+    userList.innerHTML = `
+
+      <div class="error">
+
+        Commission data load nahi ho raha.
+
+        <br><br>
+
+        ${error.message || error}
+
+      </div>
+
+    `;
+
+  }
+
 }
 
 
-/* =====================================================
-   START
-===================================================== */
+/* ================= START ================= */
 
 loadCommission();
 
 </script>
 
 </body>
+
 </html>
-```
