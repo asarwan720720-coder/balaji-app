@@ -18,7 +18,7 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
 }
 
 body{
@@ -192,6 +192,43 @@ body{
 }
 
 /* =========================
+   HISTORY ITEM
+========================= */
+
+.history-item{
+    background:#f8fafc;
+    border-radius:12px;
+    padding:10px;
+    margin-top:10px;
+}
+
+.history-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.history-market{
+    font-size:13px;
+    font-weight:bold;
+}
+
+.history-commission{
+    color:#16a34a;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.history-bottom{
+    display:flex;
+    justify-content:space-between;
+    margin-top:6px;
+    color:#6b7280;
+    font-size:11px;
+}
+
+/* =========================
    LOADING
 ========================= */
 
@@ -325,8 +362,13 @@ body{
         </button>
 
         <div>
+
             <h1>My Commission</h1>
-            <p>Earn 5% from your referred users</p>
+
+            <p>
+                Earn 5% from your referred users
+            </p>
+
         </div>
 
     </div>
@@ -428,9 +470,8 @@ const SUPABASE_URL =
 
 
 /*
-   IMPORTANT:
-   Yahan apna Supabase anon/publishable key
-   wahi use karo jo tumhare supabase.js mein hai.
+   YAHAN APNI WAHI PUBLISHABLE KEY LAGAO
+   JO TUMHARE SUPABASE.JS ME HAI.
 */
 
 const SUPABASE_KEY =
@@ -445,18 +486,13 @@ const client =
 
 
 /* =====================================================
-   COMMISSION RATE
-===================================================== */
-
-const COMMISSION_RATE = 0.05;
-
-
-/* =====================================================
    GLOBAL
 ===================================================== */
 
 let myUser = null;
+
 let myReferCode = "";
+
 let totalCommission = 0;
 
 
@@ -468,6 +504,7 @@ function getCurrentUser(){
 
     let user = null;
 
+
     try{
 
         const saved =
@@ -475,14 +512,15 @@ function getCurrentUser(){
 
         if(saved){
 
-            user = JSON.parse(saved);
+            user =
+                JSON.parse(saved);
 
         }
 
     }catch(error){
 
         console.log(
-            "user parse error:",
+            "USER PARSE ERROR:",
             error
         );
 
@@ -490,20 +528,23 @@ function getCurrentUser(){
 
 
     /*
-       Agar user object localStorage mein
-       kisi aur naam se saved hai
+       Agar user "user" key me nahi mila
     */
 
     if(!user){
 
         const possibleKeys = [
+
             "currentUser",
             "loginUser",
             "loggedUser"
+
         ];
 
 
-        for(const key of possibleKeys){
+        for(
+            const key of possibleKeys
+        ){
 
             try{
 
@@ -512,7 +553,8 @@ function getCurrentUser(){
 
                 if(saved){
 
-                    user = JSON.parse(saved);
+                    user =
+                        JSON.parse(saved);
 
                     break;
 
@@ -544,6 +586,10 @@ async function loadCommission(){
 
     try{
 
+        /* =========================================
+           CURRENT USER
+        ========================================= */
+
         myUser =
             getCurrentUser();
 
@@ -557,8 +603,11 @@ async function loadCommission(){
         if(!myUser){
 
             list.innerHTML =
+
                 `<div class="error">
+
                     User login information nahi mili.
+
                  </div>`;
 
             return;
@@ -571,6 +620,7 @@ async function loadCommission(){
         ========================================= */
 
         const currentId =
+
             myUser.id ||
             myUser.user_id ||
             myUser.userId;
@@ -579,8 +629,11 @@ async function loadCommission(){
         if(!currentId){
 
             list.innerHTML =
+
                 `<div class="error">
+
                     Current user ID nahi mili.
+
                  </div>`;
 
             return;
@@ -589,19 +642,28 @@ async function loadCommission(){
 
 
         /* =========================================
-           GET CURRENT USER FROM DATABASE
+           GET CURRENT USER
+           LOGIN TABLE
         ========================================= */
 
         const {
             data:currentUser,
             error:userError
         } =
+
             await client
+
                 .from("login")
+
                 .select(
                     "id,name,mobile,refer_code,ref_by"
                 )
-                .eq("id", currentId)
+
+                .eq(
+                    "id",
+                    currentId
+                )
+
                 .maybeSingle();
 
 
@@ -612,9 +674,13 @@ async function loadCommission(){
                 userError
             );
 
+
             list.innerHTML =
+
                 `<div class="error">
+
                     Current user load nahi hua.
+
                  </div>`;
 
             return;
@@ -625,8 +691,11 @@ async function loadCommission(){
         if(!currentUser){
 
             list.innerHTML =
+
                 `<div class="error">
+
                     Database mein user nahi mila.
+
                  </div>`;
 
             return;
@@ -634,27 +703,28 @@ async function loadCommission(){
         }
 
 
+        /* =========================================
+           CURRENT USER KA REFER CODE
+        ========================================= */
+
         myReferCode =
+
             String(
                 currentUser.refer_code || ""
             ).trim();
 
 
-        console.log(
-            "MY REFER CODE:",
-            myReferCode
-        );
-
-
         document.getElementById(
             "myReferCode"
         ).textContent =
+
             myReferCode || "N/A";
 
 
         if(!myReferCode){
 
             list.innerHTML =
+
                 `<div class="empty">
 
                     <div class="empty-icon">
@@ -671,38 +741,55 @@ async function loadCommission(){
 
 
         /* =========================================
-           GET REFERRED USERS
+           REFERRED USERS
+           
+           IMPORTANT:
+           current user's refer_code
+           ke against login.ref_by
         ========================================= */
 
         const {
+
             data:referredUsers,
             error:refError
+
         } =
+
             await client
+
                 .from("login")
+
                 .select(
                     "id,name,mobile,refer_code,ref_by"
                 )
+
                 .eq(
                     "ref_by",
                     myReferCode
                 )
+
                 .order(
                     "id",
-                    {ascending:false}
+                    {
+                        ascending:false
+                    }
                 );
 
 
         if(refError){
 
             console.log(
-                "REFERRAL ERROR:",
+                "REFERRED USERS ERROR:",
                 refError
             );
 
+
             list.innerHTML =
+
                 `<div class="error">
+
                     Referred users load nahi hue.
+
                  </div>`;
 
             return;
@@ -710,16 +797,13 @@ async function loadCommission(){
         }
 
 
-        console.log(
-            "REFERRED USERS:",
-            referredUsers
-        );
-
-
         document.getElementById(
             "userCount"
         ).textContent =
-            referredUsers.length;
+
+            referredUsers
+                ? referredUsers.length
+                : 0;
 
 
         if(
@@ -730,10 +814,12 @@ async function loadCommission(){
             document.getElementById(
                 "totalCommission"
             ).textContent =
+
                 "₹0.00";
 
 
             list.innerHTML =
+
                 `<div class="empty">
 
                     <div class="empty-icon">
@@ -752,34 +838,56 @@ async function loadCommission(){
 
 
         /* =========================================
-           LOAD EACH USER HISTORY
+           CLEAR LIST
         ========================================= */
 
         list.innerHTML = "";
 
-
         totalCommission = 0;
 
+
+        /* =========================================
+           EACH REFERRED USER
+        ========================================= */
 
         for(
             const user of referredUsers
         ){
 
-            let userTotal = 0;
-
+            /* =====================================
+               USER KI HISTORY
+            ===================================== */
 
             const {
+
                 data:historyData,
                 error:historyError
+
             } =
+
                 await client
+
                     .from("history")
+
                     .select(
-                        "id,user_id,total,market,created_at,status,win_amount,typing,mode"
+                        "id,user_id,total,market,created_at,status,commission,ref_by"
                     )
+
                     .eq(
                         "user_id",
-                        user.id
+                        String(user.id)
+                    )
+
+                    .eq(
+                        "ref_by",
+                        myReferCode
+                    )
+
+                    .order(
+                        "created_at",
+                        {
+                            ascending:false
+                        }
                     );
 
 
@@ -796,31 +904,35 @@ async function loadCommission(){
 
 
             /* =====================================
-               CALCULATE TOTAL PLAY
+               USER COMMISSION
             ===================================== */
+
+            let userCommission = 0;
+
+            let userTotal = 0;
+
 
             if(historyData){
 
                 historyData.forEach(
                     function(row){
 
-                        const amount =
+                        const total =
                             Number(
                                 row.total
                             ) || 0;
 
 
-                        /*
-                           Sirf positive amount
-                           commission mein count hoga.
-                        */
+                        const commission =
+                            Number(
+                                row.commission
+                            ) || 0;
 
-                        if(amount > 0){
 
-                            userTotal +=
-                                amount;
+                        userTotal += total;
 
-                        }
+                        userCommission +=
+                            commission;
 
                     }
                 );
@@ -828,21 +940,12 @@ async function loadCommission(){
             }
 
 
-            /* =====================================
-               5% COMMISSION
-            ===================================== */
-
-            const commission =
-                userTotal *
-                COMMISSION_RATE;
-
-
             totalCommission +=
-                commission;
+                userCommission;
 
 
             /* =====================================
-               USER CARD
+               USER NAME
             ===================================== */
 
             const name =
@@ -856,6 +959,10 @@ async function loadCommission(){
                     .toUpperCase();
 
 
+            /* =====================================
+               USER CARD
+            ===================================== */
+
             const card =
                 document.createElement(
                     "div"
@@ -866,6 +973,123 @@ async function loadCommission(){
                 "user-card";
 
 
+            let historyHTML = "";
+
+
+            /* =====================================
+               HISTORY LIST
+            ===================================== */
+
+            if(
+                historyData &&
+                historyData.length > 0
+            ){
+
+                historyData.forEach(
+                    function(row){
+
+                        const rowCommission =
+                            Number(
+                                row.commission
+                            ) || 0;
+
+
+                        const rowTotal =
+                            Number(
+                                row.total
+                            ) || 0;
+
+
+                        let dateText = "";
+
+
+                        if(row.created_at){
+
+                            const date =
+                                new Date(
+                                    row.created_at
+                                );
+
+
+                            dateText =
+                                date.toLocaleString(
+                                    "en-IN",
+                                    {
+                                        day:"2-digit",
+                                        month:"2-digit",
+                                        year:"numeric",
+                                        hour:"2-digit",
+                                        minute:"2-digit"
+                                    }
+                                );
+
+                        }
+
+
+                        historyHTML += `
+
+                            <div class="history-item">
+
+                                <div class="history-top">
+
+                                    <div class="history-market">
+
+                                        ${escapeHTML(
+                                            row.market ||
+                                            "History"
+                                        )}
+
+                                    </div>
+
+                                    <div class="history-commission">
+
+                                        ₹${rowCommission.toFixed(2)}
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="history-bottom">
+
+                                    <span>
+                                        Total: ₹${rowTotal.toFixed(2)}
+                                    </span>
+
+                                    <span>
+                                        ${dateText}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+                );
+
+            }else{
+
+                historyHTML = `
+
+                    <div class="history-item">
+
+                        <div class="history-bottom">
+
+                            <span>
+                                No commission history
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
             card.innerHTML = `
 
                 <div class="user-top">
@@ -873,17 +1097,27 @@ async function loadCommission(){
                     <div class="user-left">
 
                         <div class="avatar">
+
                             ${firstLetter}
+
                         </div>
+
 
                         <div>
 
                             <div class="user-name">
-                                ${escapeHTML(name)}
+
+                                ${escapeHTML(
+                                    name
+                                )}
+
                             </div>
 
+
                             <div class="user-id">
+
                                 ID: ${user.id}
+
                             </div>
 
                         </div>
@@ -892,7 +1126,9 @@ async function loadCommission(){
 
 
                     <div class="commission">
-                        ₹${commission.toFixed(2)}
+
+                        ₹${userCommission.toFixed(2)}
+
                     </div>
 
                 </div>
@@ -903,11 +1139,16 @@ async function loadCommission(){
                     <div class="detail">
 
                         <div class="detail-label">
+
                             Total Amount
+
                         </div>
 
+
                         <div class="detail-value">
+
                             ₹${userTotal.toFixed(2)}
+
                         </div>
 
                     </div>
@@ -916,33 +1157,43 @@ async function loadCommission(){
                     <div class="detail">
 
                         <div class="detail-label">
+
                             Commission
+
                         </div>
 
+
                         <div class="detail-value">
-                            5%
+
+                            ₹${userCommission.toFixed(2)}
+
                         </div>
 
                     </div>
 
-
                 </div>
+
+
+                ${historyHTML}
 
             `;
 
 
-            list.appendChild(card);
+            list.appendChild(
+                card
+            );
 
         }
 
 
         /* =========================================
-           TOTAL
+           TOTAL COMMISSION
         ========================================= */
 
         document.getElementById(
             "totalCommission"
         ).textContent =
+
             "₹" +
             totalCommission.toFixed(2);
 
@@ -956,9 +1207,12 @@ async function loadCommission(){
 
 
         list.innerHTML =
+
             `<div class="error">
+
                 Something went wrong.
                 Console check karo.
+
              </div>`;
 
     }
@@ -979,23 +1233,45 @@ function copyCode(){
     }
 
 
-    navigator.clipboard
-        .writeText(myReferCode)
-        .then(function(){
+    if(
+        navigator.clipboard &&
+        navigator.clipboard.writeText
+    ){
 
-            alert(
-                "Referral code copied!"
-            );
-
-        })
-        .catch(function(){
-
-            alert(
-                "Code: " +
+        navigator.clipboard
+            .writeText(
                 myReferCode
+            )
+
+            .then(
+                function(){
+
+                    alert(
+                        "Referral code copied!"
+                    );
+
+                }
+            )
+
+            .catch(
+                function(){
+
+                    alert(
+                        "Code: " +
+                        myReferCode
+                    );
+
+                }
             );
 
-        });
+    }else{
+
+        alert(
+            "Code: " +
+            myReferCode
+        );
+
+    }
 
 }
 
@@ -1007,11 +1283,31 @@ function copyCode(){
 function escapeHTML(text){
 
     return String(text)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
