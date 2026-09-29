@@ -26,6 +26,10 @@ body{
   padding-bottom:80px;
 }
 
+/* ==============================
+   HEADER
+============================== */
+
 .header{
   background:linear-gradient(135deg,#d32f2f,#ff6f00);
   color:white;
@@ -40,6 +44,32 @@ body{
   display:flex;
   align-items:center;
   gap:10px;
+}
+
+/* ==============================
+   3 DOT MENU LEFT SIDE
+============================== */
+
+.menu-btn{
+  width:36px;
+  height:40px;
+  border:0;
+  background:transparent;
+  color:white;
+  font-size:30px;
+  font-weight:bold;
+  line-height:1;
+  padding:0;
+  margin:0 2px 0 0;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.menu-btn:active{
+  transform:scale(.90);
 }
 
 .logo{
@@ -64,14 +94,9 @@ body{
   margin-top:3px;
 }
 
-/* ==============================
-   WALLET + 3 DOT MENU
-============================== */
-
 .header-right{
   display:flex;
   align-items:center;
-  gap:6px;
 }
 
 .wallet{
@@ -83,27 +108,102 @@ body{
   font-size:14px;
 }
 
-.menu-btn{
-  width:36px;
-  height:40px;
-  border:0;
-  background:transparent;
-  color:white;
-  font-size:30px;
-  font-weight:bold;
-  line-height:1;
-  padding:0;
-  margin:0;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  -webkit-tap-highlight-color:transparent;
+
+/* ==============================
+   SIDE MENU
+============================== */
+
+.menu-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.35);
+  z-index:9998;
+  display:none;
 }
 
-.menu-btn:active{
-  transform:scale(.90);
+.menu-overlay.show{
+  display:block;
 }
+
+.side-menu{
+  position:fixed;
+  top:0;
+  left:-290px;
+  width:270px;
+  max-width:82%;
+  height:100%;
+  background:white;
+  z-index:9999;
+  box-shadow:5px 0 18px rgba(0,0,0,.25);
+  transition:left .25s ease;
+  overflow-y:auto;
+}
+
+.side-menu.show{
+  left:0;
+}
+
+.menu-header{
+  background:linear-gradient(135deg,#d32f2f,#ff6f00);
+  color:white;
+  padding:22px 18px;
+}
+
+.menu-title{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.menu-user{
+  font-size:13px;
+  margin-top:5px;
+  opacity:.9;
+}
+
+.menu-close{
+  position:absolute;
+  right:12px;
+  top:12px;
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.2);
+  color:white;
+  font-size:22px;
+  cursor:pointer;
+}
+
+.menu-item{
+  width:100%;
+  border:0;
+  background:white;
+  padding:15px 18px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:15px;
+  font-weight:bold;
+  color:#333;
+  text-align:left;
+  cursor:pointer;
+  border-bottom:1px solid #eee;
+}
+
+.menu-item:active{
+  background:#fff3e0;
+}
+
+.menu-icon{
+  width:25px;
+  text-align:center;
+  font-size:20px;
+}
+
+
+/* ==============================
+   BANNER
+============================== */
 
 .banner{
   margin:12px;
@@ -120,6 +220,11 @@ body{
   border:0;
 }
 
+
+/* ==============================
+   SLOGAN
+============================== */
+
 .slogan{
   text-align:center;
   font-size:15px;
@@ -127,6 +232,11 @@ body{
   color:#d32f2f;
   margin:12px 0;
 }
+
+
+/* ==============================
+   ACTIONS
+============================== */
 
 .actions{
   display:grid;
@@ -150,6 +260,11 @@ body{
 .action-btn:active{
   transform:scale(.97);
 }
+
+
+/* ==============================
+   GAMES
+============================== */
 
 .games-title{
   padding:16px 12px 8px;
@@ -230,6 +345,11 @@ body{
   color:#856404;
 }
 
+
+/* ==============================
+   BOTTOM NAV
+============================== */
+
 .bottom-nav{
   position:fixed;
   left:0;
@@ -257,6 +377,11 @@ body{
   margin-bottom:3px;
 }
 
+
+/* ==============================
+   WHATSAPP
+============================== */
+
 .whatsapp{
   position:fixed;
   right:16px;
@@ -281,15 +406,151 @@ body{
 
 <body>
 
-<!-- HEADER -->
+
+<!-- =========================================
+     MENU OVERLAY
+========================================= -->
+
+<div
+  class="menu-overlay"
+  id="menuOverlay"
+  onclick="closeMenu()">
+</div>
+
+
+<!-- =========================================
+     SIDE MENU
+========================================= -->
+
+<div
+  class="side-menu"
+  id="sideMenu">
+
+  <div class="menu-header">
+
+    <button
+      class="menu-close"
+      type="button"
+      onclick="closeMenu()">
+
+      ×
+
+    </button>
+
+    <div class="menu-title">
+      BALAJI-DAS
+    </div>
+
+    <div
+      class="menu-user"
+      id="menuUser">
+
+      ID: --
+
+    </div>
+
+  </div>
+
+
+  <button
+    class="menu-item"
+    type="button"
+    onclick="goHome(); closeMenu();">
+
+    <span class="menu-icon">
+      🏠
+    </span>
+
+    Home
+
+  </button>
+
+
+  <button
+    class="menu-item"
+    type="button"
+    onclick="goDeposit(); closeMenu();">
+
+    <span class="menu-icon">
+      💰
+    </span>
+
+    Deposit
+
+  </button>
+
+
+  <button
+    class="menu-item"
+    type="button"
+    onclick="goWithdraw(); closeMenu();">
+
+    <span class="menu-icon">
+      💸
+    </span>
+
+    Withdraw
+
+  </button>
+
+
+  <button
+    class="menu-item"
+    type="button"
+    onclick="goHistory(); closeMenu();">
+
+    <span class="menu-icon">
+      📜
+    </span>
+
+    History
+
+  </button>
+
+
+  <button
+    class="menu-item"
+    type="button"
+    onclick="goProfile(); closeMenu();">
+
+    <span class="menu-icon">
+      👤
+    </span>
+
+    Profile
+
+  </button>
+
+</div>
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
 
 <div class="header">
 
   <div class="header-left">
 
+
+    <!-- 3 DOT BUTTON -->
+
+    <button
+      class="menu-btn"
+      id="menuBtn"
+      type="button"
+      aria-label="Menu"
+      onclick="openMenu()">
+
+      ⋮
+
+    </button>
+
+
     <div class="logo">
       🔥
     </div>
+
 
     <div>
 
@@ -297,8 +558,9 @@ body{
         BALAJI-DAS
       </div>
 
-      <div class="header-id"
-           id="userId">
+      <div
+        class="header-id"
+        id="userId">
 
         ID: --
 
@@ -309,8 +571,6 @@ body{
   </div>
 
 
-  <!-- WALLET + 3 DOT MENU -->
-
   <div class="header-right">
 
     <div class="wallet">
@@ -319,23 +579,14 @@ body{
 
     </div>
 
-
-    <button
-      class="menu-btn"
-      id="menuBtn"
-      type="button"
-      aria-label="Menu">
-
-      ⋮
-
-    </button>
-
   </div>
 
 </div>
 
 
-<!-- BANNER -->
+<!-- =========================================
+     BANNER
+========================================= -->
 
 <div class="banner">
 
@@ -346,7 +597,9 @@ body{
 </div>
 
 
-<!-- SLOGAN -->
+<!-- =========================================
+     SLOGAN
+========================================= -->
 
 <div class="slogan">
 
@@ -355,7 +608,9 @@ body{
 </div>
 
 
-<!-- ACTIONS -->
+<!-- =========================================
+     ACTIONS
+========================================= -->
 
 <div class="actions">
 
@@ -397,7 +652,9 @@ body{
 </div>
 
 
-<!-- GAMES TITLE -->
+<!-- =========================================
+     GAMES TITLE
+========================================= -->
 
 <div class="games-title">
 
@@ -406,7 +663,9 @@ body{
 </div>
 
 
-<!-- GAMES -->
+<!-- =========================================
+     GAMES
+========================================= -->
 
 <div
   class="games"
@@ -425,7 +684,9 @@ body{
 </div>
 
 
-<!-- WHATSAPP -->
+<!-- =========================================
+     WHATSAPP
+========================================= -->
 
 <a
   class="whatsapp"
@@ -437,7 +698,9 @@ body{
 </a>
 
 
-<!-- BOTTOM NAV -->
+<!-- =========================================
+     BOTTOM NAV
+========================================= -->
 
 <div class="bottom-nav">
 
@@ -536,6 +799,83 @@ document.getElementById(
   (user?.id || "--");
 
 
+document.getElementById(
+  "menuUser"
+).innerText =
+  "ID: " +
+  (user?.id || "--");
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+function openMenu(){
+
+  const sideMenu =
+    document.getElementById(
+      "sideMenu"
+    );
+
+  const overlay =
+    document.getElementById(
+      "menuOverlay"
+    );
+
+
+  sideMenu.classList.add(
+    "show"
+  );
+
+  overlay.classList.add(
+    "show"
+  );
+
+}
+
+
+function closeMenu(){
+
+  const sideMenu =
+    document.getElementById(
+      "sideMenu"
+    );
+
+  const overlay =
+    document.getElementById(
+      "menuOverlay"
+    );
+
+
+  sideMenu.classList.remove(
+    "show"
+  );
+
+  overlay.classList.remove(
+    "show"
+  );
+
+}
+
+
+/* ESC KEY */
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      event.key === "Escape"
+    ){
+
+      closeMenu();
+
+    }
+
+  }
+);
+
+
 /* =====================================================
    WALLET
 ===================================================== */
@@ -631,8 +971,6 @@ function formatTimeAMPM(time){
 
 /* =====================================================
    GAME DAY
-   07:00 AM = NEW DAY
-   06:59:59 AM = OLD DAY
 ===================================================== */
 
 function getGameDay(){
@@ -1641,10 +1979,6 @@ loadWallet();
 loadButtons();
 
 
-/*
-   हर second countdown
-*/
-
 setInterval(
 
   updateCountdowns,
@@ -1654,11 +1988,6 @@ setInterval(
 );
 
 
-/*
-   हर second check:
-   क्या नया game-day शुरू हुआ?
-*/
-
 setInterval(
 
   checkGameDay,
@@ -1667,10 +1996,6 @@ setInterval(
 
 );
 
-
-/*
-   हर 60 second Supabase refresh
-*/
 
 setInterval(
 
@@ -1689,7 +2014,13 @@ setInterval(
 </script>
 
 
-<!-- EXISTING MENU SYSTEM -->
+<!--
+=======================================================
+   menu.js भी रखा गया है
+   अगर menu.js में अपना अलग menu system है,
+   तो वह भी load होगा।
+=======================================================
+-->
 
 <script src="menu.js"></script>
 
