@@ -97,6 +97,7 @@ input,textarea{
 </div>
 
 <div class="boxBtn">
+
   <div class="btn typing" onclick="showBox('typingBox')">
     Typing Game
   </div>
@@ -104,6 +105,7 @@ input,textarea{
   <div class="btn image" onclick="showBox('imageBox')">
     Image Game
   </div>
+
 </div>
 
 <div class="container">
@@ -238,6 +240,53 @@ try{
 }
 
 
+/* =========================
+   CURRENT LOGIN ID
+   DIRECTLY FROM LOGIN TABLE
+========================= */
+
+let currentUserId = null;
+
+async function getCurrentUserId(){
+
+  try{
+
+    const { data, error } = await client
+      .from("login")
+      .select("id")
+      .eq("id", user.id)
+      .single();
+
+    if(error || !data){
+
+      console.error("LOGIN ID ERROR:", error);
+
+      alert("Login user not found");
+
+      return false;
+
+    }
+
+    currentUserId = Number(data.id);
+
+    document.getElementById("userId").innerText =
+      "ID: " + currentUserId;
+
+    return true;
+
+  }catch(error){
+
+    console.error(error);
+
+    alert("Login ID server error");
+
+    return false;
+
+  }
+
+}
+
+
 const market =
 localStorage.getItem("market") || "UNKNOWN";
 
@@ -298,7 +347,7 @@ async function loadWallet(){
     const { data, error } = await client
       .from("login")
       .select("balance")
-      .eq("id", user.id)
+      .eq("id", currentUserId)
       .single();
 
 
@@ -326,7 +375,7 @@ async function loadWallet(){
       "₹ " + (data.balance || 0);
 
     document.getElementById("userId").innerText =
-      "ID: " + user.id;
+      "ID: " + currentUserId;
 
 
   }catch(error){
@@ -338,9 +387,6 @@ async function loadWallet(){
   }
 
 }
-
-
-loadWallet();
 
 
 /* =========================
@@ -405,7 +451,7 @@ async function submitTyping(){
     const { data, error } = await client
       .from("login")
       .select("balance")
-      .eq("id", user.id)
+      .eq("id", currentUserId)
       .single();
 
 
@@ -450,7 +496,7 @@ async function submitTyping(){
         .update({
           balance: balance - amount
         })
-        .eq("id", user.id);
+        .eq("id", currentUserId);
 
 
     if(balanceError){
@@ -474,7 +520,7 @@ async function submitTyping(){
         .from("typing_image")
         .insert([{
 
-          user_id: user.id,
+          user_id: currentUserId,
 
           market: market,
 
@@ -569,7 +615,7 @@ async function submitImage(){
     } = await client
       .from("login")
       .select("balance")
-      .eq("id", user.id)
+      .eq("id", currentUserId)
       .single();
 
 
@@ -677,7 +723,7 @@ async function submitImage(){
       .update({
         balance: balance - amount
       })
-      .eq("id", user.id);
+      .eq("id", currentUserId);
 
 
     if(updateError){
@@ -704,7 +750,7 @@ async function submitImage(){
       .from("typing_image")
       .insert([{
 
-        user_id: user.id,
+        user_id: currentUserId,
 
         market: market,
 
@@ -743,6 +789,28 @@ async function submitImage(){
   }
 
 }
+
+
+/* =========================
+   START
+========================= */
+
+async function startPage(){
+
+  const ok = await getCurrentUserId();
+
+  if(!ok){
+
+    return;
+
+  }
+
+  await loadWallet();
+
+}
+
+
+startPage();
 
 </script>
 
