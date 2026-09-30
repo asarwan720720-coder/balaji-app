@@ -15,186 +15,422 @@
 <style>
 
 *{
-    box-sizing:border-box;
+  box-sizing:border-box;
 }
 
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f4f6f9;
-    color:#222;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+  background:#f5f5f5;
+  color:#222;
 }
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+  background:linear-gradient(
+    135deg,
+    #ff9800,
+    #ff5722
+  );
+
+  color:white;
+
+  padding:18px 15px;
+
+  text-align:center;
+
+  font-size:21px;
+
+  font-weight:bold;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.15);
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
 
 .container{
-    max-width:600px;
-    margin:auto;
-    padding:15px;
-}
-
-h2{
-    text-align:center;
-    margin:10px 0 15px;
+  width:100%;
+  max-width:750px;
+  margin:auto;
+  padding:12px;
 }
 
 
-/* ================= TOTAL ================= */
+/* =========================
+   SUMMARY
+========================= */
 
-.total-box{
-    background:white;
-    border-radius:15px;
-    padding:18px;
-    text-align:center;
-    margin-bottom:15px;
-    box-shadow:0 3px 10px rgba(0,0,0,.08);
+.summary{
+  background:white;
+
+  border-radius:12px;
+
+  padding:15px;
+
+  margin-bottom:12px;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.08);
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  text-align:center;
 }
 
-.total-title{
-    font-size:14px;
-    color:#777;
+.summary-box{
+  flex:1;
 }
 
-.total-amount{
-    margin-top:6px;
-    font-size:28px;
-    font-weight:bold;
-    color:#16a34a;
+.summary-title{
+  font-size:12px;
+  color:#777;
+  margin-bottom:5px;
 }
 
-
-/* ================= FILTERS ================= */
-
-.filters{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-bottom:15px;
-}
-
-select{
-    width:100%;
-    padding:13px;
-    border:1px solid #ddd;
-    border-radius:9px;
-    background:white;
-    font-size:15px;
-    outline:none;
+.summary-value{
+  font-size:18px;
+  font-weight:bold;
+  color:#e65100;
 }
 
 
-/* ================= CARD ================= */
+/* =========================
+   SEARCH
+========================= */
 
-.commission-card{
-    background:white;
-    border-radius:12px;
-    padding:15px;
-    margin-bottom:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+.search-box{
+  background:white;
+
+  padding:10px;
+
+  border-radius:10px;
+
+  margin-bottom:12px;
+
+  box-shadow:
+    0 2px 7px rgba(0,0,0,0.08);
 }
 
-.top-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
+.search-box input{
+  width:100%;
+
+  padding:12px;
+
+  border:1px solid #ddd;
+
+  border-radius:8px;
+
+  outline:none;
+
+  font-size:14px;
 }
 
-.user-id{
-    font-size:14px;
-    color:#666;
+.search-box input:focus{
+  border-color:#ff9800;
 }
 
-.commission{
-    font-size:18px;
-    font-weight:bold;
-    color:#16a34a;
+
+/* =========================
+   COMMISSION ROW
+========================= */
+
+.commission-row{
+
+  background:white;
+
+  border-radius:12px;
+
+  margin-bottom:10px;
+
+  padding:13px;
+
+  box-shadow:
+    0 2px 7px rgba(0,0,0,0.08);
+
 }
+
+
+/* =========================
+   TOP
+========================= */
+
+.row-top{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:10px;
+
+  margin-bottom:8px;
+}
+
+.user-name{
+
+  font-size:16px;
+
+  font-weight:bold;
+
+  color:#222;
+}
+
+.mobile{
+
+  font-size:13px;
+
+  color:#666;
+
+  white-space:nowrap;
+}
+
+
+/* =========================
+   MARKET
+========================= */
 
 .market{
-    text-align:center;
-    font-size:16px;
-    font-weight:bold;
-    margin:10px 0 6px;
-    color:#333;
+
+  text-align:center;
+
+  font-size:16px;
+
+  font-weight:bold;
+
+  color:#333;
+
+  background:#fff3e0;
+
+  border-radius:8px;
+
+  padding:8px;
+
+  margin-bottom:10px;
 }
 
-.amount-row{
-    display:flex;
-    justify-content:space-between;
-    padding-top:8px;
-    border-top:1px solid #eee;
-    font-size:14px;
+
+/* =========================
+   INFO
+========================= */
+
+.info-row{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:10px;
+
+  margin-bottom:8px;
 }
 
-.date-time{
-    color:#777;
-    font-size:13px;
+.info-left{
+
+  font-size:13px;
+
+  color:#777;
+}
+
+.info-right{
+
+  font-size:14px;
+
+  font-weight:bold;
 }
 
 
-/* ================= STATUS ================= */
+/* =========================
+   COMMISSION
+========================= */
+
+.commission{
+
+  font-size:17px;
+
+  font-weight:bold;
+
+  color:#e65100;
+}
+
+
+/* =========================
+   STATUS
+========================= */
 
 .status{
-    display:inline-block;
-    margin-top:8px;
-    padding:5px 10px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:bold;
+
+  display:inline-block;
+
+  font-size:12px;
+
+  font-weight:bold;
+
+  padding:5px 10px;
+
+  border-radius:20px;
+
+  background:#fff8e1;
+
+  color:#ef6c00;
 }
 
-.status-accepted{
-    background:#dcfce7;
-    color:#15803d;
+.status.accepted{
+
+  background:#e8f5e9;
+
+  color:#2e7d32;
 }
 
-.status-pending{
-    background:#fef3c7;
-    color:#a16207;
+.status.cancelled{
+
+  background:#ffebee;
+
+  color:#c62828;
 }
 
-.status-cancelled{
-    background:#fee2e2;
-    color:#b91c1c;
-}
+.status.pending{
 
-.status-other{
-    background:#eee;
-    color:#555;
-}
+  background:#fff8e1;
 
-
-/* ================= LOADING ================= */
-
-#loading{
-    text-align:center;
-    padding:25px;
-    color:#777;
-}
-
-
-/* ================= NO DATA ================= */
-
-#noData{
-    text-align:center;
-    padding:25px;
-    color:#777;
-    background:white;
-    border-radius:12px;
-    display:none;
+  color:#ef6c00;
 }
 
 
-/* ================= ERROR ================= */
+/* =========================
+   ACTION BUTTONS
+========================= */
 
-#errorBox{
-    display:none;
-    background:white;
-    color:#d32f2f;
-    padding:18px;
-    border-radius:12px;
-    text-align:center;
-    margin-top:10px;
-    word-break:break-word;
+.actions{
+
+  display:flex;
+
+  gap:8px;
+
+  margin-top:10px;
+}
+
+.actions button{
+
+  flex:1;
+
+  border:none;
+
+  padding:10px;
+
+  border-radius:8px;
+
+  font-size:14px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+.accept-btn{
+
+  background:#2e7d32;
+
+  color:white;
+}
+
+.cancel-btn{
+
+  background:#c62828;
+
+  color:white;
+}
+
+.actions button:disabled{
+
+  opacity:.5;
+
+  cursor:not-allowed;
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+.date{
+
+  font-size:11px;
+
+  color:#999;
+
+  margin-top:8px;
+
+  text-align:right;
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+.loading{
+
+  text-align:center;
+
+  padding:30px 10px;
+
+  color:#777;
+
+  font-size:15px;
+}
+
+
+/* =========================
+   NO DATA
+========================= */
+
+.no-data{
+
+  background:white;
+
+  border-radius:10px;
+
+  padding:30px 15px;
+
+  text-align:center;
+
+  color:#777;
+
+  box-shadow:
+    0 2px 7px rgba(0,0,0,0.08);
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.error{
+
+  background:#ffebee;
+
+  color:#c62828;
+
+  border-radius:10px;
+
+  padding:15px;
+
+  text-align:center;
 }
 
 </style>
@@ -205,112 +441,842 @@ select{
 <body>
 
 
+<div class="header">
+  Admin Commission
+</div>
+
+
 <div class="container">
 
 
-    <h2>Admin Commission</h2>
+  <!-- SUMMARY -->
 
+  <div class="summary">
 
-    <!-- ================= TOTAL ================= -->
+    <div class="summary-box">
 
-    <div class="total-box">
+      <div class="summary-title">
+        Total Records
+      </div>
 
-        <div class="total-title">
-            Total Commission
-        </div>
-
-        <div
-            class="total-amount"
-            id="totalCommission"
-        >
-            ₹0
-        </div>
-
-    </div>
-
-
-    <!-- ================= FILTERS ================= -->
-
-    <div class="filters">
-
-        <select id="idFilter">
-
-            <option value="all">
-                All ID
-            </option>
-
-        </select>
-
-
-        <select id="dateFilter">
-
-            <option value="all">
-                All Date
-            </option>
-
-        </select>
-
-
-        <select id="marketFilter">
-
-            <option value="all">
-                All Market
-            </option>
-
-        </select>
+      <div
+        id="totalRecords"
+        class="summary-value"
+      >
+        0
+      </div>
 
     </div>
 
 
-    <div id="loading">
-        Loading...
+    <div class="summary-box">
+
+      <div class="summary-title">
+        Commission
+      </div>
+
+      <div
+        id="totalCommission"
+        class="summary-value"
+      >
+        ₹0.00
+      </div>
+
     </div>
 
 
-    <div id="errorBox"></div>
+    <div class="summary-box">
 
+      <div class="summary-title">
+        Pending
+      </div>
 
-    <div id="noData">
-        Commission data nahi mili.
+      <div
+        id="pendingCount"
+        class="summary-value"
+      >
+        0
+      </div>
+
     </div>
 
+  </div>
 
-    <div id="commissionList"></div>
+
+  <!-- SEARCH -->
+
+  <div class="search-box">
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search name, mobile, market, user ID..."
+    >
+
+  </div>
+
+
+  <!-- DATA -->
+
+  <div
+    id="commissionContainer"
+  >
+
+    <div class="loading">
+      Loading...
+    </div>
+
+  </div>
 
 
 </div>
 
 
-
 <script>
-
 
 /* =====================================================
    SUPABASE
 ===================================================== */
 
-const SUPABASE_URL =
-    "https://katbdbzoufiblnnsoxkk.supabase.co";
-
-
-const SUPABASE_KEY =
-    "sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a";
-
-
 const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+  supabase.createClient(
 
+    "https://katbdbzoufiblnnsoxkk.supabase.co",
+
+    "sb_publishable_--fdpQMmSlUyt2ywjUErgQ_LXGvQH-a"
+
+  );
 
 
 /* =====================================================
-   GLOBAL DATA
+   ELEMENTS
 ===================================================== */
 
-let allCommissions = [];
+const container =
+  document.getElementById(
+    "commissionContainer"
+  );
 
+const searchInput =
+  document.getElementById(
+    "searchInput"
+  );
+
+const totalRecords =
+  document.getElementById(
+    "totalRecords"
+  );
+
+const totalCommission =
+  document.getElementById(
+    "totalCommission"
+  );
+
+const pendingCount =
+  document.getElementById(
+    "pendingCount"
+  );
+
+
+/* =====================================================
+   ALL COMMISSION DATA
+===================================================== */
+
+let allCommissionData = [];
+
+
+/* =====================================================
+   LOGIN USERS
+===================================================== */
+
+let loginUsers = [];
+
+
+/* =====================================================
+   LOAD LOGIN USERS
+===================================================== */
+
+async function loadLoginUsers(){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+
+      .from("login")
+
+      .select(
+        "id,user_id,name,mobile"
+      );
+
+
+  if(error){
+
+    console.log(
+      "Login users error:",
+      error
+    );
+
+    loginUsers = [];
+
+    return;
+
+  }
+
+
+  loginUsers =
+    data || [];
+
+}
+
+
+/* =====================================================
+   LOAD COMMISSION
+===================================================== */
+
+async function loadCommission(){
+
+  try{
+
+    container.innerHTML = `
+
+      <div class="loading">
+        Loading commission...
+      </div>
+
+    `;
+
+
+    await loadLoginUsers();
+
+
+    /* =================================================
+       ADMIN KE LIYE SAARA DATA
+       KISI REF_CODE SE FILTER NAHI
+    ================================================= */
+
+    const {
+
+      data,
+
+      error
+
+    } =
+      await supabaseClient
+
+        .from("commission_records")
+
+        .select(`
+
+          id,
+          user_id,
+          market,
+          total,
+          ref_by,
+          commission,
+          commission_amount,
+          commission_percent,
+          status,
+          history_id,
+          created_at
+
+        `)
+
+        .order(
+          "created_at",
+          {
+            ascending:false
+          }
+        );
+
+
+    if(error){
+
+      console.log(
+        "Commission error:",
+        error
+      );
+
+
+      container.innerHTML = `
+
+        <div class="error">
+
+          Commission data load nahi hua
+
+          <br><br>
+
+          ${escapeHTML(
+            error.message || "Unknown error"
+          )}
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    allCommissionData =
+      data || [];
+
+
+    updateSummary(
+      allCommissionData
+    );
+
+
+    renderCommission(
+      allCommissionData
+    );
+
+  }
+
+  catch(error){
+
+    console.log(
+      "Admin commission error:",
+      error
+    );
+
+
+    container.innerHTML = `
+
+      <div class="error">
+        Something went wrong
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* =====================================================
+   FIND USER
+===================================================== */
+
+function findUser(userId){
+
+  const commissionUserId =
+    String(
+      userId ?? ""
+    );
+
+
+  return loginUsers.find(
+    item => {
+
+      const loginId =
+        String(
+          item.id ?? ""
+        );
+
+
+      const loginUserId =
+        String(
+          item.user_id ?? ""
+        );
+
+
+      return (
+
+        commissionUserId === loginId ||
+
+        commissionUserId === loginUserId
+
+      );
+
+    }
+  ) || null;
+
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+function updateSummary(data){
+
+  totalRecords.textContent =
+    data.length;
+
+
+  let commissionTotal = 0;
+
+  let pending = 0;
+
+
+  data.forEach(
+    record => {
+
+      const status =
+        String(
+          record.status || "pending"
+        ).toLowerCase();
+
+
+      if(status === "pending"){
+
+        pending++;
+
+      }
+
+
+      const amount =
+        Number(
+          record.commission_amount ??
+          record.commission ??
+          0
+        );
+
+
+      if(status === "accepted"){
+
+        commissionTotal +=
+          Number.isFinite(amount)
+            ? amount
+            : 0;
+
+      }
+
+    }
+  );
+
+
+  totalCommission.textContent =
+    "₹" +
+    commissionTotal.toFixed(2);
+
+
+  pendingCount.textContent =
+    pending;
+
+}
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+function renderCommission(data){
+
+  if(
+    !data ||
+    data.length === 0
+  ){
+
+    container.innerHTML = `
+
+      <div class="no-data">
+        No commission found
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  data.forEach(
+    record => {
+
+
+      const user =
+        findUser(
+          record.user_id
+        );
+
+
+      const userName =
+        user?.name ||
+        "User";
+
+
+      const mobile =
+        String(
+          user?.mobile || ""
+        );
+
+
+      let maskedMobile =
+        mobile.slice(-4);
+
+
+      if(maskedMobile.length < 4){
+
+        maskedMobile =
+          "----";
+
+      }
+
+
+      maskedMobile =
+        "****" +
+        maskedMobile;
+
+
+      const market =
+        record.market ||
+        "-";
+
+
+      const total =
+        Number(
+          record.total || 0
+        );
+
+
+      const commissionValue =
+        Number(
+          record.commission_amount ??
+          record.commission ??
+          0
+        );
+
+
+      const status =
+        String(
+          record.status ||
+          "pending"
+        );
+
+
+      const statusClass =
+        status
+          .toLowerCase()
+          .replace(
+            /\s+/g,
+            "-"
+          );
+
+
+      const createdAt =
+        record.created_at
+          ? new Date(
+              record.created_at
+            ).toLocaleString(
+              "en-IN"
+            )
+          : "-";
+
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      row.className =
+        "commission-row";
+
+
+      row.innerHTML = `
+
+        <div class="row-top">
+
+          <div class="user-name">
+
+            ${escapeHTML(
+              userName
+            )}
+
+          </div>
+
+          <div class="mobile">
+
+            ${escapeHTML(
+              maskedMobile
+            )}
+
+          </div>
+
+        </div>
+
+
+        <div class="market">
+
+          ${escapeHTML(
+            market
+          )}
+
+        </div>
+
+
+        <div class="info-row">
+
+          <div class="info-left">
+            Total
+          </div>
+
+          <div class="info-right">
+            ₹${total.toFixed(2)}
+          </div>
+
+        </div>
+
+
+        <div class="info-row">
+
+          <div class="info-left">
+            Commission
+          </div>
+
+          <div class="commission">
+
+            ₹${commissionValue.toFixed(2)}
+
+          </div>
+
+        </div>
+
+
+        <div class="info-row">
+
+          <div class="info-left">
+            Status
+          </div>
+
+          <div
+            class="status ${statusClass}"
+            id="status-${record.id}"
+          >
+
+            ${escapeHTML(
+              status
+            )}
+
+          </div>
+
+        </div>
+
+
+        <div class="actions">
+
+          <button
+            class="accept-btn"
+            onclick="updateStatus(${record.id}, 'accepted')"
+            ${status.toLowerCase() === "accepted" ? "disabled" : ""}
+          >
+            Accept
+          </button>
+
+
+          <button
+            class="cancel-btn"
+            onclick="updateStatus(${record.id}, 'cancelled')"
+            ${status.toLowerCase() === "cancelled" ? "disabled" : ""}
+          >
+            Cancel
+          </button>
+
+        </div>
+
+
+        <div class="date">
+
+          ${escapeHTML(
+            createdAt
+          )}
+
+        </div>
+
+      `;
+
+
+      container.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   UPDATE STATUS
+===================================================== */
+
+async function updateStatus(
+  recordId,
+  newStatus
+){
+
+  const confirmText =
+    newStatus === "accepted"
+      ? "Commission accept karni hai?"
+      : "Commission cancel karni hai?";
+
+
+  if(!confirm(confirmText)){
+
+    return;
+
+  }
+
+
+  try{
+
+    const {
+      error
+    } =
+      await supabaseClient
+
+        .from("commission_records")
+
+        .update({
+          status:newStatus
+        })
+
+        .eq(
+          "id",
+          recordId
+        );
+
+
+    if(error){
+
+      console.log(
+        "Status update error:",
+        error
+      );
+
+
+      alert(
+        "Status update nahi hua:\n" +
+        error.message
+      );
+
+      return;
+
+    }
+
+
+    alert(
+      "Status " +
+      newStatus +
+      " ho gaya"
+    );
+
+
+    await loadCommission();
+
+  }
+
+  catch(error){
+
+    console.log(
+      error
+    );
+
+    alert(
+      "Something went wrong"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+searchInput.addEventListener(
+  "input",
+  function(){
+
+    const search =
+      this.value
+        .trim()
+        .toLowerCase();
+
+
+    if(!search){
+
+      renderCommission(
+        allCommissionData
+      );
+
+      return;
+
+    }
+
+
+    const filtered =
+      allCommissionData.filter(
+        record => {
+
+          const user =
+            findUser(
+              record.user_id
+            );
+
+
+          const name =
+            String(
+              user?.name || ""
+            ).toLowerCase();
+
+
+          const mobile =
+            String(
+              user?.mobile || ""
+            ).toLowerCase();
+
+
+          const market =
+            String(
+              record.market || ""
+            ).toLowerCase();
+
+
+          const userId =
+            String(
+              record.user_id || ""
+            ).toLowerCase();
+
+
+          const refBy =
+            String(
+              record.ref_by || ""
+            ).toLowerCase();
+
+
+          return (
+
+            name.includes(search) ||
+
+            mobile.includes(search) ||
+
+            market.includes(search) ||
+
+            userId.includes(search) ||
+
+            refBy.includes(search)
+
+          );
+
+        }
+      );
+
+
+    renderCommission(
+      filtered
+    );
+
+  }
+);
 
 
 /* =====================================================
@@ -319,787 +1285,57 @@ let allCommissions = [];
 
 function escapeHTML(value){
 
-    if(value === null || value === undefined){
-        return "";
-    }
+  return String(value)
 
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    .replace(
+      /&/g,
+      "&amp;"
+    )
 
-}
+    .replace(
+      /</g,
+      "&lt;"
+    )
 
+    .replace(
+      />/g,
+      "&gt;"
+    )
 
+    .replace(
+      /"/g,
+      "&quot;"
+    )
 
-/* =====================================================
-   DATE ONLY
-===================================================== */
-
-function getDateOnly(date){
-
-    if(!date){
-        return "-";
-    }
-
-    const d = new Date(date);
-
-    if(Number.isNaN(d.getTime())){
-        return "-";
-    }
-
-    const day =
-        String(d.getDate()).padStart(2,"0");
-
-    const month =
-        String(d.getMonth()+1).padStart(2,"0");
-
-    const year =
-        d.getFullYear();
-
-    return `${day}/${month}/${year}`;
-
-}
-
-
-
-/* =====================================================
-   DATE TIME
-===================================================== */
-
-function getDateTime(date){
-
-    if(!date){
-        return "-";
-    }
-
-    const d = new Date(date);
-
-    if(Number.isNaN(d.getTime())){
-        return "-";
-    }
-
-    return d.toLocaleString(
-        "en-IN",
-        {
-            day:"2-digit",
-            month:"2-digit",
-            year:"numeric",
-            hour:"2-digit",
-            minute:"2-digit",
-            hour12:true
-        }
+    .replace(
+      /'/g,
+      "&#039;"
     );
 
 }
-
-
-
-/* =====================================================
-   STATUS CLASS
-===================================================== */
-
-function getStatusClass(status){
-
-    const value =
-        String(status || "").toLowerCase();
-
-    if(value === "accepted" ||
-       value === "clear"){
-
-        return "status-accepted";
-
-    }
-
-    if(value === "pending"){
-
-        return "status-pending";
-
-    }
-
-    if(value === "cancelled" ||
-       value === "canceled"){
-
-        return "status-cancelled";
-
-    }
-
-    return "status-other";
-
-}
-
-
-
-/* =====================================================
-   LOAD COMMISSION DATA
-===================================================== */
-
-async function loadCommissionData(){
-
-    const loading =
-        document.getElementById("loading");
-
-    const errorBox =
-        document.getElementById("errorBox");
-
-    const noData =
-        document.getElementById("noData");
-
-    const list =
-        document.getElementById("commissionList");
-
-
-    loading.style.display = "block";
-
-    errorBox.style.display = "none";
-
-    noData.style.display = "none";
-
-    list.innerHTML = "";
-
-    document.getElementById(
-        "totalCommission"
-    ).textContent = "₹0";
-
-
-    try{
-
-
-        /* =================================================
-           COMMISSION RECORDS
-        ================================================= */
-
-        const {
-            data: commissionData,
-            error: commissionError
-        } = await supabaseClient
-
-            .from("commission_records")
-
-            .select(`
-                id,
-                user_id,
-                total,
-                ref_by,
-                referral_id,
-                commission_amount,
-                commission_percent,
-                status,
-                history_id,
-                created_at
-            `)
-
-            .order(
-                "created_at",
-                {
-                    ascending:false
-                }
-            );
-
-
-        if(commissionError){
-            throw commissionError;
-        }
-
-
-        allCommissions =
-            commissionData || [];
-
-
-
-        /* =================================================
-           HISTORY DATA
-        ================================================= */
-
-        const historyIds = [
-            ...new Set(
-                allCommissions
-                    .map(row => row.history_id)
-                    .filter(Boolean)
-            )
-        ];
-
-
-        let historyMap =
-            new Map();
-
-
-        if(historyIds.length > 0){
-
-            const {
-                data: historyData,
-                error: historyError
-            } = await supabaseClient
-
-                .from("history")
-
-                .select(
-                    "id,market"
-                )
-
-                .in(
-                    "id",
-                    historyIds
-                );
-
-
-            if(historyError){
-                throw historyError;
-            }
-
-
-            (historyData || []).forEach(row => {
-
-                historyMap.set(
-                    String(row.id),
-                    row.market || "-"
-                );
-
-            });
-
-        }
-
-
-
-        /* =================================================
-           LOGIN DATA
-        ================================================= */
-
-        const userIds = [
-            ...new Set(
-                allCommissions
-                    .map(row => row.user_id)
-                    .filter(Boolean)
-            )
-        ];
-
-
-        let userMap =
-            new Map();
-
-
-        if(userIds.length > 0){
-
-            const {
-                data: users,
-                error: usersError
-            } = await supabaseClient
-
-                .from("login")
-
-                .select(
-                    "id,name,mobile"
-                )
-
-                .in(
-                    "id",
-                    userIds
-                );
-
-
-            if(usersError){
-                throw usersError;
-            }
-
-
-            (users || []).forEach(user => {
-
-                userMap.set(
-                    String(user.id),
-                    user
-                );
-
-            });
-
-        }
-
-
-
-        /* =================================================
-           DATA KO COMPLETE FORMAT MEIN BANANA
-        ================================================= */
-
-        allCommissions =
-            allCommissions.map(row => {
-
-                const user =
-                    userMap.get(
-                        String(row.user_id)
-                    );
-
-
-                return {
-
-                    ...row,
-
-                    user_name:
-                        user?.name || "Customer",
-
-                    mobile:
-                        user?.mobile || "-",
-
-                    market:
-                        historyMap.get(
-                            String(row.history_id)
-                        ) || "-"
-
-                };
-
-            });
-
-
-
-        loading.style.display = "none";
-
-
-
-        /* =================================================
-           NO DATA
-        ================================================= */
-
-        if(allCommissions.length === 0){
-
-            noData.style.display = "block";
-
-            return;
-
-        }
-
-
-
-        /* =================================================
-           DROPDOWNS
-        ================================================= */
-
-        fillFilters();
-
-
-
-        /* =================================================
-           SHOW DATA
-        ================================================= */
-
-        renderCommission();
-
-    }
-    catch(error){
-
-        console.error(
-            "ADMIN COMMISSION ERROR:",
-            error
-        );
-
-
-        loading.style.display = "none";
-
-        errorBox.style.display = "block";
-
-        errorBox.innerHTML = `
-            Commission data load nahi ho raha.
-            <br><br>
-            ${escapeHTML(
-                error.message || String(error)
-            )}
-        `;
-
-    }
-
-}
-
-
-
-/* =====================================================
-   FILL FILTERS
-===================================================== */
-
-function fillFilters(){
-
-    const idFilter =
-        document.getElementById("idFilter");
-
-    const dateFilter =
-        document.getElementById("dateFilter");
-
-    const marketFilter =
-        document.getElementById("marketFilter");
-
-
-    idFilter.innerHTML = `
-        <option value="all">
-            All ID
-        </option>
-    `;
-
-
-    dateFilter.innerHTML = `
-        <option value="all">
-            All Date
-        </option>
-    `;
-
-
-    marketFilter.innerHTML = `
-        <option value="all">
-            All Market
-        </option>
-    `;
-
-
-
-    /* ================= ID ================= */
-
-    const ids = [
-        ...new Set(
-            allCommissions
-                .map(row => row.user_id)
-                .filter(Boolean)
-                .map(id => String(id))
-        )
-    ];
-
-
-    ids.forEach(id => {
-
-        const option =
-            document.createElement("option");
-
-        option.value = id;
-
-        option.textContent = id;
-
-        idFilter.appendChild(option);
-
-    });
-
-
-
-    /* ================= DATE ================= */
-
-    const dates = [
-        ...new Set(
-            allCommissions
-                .map(row =>
-                    getDateOnly(row.created_at)
-                )
-        )
-    ];
-
-
-    dates.forEach(date => {
-
-        const option =
-            document.createElement("option");
-
-        option.value = date;
-
-        option.textContent = date;
-
-        dateFilter.appendChild(option);
-
-    });
-
-
-
-    /* ================= MARKET ================= */
-
-    const markets = [
-        ...new Set(
-            allCommissions
-                .map(row => row.market)
-                .filter(Boolean)
-        )
-    ];
-
-
-    markets.forEach(market => {
-
-        const option =
-            document.createElement("option");
-
-        option.value = market;
-
-        option.textContent = market;
-
-        marketFilter.appendChild(option);
-
-    });
-
-}
-
-
-
-/* =====================================================
-   FILTER + RENDER
-===================================================== */
-
-function renderCommission(){
-
-    const idValue =
-        document.getElementById("idFilter").value;
-
-    const dateValue =
-        document.getElementById("dateFilter").value;
-
-    const marketValue =
-        document.getElementById("marketFilter").value;
-
-
-    const filtered =
-        allCommissions.filter(row => {
-
-
-            /* ================= ID ================= */
-
-            if(
-                idValue !== "all" &&
-                String(row.user_id) !== idValue
-            ){
-
-                return false;
-
-            }
-
-
-
-            /* ================= DATE ================= */
-
-            if(
-                dateValue !== "all" &&
-                getDateOnly(row.created_at)
-                !== dateValue
-            ){
-
-                return false;
-
-            }
-
-
-
-            /* ================= MARKET ================= */
-
-            if(
-                marketValue !== "all" &&
-                String(row.market)
-                !== String(marketValue)
-            ){
-
-                return false;
-
-            }
-
-
-            return true;
-
-        });
-
-
-
-    /* =================================================
-       TOTAL COMMISSION
-       
-       Accepted/Clear ko total mein count karna
-       Pending/Cancelled ko nahi.
-    ================================================= */
-
-    let total = 0;
-
-
-    filtered.forEach(row => {
-
-        const status =
-            String(
-                row.status || ""
-            ).toLowerCase();
-
-
-        if(
-            status === "accepted" ||
-            status === "clear"
-        ){
-
-            total +=
-                Number(
-                    row.commission_amount
-                ) || 0;
-
-        }
-
-    });
-
-
-    document.getElementById(
-        "totalCommission"
-    ).textContent =
-        "₹" + total.toFixed(2);
-
-
-
-    /* =================================================
-       NO FILTERED DATA
-    ================================================= */
-
-    const noData =
-        document.getElementById("noData");
-
-    const list =
-        document.getElementById("commissionList");
-
-
-    if(filtered.length === 0){
-
-        list.innerHTML = "";
-
-        noData.style.display = "block";
-
-        return;
-
-    }
-
-
-    noData.style.display = "none";
-
-
-
-    /* =================================================
-       CARDS
-    ================================================= */
-
-    let html = "";
-
-
-    filtered.forEach(row => {
-
-
-        const commission =
-            Number(
-                row.commission_amount
-            ) || 0;
-
-
-        const totalAmount =
-            Number(
-                row.total
-            ) || 0;
-
-
-        const status =
-            row.status || "unknown";
-
-
-        const statusClass =
-            getStatusClass(status);
-
-
-
-        html += `
-
-            <div class="commission-card">
-
-
-                <div class="top-row">
-
-                    <div>
-
-                        <div class="user-id">
-                            ID: ${escapeHTML(row.user_id)}
-                        </div>
-
-                        <div style="
-                            font-weight:bold;
-                            margin-top:4px;
-                        ">
-                            ${escapeHTML(row.user_name)}
-                        </div>
-
-                    </div>
-
-
-                    <div class="commission">
-                        ₹${commission.toFixed(2)}
-                    </div>
-
-                </div>
-
-
-                <div class="market">
-                    ${escapeHTML(row.market)}
-                </div>
-
-
-                <div class="amount-row">
-
-                    <span>
-                        Total: ₹${totalAmount.toFixed(2)}
-                    </span>
-
-                    <span class="date-time">
-                        ${escapeHTML(
-                            getDateTime(row.created_at)
-                        )}
-                    </span>
-
-                </div>
-
-
-                <span class="
-                    status
-                    ${statusClass}
-                ">
-                    ${escapeHTML(status)}
-                </span>
-
-
-            </div>
-
-        `;
-
-    });
-
-
-    list.innerHTML = html;
-
-}
-
-
-
-/* =====================================================
-   FILTER EVENTS
-===================================================== */
-
-document.getElementById(
-    "idFilter"
-).addEventListener(
-    "change",
-    renderCommission
-);
-
-
-document.getElementById(
-    "dateFilter"
-).addEventListener(
-    "change",
-    renderCommission
-);
-
-
-document.getElementById(
-    "marketFilter"
-).addEventListener(
-    "change",
-    renderCommission
-);
-
 
 
 /* =====================================================
    START
 ===================================================== */
 
-loadCommissionData();
+loadCommission();
+
+
+/* =====================================================
+   AUTO REFRESH
+===================================================== */
+
+setInterval(
+
+  loadCommission,
+
+  60000
+
+);
 
 </script>
 
 </body>
+
 </html>
