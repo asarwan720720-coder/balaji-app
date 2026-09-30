@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -161,13 +162,40 @@ const supabaseClient = supabase.createClient(
 );
 
 
-/* ================= USER ID ================= */
+/* ================= GET USER ID ================= */
 
-/*
-  Yahan login ke baad saved user_id li ja rahi hai.
-*/
+function getUserId() {
 
-const userId = localStorage.getItem("user_id");
+  // Sabse pehle existing user_id
+  let userId = localStorage.getItem("user_id");
+
+  if (userId && userId !== "null" && userId !== "undefined") {
+    return String(userId).trim();
+  }
+
+  // Agar login me id naam se save hai
+  let id = localStorage.getItem("id");
+
+  if (id && id !== "null" && id !== "undefined") {
+    return String(id).trim();
+  }
+
+  // Kuch systems me userId naam ho sakta hai
+  let userId2 = localStorage.getItem("userId");
+
+  if (userId2 && userId2 !== "null" && userId2 !== "undefined") {
+    return String(userId2).trim();
+  }
+
+  // Login ID ke liye fallback
+  let loginId = localStorage.getItem("login_id");
+
+  if (loginId && loginId !== "null" && loginId !== "undefined") {
+    return String(loginId).trim();
+  }
+
+  return null;
+}
 
 
 /* ================= LOAD WINING ================= */
@@ -181,6 +209,12 @@ async function loadWining() {
       Wining load ho rahi hai...
     </div>
   `;
+
+
+  const userId = getUserId();
+
+
+  /* LOGIN CHECK */
 
   if (!userId) {
 
@@ -196,19 +230,28 @@ async function loadWining() {
   }
 
 
+  console.log("WINING USER ID =", userId);
+
+
+  /* ================= WINING DATA ================= */
+
   const { data, error } = await supabaseClient
     .from("wining")
     .select("*")
-    .eq("user_id", String(userId))
-    .order("created_at", { ascending: false });
+    .eq("user_id", userId)
+    .order("id", { ascending: false });
 
+
+  /* ================= ERROR ================= */
 
   if (error) {
 
-    console.error(error);
+    console.error("WINING ERROR:", error);
 
     list.innerHTML = `
       <div class="empty">
+        <div style="font-size:40px;">⚠️</div>
+        <br>
         Wining load nahi ho saki.
       </div>
     `;
@@ -217,7 +260,11 @@ async function loadWining() {
   }
 
 
+  /* ================= NO DATA ================= */
+
   if (!data || data.length === 0) {
+
+    console.log("NO WINING FOUND FOR USER:", userId);
 
     list.innerHTML = `
       <div class="empty">
@@ -231,6 +278,8 @@ async function loadWining() {
   }
 
 
+  /* ================= SHOW DATA ================= */
+
   list.innerHTML = "";
 
 
@@ -239,10 +288,12 @@ async function loadWining() {
     let statusText = "Pending";
     let statusClass = "pending";
 
+
     if (row.status === "accepted") {
       statusText = "Accepted";
       statusClass = "accepted";
     }
+
 
     if (row.status === "cancelled") {
       statusText = "Cancelled";
@@ -251,6 +302,7 @@ async function loadWining() {
 
 
     let createdDate = "";
+
 
     if (row.created_at) {
 
@@ -272,52 +324,77 @@ async function loadWining() {
 
     card.className = "card";
 
+
     card.innerHTML = `
 
       <div class="market">
         ${escapeHtml(row.market || "Market")}
       </div>
 
+
       <div class="info">
-        <span class="label">Number</span>
+        <span class="label">
+          Number
+        </span>
+
         <span class="value">
           ${escapeHtml(row.number || "-")}
         </span>
       </div>
 
+
       <div class="info">
-        <span class="label">Bet Amount</span>
+        <span class="label">
+          Bet Amount
+        </span>
+
         <span class="value">
           ₹${Number(row.bet_amount || 0)}
         </span>
       </div>
 
+
       <div class="info">
-        <span class="label">Winning Amount</span>
+        <span class="label">
+          Winning Amount
+        </span>
+
         <span class="value win-amount">
           ₹${Number(row.amount || 0)}
         </span>
       </div>
 
+
       <div class="info">
-        <span class="label">Game</span>
+        <span class="label">
+          Game
+        </span>
+
         <span class="value">
           ${escapeHtml(row.game_type || "-")}
         </span>
       </div>
 
+
       <div class="info">
-        <span class="label">Status</span>
+        <span class="label">
+          Status
+        </span>
+
         <span class="status ${statusClass}">
           ${statusText}
         </span>
       </div>
 
+
       ${
         createdDate
         ? `
         <div class="info">
-          <span class="label">Date</span>
+          <span class="label">
+            Date
+          </span>
+
           <span class="value">
             ${createdDate}
           </span>
@@ -327,6 +404,7 @@ async function loadWining() {
       }
 
     `;
+
 
     list.appendChild(card);
 
@@ -357,3 +435,4 @@ loadWining();
 
 </body>
 </html>
+```
