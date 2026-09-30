@@ -1,15 +1,19 @@
-```html
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>Admin Wining</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -17,14 +21,15 @@
 }
 
 body{
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
     background:#f3f5f9;
     color:#222;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
+
 .header{
-    background:linear-gradient(135deg,#111827,#1f2937);
+    background:linear-gradient(135deg,#111827,#273449);
     color:white;
     padding:18px 15px;
     text-align:center;
@@ -41,20 +46,23 @@ body{
     opacity:.8;
 }
 
-/* MAIN */
+
+/* ================= CONTAINER ================= */
+
 .container{
-    width:100%;
-    max-width:1000px;
+    max-width:1050px;
     margin:auto;
     padding:15px;
 }
 
-/* FILTER BOX */
+
+/* ================= FILTER ================= */
+
 .filter-box{
     background:white;
-    border-radius:14px;
-    padding:15px;
-    box-shadow:0 3px 15px rgba(0,0,0,.08);
+    border-radius:15px;
+    padding:16px;
+    box-shadow:0 3px 15px rgba(0,0,0,.07);
     margin-bottom:15px;
 }
 
@@ -64,7 +72,7 @@ body{
     margin-bottom:13px;
 }
 
-.row{
+.filter-row{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
@@ -74,8 +82,8 @@ body{
     display:block;
     font-size:12px;
     font-weight:bold;
+    color:#666;
     margin-bottom:6px;
-    color:#555;
 }
 
 select,
@@ -95,67 +103,78 @@ input:focus{
     border-color:#2563eb;
 }
 
-/* RESULT */
-.result-box{
-    margin-top:12px;
+.result-row{
     display:flex;
     gap:10px;
+    margin-top:12px;
 }
 
-.result-box input{
+.result-row input{
     flex:1;
-    font-size:20px;
-    font-weight:bold;
     text-align:center;
-    letter-spacing:2px;
+    font-size:21px;
+    font-weight:bold;
+    letter-spacing:3px;
 }
 
-.load-btn{
-    width:130px;
+.result-btn{
+    width:190px;
     border:0;
     border-radius:9px;
     background:#2563eb;
     color:white;
-    font-size:15px;
     font-weight:bold;
     cursor:pointer;
 }
 
-.load-btn:active{
-    transform:scale(.98);
+.result-btn:disabled{
+    opacity:.6;
 }
 
-/* RESULT INFO */
+
+/* ================= RESULT INFO ================= */
+
 .result-info{
     display:none;
-    background:#eef6ff;
-    border:1px solid #bfdbfe;
-    border-radius:11px;
-    padding:12px;
+    background:white;
+    border-radius:14px;
+    padding:15px;
     margin-bottom:15px;
+    box-shadow:0 3px 15px rgba(0,0,0,.07);
 }
 
-.result-info .market{
-    font-size:17px;
+.result-info-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.market-title{
+    font-size:19px;
     font-weight:bold;
 }
 
-.result-info .date{
-    color:#555;
-    margin-top:3px;
+.date-text{
+    color:#777;
     font-size:13px;
+    margin-top:4px;
 }
 
 .result-number{
-    margin-top:8px;
-    font-size:24px;
+    font-size:28px;
     font-weight:bold;
+    background:#eef6ff;
+    padding:9px 16px;
+    border-radius:10px;
 }
 
-/* STATS */
+
+/* ================= STATS ================= */
+
 .stats{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(4,1fr);
     gap:10px;
     margin-bottom:15px;
 }
@@ -174,23 +193,32 @@ input:focus{
 }
 
 .stat-value{
-    font-size:20px;
+    font-size:19px;
     font-weight:bold;
-    margin-top:4px;
+    margin-top:5px;
 }
 
-/* WINING CARD */
+
+/* ================= LIST ================= */
+
 .list{
     display:flex;
     flex-direction:column;
-    gap:12px;
+    gap:11px;
 }
+
+
+/* ================= CARD ================= */
 
 .card{
     background:white;
     border-radius:14px;
     padding:15px;
-    box-shadow:0 3px 15px rgba(0,0,0,.07);
+    box-shadow:0 3px 14px rgba(0,0,0,.07);
+}
+
+.card.processed{
+    opacity:.88;
 }
 
 .card-top{
@@ -201,16 +229,23 @@ input:focus{
     margin-bottom:12px;
 }
 
-.market-name{
-    font-size:17px;
+.user-title{
+    font-size:16px;
     font-weight:bold;
 }
 
+.user-sub{
+    font-size:12px;
+    color:#777;
+    margin-top:3px;
+}
+
 .status{
-    padding:5px 9px;
+    padding:6px 10px;
     border-radius:20px;
     font-size:11px;
     font-weight:bold;
+    white-space:nowrap;
 }
 
 .status.pending{
@@ -228,9 +263,12 @@ input:focus{
     color:#dc2626;
 }
 
+
+/* ================= DETAILS ================= */
+
 .details{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(5,1fr);
     gap:8px;
 }
 
@@ -241,23 +279,25 @@ input:focus{
 }
 
 .detail-title{
-    font-size:10px;
     color:#777;
+    font-size:10px;
 }
 
 .detail-value{
+    margin-top:4px;
     font-size:14px;
     font-weight:bold;
-    margin-top:3px;
     word-break:break-word;
 }
 
-.win-amount{
+.win{
     color:#15803d;
-    font-size:17px;
+    font-size:16px;
 }
 
-/* ACTIONS */
+
+/* ================= ACTION ================= */
+
 .actions{
     display:flex;
     gap:9px;
@@ -290,170 +330,301 @@ input:focus{
     cursor:not-allowed;
 }
 
-/* EMPTY */
+
+/* ================= EMPTY ================= */
+
 .empty{
     background:white;
-    border-radius:13px;
-    padding:30px 15px;
+    border-radius:14px;
+    padding:32px 15px;
     text-align:center;
     color:#777;
     box-shadow:0 3px 12px rgba(0,0,0,.05);
 }
 
-/* LOADING */
 .loading{
+    background:white;
+    border-radius:14px;
+    padding:30px;
     text-align:center;
-    padding:25px;
     color:#666;
 }
 
-/* MOBILE */
-@media(max-width:650px){
+
+/* ================= MOBILE ================= */
+
+@media(max-width:700px){
 
     .container{
         padding:10px;
     }
 
-    .row{
+    .filter-row{
         grid-template-columns:1fr;
+    }
+
+    .result-row{
+        flex-direction:column;
+    }
+
+    .result-btn{
+        width:100%;
+        height:44px;
+    }
+
+    .result-info-top{
+        align-items:flex-start;
+    }
+
+    .result-number{
+        font-size:23px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
     }
 
     .details{
         grid-template-columns:repeat(2,1fr);
     }
 
-    .result-box{
-        flex-direction:column;
+    .details .detail:last-child{
+        grid-column:span 2;
     }
 
-    .load-btn{
-        width:100%;
-        height:44px;
-    }
-
-    .stats{
-        gap:7px;
-    }
-
-    .stat{
-        padding:11px 5px;
-    }
-
-    .stat-value{
-        font-size:18px;
-    }
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- ================= HEADER ================= -->
+
 <div class="header">
+
     <h1>🏆 Admin Wining</h1>
-    <p>Result डालें और winning requests manage करें</p>
+
+    <p>
+        Result डालें और winning manage करें
+    </p>
+
 </div>
+
 
 <div class="container">
 
-    <!-- FILTER -->
-    <div class="filter-box">
 
-        <div class="filter-title">
-            Winning Filter
+<!-- ================= FILTER ================= -->
+
+<div class="filter-box">
+
+    <div class="filter-title">
+        Result & Wining
+    </div>
+
+
+    <div class="filter-row">
+
+        <div class="field">
+
+            <label>
+                Date
+            </label>
+
+            <select id="dateSelect">
+
+                <option value="">
+                    Date Select करें
+                </option>
+
+            </select>
+
         </div>
 
-        <div class="row">
 
-            <div class="field">
-                <label>Date</label>
-                <select id="dateSelect">
-                    <option value="">Date Select करें</option>
-                </select>
+        <div class="field">
+
+            <label>
+                Market
+            </label>
+
+            <select id="marketSelect">
+
+                <option value="">
+                    Market Select करें
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="field"
+         style="margin-top:12px;">
+
+        <label>
+            Result
+        </label>
+
+
+        <div class="result-row">
+
+            <input
+                id="resultInput"
+                type="text"
+                inputmode="numeric"
+                maxlength="2"
+                placeholder="00">
+
+
+            <button
+                id="resultBtn"
+                class="result-btn"
+                onclick="saveResultAndFind()">
+
+                SAVE RESULT & FIND WINING
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= RESULT INFO ================= -->
+
+<div
+    id="resultInfo"
+    class="result-info">
+
+    <div class="result-info-top">
+
+        <div>
+
+            <div
+                id="infoMarket"
+                class="market-title">
             </div>
 
-            <div class="field">
-                <label>Market</label>
-                <select id="marketSelect">
-                    <option value="">Market Select करें</option>
-                </select>
+            <div
+                id="infoDate"
+                class="date-text">
             </div>
 
         </div>
 
-        <div class="field" style="margin-top:12px;">
-            <label>Game Result</label>
 
-            <div class="result-box">
+        <div
+            id="infoResult"
+            class="result-number">
+            --
+        </div>
 
-                <input
-                    id="resultInput"
-                    type="text"
-                    inputmode="numeric"
-                    maxlength="2"
-                    placeholder="00"
-                >
+    </div>
 
-                <button
-                    class="load-btn"
-                    onclick="loadWining()">
-                    VIEW WINING
-                </button>
+</div>
 
-            </div>
+
+<!-- ================= STATS ================= -->
+
+<div class="stats">
+
+    <div class="stat">
+
+        <div class="stat-title">
+            PENDING
+        </div>
+
+        <div
+            id="pendingCount"
+            class="stat-value">
+            0
         </div>
 
     </div>
 
 
-    <!-- RESULT INFO -->
-    <div class="result-info" id="resultInfo">
+    <div class="stat">
 
-        <div class="market" id="infoMarket"></div>
+        <div class="stat-title">
+            PAID
+        </div>
 
-        <div class="date" id="infoDate"></div>
-
-        <div class="result-number">
-            Result: <span id="infoResult">--</span>
+        <div
+            id="paidAmount"
+            class="stat-value">
+            ₹0
         </div>
 
     </div>
 
 
-    <!-- STATS -->
-    <div class="stats">
+    <div class="stat">
 
-        <div class="stat">
-            <div class="stat-title">Pending</div>
-            <div class="stat-value" id="pendingCount">0</div>
+        <div class="stat-title">
+            ACCEPT
         </div>
 
-        <div class="stat">
-            <div class="stat-title">Winning Amount</div>
-            <div class="stat-value" id="totalWinning">₹0</div>
-        </div>
-
-        <div class="stat">
-            <div class="stat-title">Accepted</div>
-            <div class="stat-value" id="acceptedCount">0</div>
+        <div
+            id="acceptedCount"
+            class="stat-value">
+            0
         </div>
 
     </div>
 
 
-    <!-- LIST -->
-    <div id="winingList">
-        <div class="empty">
-            Date, Market और Result select करके<br>
-            <b>VIEW WINING</b> दबाएँ
+    <div class="stat">
+
+        <div class="stat-title">
+            CANCEL
         </div>
+
+        <div
+            id="cancelledCount"
+            class="stat-value">
+            0
+        </div>
+
     </div>
+
+</div>
+
+
+<!-- ================= WINING LIST ================= -->
+
+<div
+    id="winingList"
+    class="list">
+
+    <div class="empty">
+
+        Date, Market और Result select करके<br>
+
+        <b>SAVE RESULT & FIND WINING</b>
+        दबाएँ।
+
+    </div>
+
+</div>
+
 
 </div>
 
 
 <script>
 
-/* ================= SUPABASE ================= */
+/* =====================================================
+   SUPABASE
+===================================================== */
 
 const supabaseClient = supabase.createClient(
 
@@ -464,77 +635,109 @@ const supabaseClient = supabase.createClient(
 );
 
 
-/* ================= GLOBAL DATA ================= */
+/* =====================================================
+   GLOBAL
+===================================================== */
 
-let allWining = [];
-let historyMap = {};
 let selectedDate = "";
 let selectedMarket = "";
 let selectedResult = "";
 
-
-/* ================= PAGE LOAD ================= */
-
-document.addEventListener("DOMContentLoaded", async () => {
-
-    await loadDates();
-
-});
+let winingRows = [];
+let historyMap = {};
 
 
-/* ================= LOAD DATES ================= */
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function(){
+
+        await loadDates();
+
+    }
+);
+
+
+/* =====================================================
+   LOAD DATES
+===================================================== */
 
 async function loadDates(){
 
-    const select = document.getElementById("dateSelect");
+    const select =
+        document.getElementById("dateSelect");
 
-    select.innerHTML =
-        `<option value="">Date Select करें</option>`;
 
-    const { data, error } = await supabaseClient
+    const { data, error } =
+        await supabaseClient
+
         .from("history")
+
         .select("created_at")
-        .not("created_at", "is", null)
-        .order("created_at", { ascending:false });
+
+        .not(
+            "created_at",
+            "is",
+            null
+        )
+
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
 
     if(error){
 
         console.error(error);
 
         select.innerHTML =
-            `<option value="">Date load नहीं हुई</option>`;
+            `<option value="">
+                Date load error
+             </option>`;
 
         return;
+
     }
 
-    const dates = new Set();
 
-    data.forEach(row => {
+    const dates =
+        new Set();
 
-        if(!row.created_at) return;
 
-        const d = new Date(row.created_at);
+    (data || []).forEach(row => {
 
         const date =
-            d.getFullYear() +
-            "-" +
-            String(d.getMonth()+1).padStart(2,"0") +
-            "-" +
-            String(d.getDate()).padStart(2,"0");
+            getLocalDate(
+                row.created_at
+            );
 
-        dates.add(date);
+        if(date){
+
+            dates.add(date);
+
+        }
 
     });
+
 
     [...dates].forEach(date => {
 
         const option =
             document.createElement("option");
 
+
         option.value = date;
+
 
         option.textContent =
             formatDate(date);
+
 
         select.appendChild(option);
 
@@ -543,286 +746,972 @@ async function loadDates(){
 }
 
 
-/* ================= DATE CHANGE ================= */
+/* =====================================================
+   DATE CHANGE
+===================================================== */
 
-document.getElementById("dateSelect")
-.addEventListener("change", async function(){
+document
+.getElementById("dateSelect")
+.addEventListener(
+    "change",
+    async function(){
 
-    selectedDate = this.value;
+        selectedDate = this.value;
 
-    document.getElementById("marketSelect").innerHTML =
-        `<option value="">Market Select करें</option>`;
+        selectedMarket = "";
 
-    document.getElementById("resultInfo").style.display = "none";
+        document
+        .getElementById("marketSelect")
+        .innerHTML =
+            `<option value="">
+                Market Select करें
+             </option>`;
 
-    if(!selectedDate){
 
-        return;
+        document
+        .getElementById("resultInfo")
+        .style.display = "none";
+
+
+        if(!selectedDate){
+
+            return;
+
+        }
+
+
+        await loadMarkets(selectedDate);
+
     }
-
-    await loadMarkets(selectedDate);
-
-});
+);
 
 
-/* ================= LOAD MARKETS ================= */
+/* =====================================================
+   LOAD MARKETS
+===================================================== */
 
 async function loadMarkets(date){
 
     const marketSelect =
-        document.getElementById("marketSelect");
+        document.getElementById(
+            "marketSelect"
+        );
 
-    const { data, error } = await supabaseClient
+
+    const { data, error } =
+        await supabaseClient
+
         .from("history")
-        .select("market,created_at")
-        .not("market","is",null)
-        .not("created_at","is",null);
+
+        .select(
+            "market,created_at"
+        )
+
+        .not(
+            "market",
+            "is",
+            null
+        )
+
+        .not(
+            "created_at",
+            "is",
+            null
+        );
+
 
     if(error){
 
         console.error(error);
+
         return;
 
     }
 
-    const markets = new Set();
 
-    data.forEach(row => {
+    const markets =
+        new Set();
 
-        const rowDate =
-            getLocalDate(row.created_at);
 
-        if(rowDate === date){
+    (data || []).forEach(row => {
 
-            markets.add(row.market);
+        if(
+            getLocalDate(row.created_at)
+            === date
+        ){
+
+            if(row.market){
+
+                markets.add(
+                    row.market
+                );
+
+            }
 
         }
 
     });
+
 
     [...markets]
     .sort()
     .forEach(market => {
 
         const option =
-            document.createElement("option");
+            document.createElement(
+                "option"
+            );
 
         option.value = market;
+
         option.textContent = market;
 
-        marketSelect.appendChild(option);
+        marketSelect.appendChild(
+            option
+        );
 
     });
 
 }
 
 
-/* ================= MARKET CHANGE ================= */
+/* =====================================================
+   MARKET CHANGE
+===================================================== */
 
-document.getElementById("marketSelect")
-.addEventListener("change", function(){
+document
+.getElementById("marketSelect")
+.addEventListener(
+    "change",
+    function(){
 
-    selectedMarket = this.value;
+        selectedMarket =
+            this.value;
 
-});
-
-
-/* ================= RESULT INPUT ================= */
-
-document.getElementById("resultInput")
-.addEventListener("input", function(){
-
-    this.value =
-        this.value.replace(/[^0-9]/g,"").slice(0,2);
-
-});
+    }
+);
 
 
-/* ================= LOAD WINING ================= */
+/* =====================================================
+   RESULT INPUT
+===================================================== */
 
-async function loadWining(){
+document
+.getElementById("resultInput")
+.addEventListener(
+    "input",
+    function(){
+
+        this.value =
+            this.value
+            .replace(/[^0-9]/g,"")
+            .slice(0,2);
+
+    }
+);
+
+
+/* =====================================================
+   MAIN BUTTON
+===================================================== */
+
+async function saveResultAndFind(){
 
     selectedDate =
-        document.getElementById("dateSelect").value;
+        document
+        .getElementById("dateSelect")
+        .value;
+
 
     selectedMarket =
-        document.getElementById("marketSelect").value;
+        document
+        .getElementById("marketSelect")
+        .value;
+
 
     selectedResult =
-        document.getElementById("resultInput").value.trim();
+        document
+        .getElementById("resultInput")
+        .value
+        .trim();
+
+
+    /* DATE */
 
     if(!selectedDate){
 
-        alert("पहले Date select करें");
+        alert(
+            "पहले Date select करें."
+        );
+
         return;
 
     }
+
+
+    /* MARKET */
 
     if(!selectedMarket){
 
-        alert("पहले Market select करें");
+        alert(
+            "पहले Market select करें."
+        );
+
         return;
 
     }
 
-    if(!/^[0-9]{2}$/.test(selectedResult)){
 
-        alert("Result 00 से 99 के बीच 2 digit का डालें");
+    /* RESULT */
+
+    if(
+        !/^[0-9]{2}$/.test(
+            selectedResult
+        )
+    ){
+
+        alert(
+            "Result 00 से 99 के बीच 2 digit डालें."
+        );
+
         return;
 
     }
 
-    showLoading();
 
-    /*
-      पहले Game result में result save/update होगा
-    */
-    await updateGameResult(
-        selectedDate,
-        selectedMarket,
-        selectedResult
-    );
+    const button =
+        document.getElementById(
+            "resultBtn"
+        );
 
-    /*
-      फिर उस date/market की winning entries load होंगी
-    */
-    await fetchWining();
+
+    button.disabled = true;
+
+    button.textContent =
+        "PROCESSING...";
+
+
+    try{
+
+        /*
+         * STEP 1
+         * Game result में result save
+         */
+
+        const resultSaved =
+            await saveGameResult();
+
+
+        if(!resultSaved){
+
+            return;
+
+        }
+
+
+        /*
+         * STEP 2
+         * History से winning rows बनाना
+         */
+
+        await createWiningRows();
+
+
+        /*
+         * STEP 3
+         * Wining table reload
+         */
+
+        await loadWining();
+
+
+    }
+    finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "SAVE RESULT & FIND WINING";
+
+    }
 
 }
 
 
-/* ================= UPDATE GAME RESULT ================= */
+/* =====================================================
+   SAVE GAME RESULT
+===================================================== */
 
-async function updateGameResult(
-    date,
-    market,
-    result
-){
+async function saveGameResult(){
 
     /*
-      Exact date + market की row ढूँढेंगे
-    */
+     * पहले exact date + market की row
+     */
 
-    const { data, error } = await supabaseClient
+    const { data, error } =
+        await supabaseClient
+
         .from("Game result")
-        .select("id,name,date,number")
-        .eq("name", market)
-        .eq("date", date)
+
+        .select(
+            "id,name,date,number"
+        )
+
+        .eq(
+            "name",
+            selectedMarket
+        )
+
+        .eq(
+            "date",
+            selectedDate
+        )
+
         .limit(1);
+
 
     if(error){
 
-        console.error("Game result error:", error);
+        console.error(error);
 
         alert(
-            "Game result पढ़ने में error आया.\n\n" +
-            error.message
+            "Game result पढ़ने में error:\n\n"
+            + error.message
         );
 
         return false;
+
     }
 
-    if(!data || data.length === 0){
 
-        /*
-          अगर exact date row नहीं मिली,
-          तो केवल warning देंगे।
-        */
+    /*
+     * Existing row मिली
+     */
 
-        console.warn(
-            "Game result row नहीं मिली:",
-            date,
-            market
-        );
+    if(data && data.length > 0){
 
-        return false;
+        const resultId =
+            data[0].id;
+
+
+        const { error:updateError } =
+            await supabaseClient
+
+            .from("Game result")
+
+            .update({
+
+                number:
+                    selectedResult
+
+            })
+
+            .eq(
+                "id",
+                resultId
+            );
+
+
+        if(updateError){
+
+            console.error(
+                updateError
+            );
+
+            alert(
+                "Result update नहीं हुआ:\n\n"
+                + updateError.message
+            );
+
+            return false;
+
+        }
+
+
+        return true;
+
     }
 
-    const resultId = data[0].id;
 
-    const { error:updateError } =
+    /*
+     * अगर row नहीं मिली तो नई row बनाओ
+     */
+
+    const { error:insertError } =
         await supabaseClient
+
         .from("Game result")
-        .update({
-            number: result
-        })
-        .eq("id", resultId);
 
-    if(updateError){
+        .insert({
 
-        console.error(updateError);
+            name:
+                selectedMarket,
+
+            number:
+                selectedResult,
+
+            date:
+                selectedDate
+
+        });
+
+
+    if(insertError){
+
+        console.error(
+            insertError
+        );
 
         alert(
-            "Result update नहीं हुआ.\n\n" +
-            updateError.message
+            "Result save नहीं हुआ:\n\n"
+            + insertError.message
         );
 
         return false;
+
     }
+
 
     return true;
 
 }
 
 
-/* ================= FETCH WINING ================= */
+/* =====================================================
+   CREATE WINING ROWS
+===================================================== */
 
-async function fetchWining(){
+async function createWiningRows(){
 
     /*
-      सभी wining rows
-    */
+     * इस date और market की सारी history
+     */
 
-    const { data:winingData, error:winingError } =
+    const { data:historyData, error } =
         await supabaseClient
-        .from("wining")
-        .select("*")
-        .order("id", {ascending:false});
 
-    if(winingError){
+        .from("history")
 
-        console.error(winingError);
+        .select(
+            "id,user_id,market,data,total,created_at,status"
+        )
 
-        document.getElementById("winingList").innerHTML =
-            `<div class="empty">
-                Wining data load नहीं हुआ.<br><br>
-                ${escapeHtml(winingError.message)}
-            </div>`;
+        .eq(
+            "market",
+            selectedMarket
+        )
+
+        .not(
+            "created_at",
+            "is",
+            null
+        );
+
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            "History load नहीं हुई:\n\n"
+            + error.message
+        );
 
         return;
+
     }
 
-    allWining = winingData || [];
+
+    const histories =
+        (historyData || [])
+        .filter(row => {
+
+            return (
+                getLocalDate(
+                    row.created_at
+                )
+                ===
+                selectedDate
+            );
+
+        });
+
+
+    if(histories.length === 0){
+
+        alert(
+            "इस Date और Market की कोई history bet नहीं मिली."
+        );
+
+        return;
+
+    }
+
 
     /*
-      History IDs निकालना
-    */
+     * Existing winning rows
+     *
+     * Duplicate रोकने के लिए
+     */
 
     const historyIds =
-        allWining
-        .map(x => x.history_id)
-        .filter(x => x !== null && x !== undefined);
+        histories.map(
+            h => h.id
+        );
+
+
+    const { data:existingRows,
+            error:existingError } =
+
+        await supabaseClient
+
+        .from("wining")
+
+        .select(
+            "history_id,number"
+        )
+
+        .in(
+            "history_id",
+            historyIds
+        );
+
+
+    if(existingError){
+
+        console.error(
+            existingError
+        );
+
+        alert(
+            "Existing wining data पढ़ने में error:\n\n"
+            + existingError.message
+        );
+
+        return;
+
+    }
+
+
+    const existingSet =
+        new Set();
+
+
+    (existingRows || [])
+    .forEach(row => {
+
+        existingSet.add(
+            String(row.history_id)
+            + "_"
+            + String(row.number)
+            .toUpperCase()
+        );
+
+    });
+
+
+    const rowsToInsert = [];
+
+
+    /*
+     * हर history check
+     */
+
+    histories.forEach(history => {
+
+        let items;
+
+
+        try{
+
+            items =
+                JSON.parse(
+                    history.data || "[]"
+                );
+
+        }
+        catch(error){
+
+            console.error(
+                "Invalid history JSON:",
+                history.id,
+                error
+            );
+
+            return;
+
+        }
+
+
+        if(!Array.isArray(items)){
+
+            return;
+
+        }
+
+
+        items.forEach(item => {
+
+            const number =
+                String(
+                    item.number || ""
+                )
+                .trim()
+                .toUpperCase();
+
+
+            const betAmount =
+                Number(
+                    item.amount || 0
+                );
+
+
+            if(
+                !number ||
+                betAmount <= 0
+            ){
+
+                return;
+
+            }
+
+
+            /*
+             * Result matching
+             */
+
+            const winningAmount =
+                calculateWinning(
+                    number,
+                    selectedResult,
+                    betAmount
+                );
+
+
+            /*
+             * Losing number
+             */
+
+            if(winningAmount <= 0){
+
+                return;
+
+            }
+
+
+            /*
+             * Duplicate
+             */
+
+            const duplicateKey =
+                String(history.id)
+                + "_"
+                + number;
+
+
+            if(
+                existingSet.has(
+                    duplicateKey
+                )
+            ){
+
+                return;
+
+            }
+
+
+            /*
+             * Game type
+             */
+
+            let gameType =
+                "Number";
+
+
+            if(
+                number.startsWith("A") ||
+                number.startsWith("B")
+            ){
+
+                gameType =
+                    "Hurf";
+
+            }
+
+
+            rowsToInsert.push({
+
+                user_id:
+                    String(
+                        history.user_id
+                    ),
+
+                market:
+                    history.market,
+
+                number:
+                    number,
+
+                bet_amount:
+                    betAmount,
+
+                amount:
+                    winningAmount,
+
+                status:
+                    "pending",
+
+                history_id:
+                    history.id,
+
+                game_type:
+                    gameType,
+
+                created_at:
+                    history.created_at
+
+            });
+
+
+        });
+
+    });
+
+
+    /*
+     * कोई winning नहीं
+     */
+
+    if(rowsToInsert.length === 0){
+
+        console.log(
+            "No new winning rows."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * WINING TABLE INSERT
+     */
+
+    const { error:insertError } =
+        await supabaseClient
+
+        .from("wining")
+
+        .insert(
+            rowsToInsert
+        );
+
+
+    if(insertError){
+
+        console.error(
+            insertError
+        );
+
+        alert(
+            "Wining rows create नहीं हुईं:\n\n"
+            + insertError.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        rowsToInsert.length
+        + " winning row(s) बन गईं."
+    );
+
+}
+
+
+/* =====================================================
+   CALCULATE WINNING
+===================================================== */
+
+function calculateWinning(
+    number,
+    result,
+    betAmount
+){
+
+    const n =
+        String(number)
+        .trim()
+        .toUpperCase();
+
+
+    const r =
+        String(result)
+        .padStart(2,"0");
+
+
+    const bet =
+        Number(betAmount || 0);
+
+
+    /*
+     * EXACT NUMBER
+     *
+     * 56 = 56 × 92
+     */
+
+    if(n === r){
+
+        return bet * 92;
+
+    }
+
+
+    /*
+     * A FIRST DIGIT
+     *
+     * Result 56
+     * A5 = 9
+     */
+
+    if(
+        n ===
+        "A" + r.charAt(0)
+    ){
+
+        return bet * 9;
+
+    }
+
+
+    /*
+     * B SECOND DIGIT
+     *
+     * Result 56
+     * B6 = 9
+     */
+
+    if(
+        n ===
+        "B" + r.charAt(1)
+    ){
+
+        return bet * 9;
+
+    }
+
+
+    return 0;
+
+}
+
+
+/* =====================================================
+   LOAD WINING
+===================================================== */
+
+async function loadWining(){
+
+    /*
+     * सभी wining rows
+     */
+
+    const { data, error } =
+        await supabaseClient
+
+        .from("wining")
+
+        .select("*")
+
+        .order(
+            "id",
+            {
+                ascending:false
+            }
+        );
+
+
+    if(error){
+
+        console.error(error);
+
+        document
+        .getElementById(
+            "winingList"
+        )
+        .innerHTML =
+            `<div class="empty">
+                Wining load नहीं हुई.<br><br>
+                ${escapeHtml(
+                    error.message
+                )}
+             </div>`;
+
+        return;
+
+    }
+
+
+    winingRows =
+        data || [];
+
+
+    /*
+     * History IDs
+     */
+
+    const ids =
+        winingRows
+        .map(
+            row =>
+                row.history_id
+        )
+        .filter(
+            id =>
+                id !== null &&
+                id !== undefined
+        );
+
 
     historyMap = {};
 
-    if(historyIds.length > 0){
+
+    if(ids.length > 0){
 
         const uniqueIds =
-            [...new Set(historyIds)];
+            [...new Set(ids)];
 
-        const { data:historyData, error:historyError } =
+
+        const { data:histories,
+                error:historyError } =
+
             await supabaseClient
+
             .from("history")
-            .select("id,created_at,market")
-            .in("id", uniqueIds);
+
+            .select(
+                "id,created_at,market"
+            )
+
+            .in(
+                "id",
+                uniqueIds
+            );
+
 
         if(historyError){
 
-            console.error(historyError);
+            console.error(
+                historyError
+            );
 
-        }else{
+        }
+        else{
 
-            (historyData || []).forEach(h => {
+            (histories || [])
+            .forEach(h => {
 
                 historyMap[h.id] = h;
 
@@ -832,194 +1721,251 @@ async function fetchWining(){
 
     }
 
+
     renderWining();
 
 }
 
 
-/* ================= RESULT MATCHING ================= */
-
-function getWinningAmount(row){
-
-    const number =
-        String(row.number || "").trim().toUpperCase();
-
-    const result =
-        String(selectedResult).padStart(2,"0");
-
-    const bet =
-        Number(row.bet_amount || 0);
-
-    /*
-      Exact Number
-      Example 56 => 56 x 92
-    */
-
-    if(number === result){
-
-        return bet * 92;
-
-    }
-
-    /*
-      A first digit
-      Example result 56 => A5
-    */
-
-    if(number === "A" + result.charAt(0)){
-
-        return bet * 9;
-
-    }
-
-    /*
-      B second digit
-      Example result 56 => B6
-    */
-
-    if(number === "B" + result.charAt(1)){
-
-        return bet * 9;
-
-    }
-
-    return 0;
-
-}
-
-
-/* ================= RENDER ================= */
+/* =====================================================
+   RENDER WINING
+===================================================== */
 
 function renderWining(){
 
     const list =
-        document.getElementById("winingList");
+        document.getElementById(
+            "winingList"
+        );
 
-    let rows = [];
 
-    /*
-      Selected date + market
-    */
+    let rows =
+        winingRows.filter(row => {
 
-    allWining.forEach(row => {
+            const history =
+                historyMap[
+                    row.history_id
+                ];
 
-        const history =
-            historyMap[row.history_id];
 
-        let rowDate = null;
-        let rowMarket = row.market;
+            let date = null;
 
-        if(history){
+            let market =
+                row.market;
 
-            rowDate =
-                getLocalDate(history.created_at);
 
-            if(!rowMarket){
+            if(history){
 
-                rowMarket =
-                    history.market;
+                date =
+                    getLocalDate(
+                        history.created_at
+                    );
+
+
+                if(!market){
+
+                    market =
+                        history.market;
+
+                }
+
+            }
+            else if(row.created_at){
+
+                date =
+                    getLocalDate(
+                        row.created_at
+                    );
 
             }
 
-        }else if(row.created_at){
 
-            rowDate =
-                getLocalDate(row.created_at);
+            return (
+                date === selectedDate &&
+                String(market || "")
+                .trim()
+                .toLowerCase()
+                ===
+                String(selectedMarket || "")
+                .trim()
+                .toLowerCase()
+            );
 
-        }
+        });
 
-        if(rowDate !== selectedDate){
 
-            return;
+    /*
+     * IMPORTANT:
+     *
+     * Pending सबसे ऊपर
+     * Processed नीचे
+     */
 
-        }
+    rows.sort((a,b) => {
+
+        const aPending =
+            String(a.status)
+            .toLowerCase()
+            === "pending";
+
+
+        const bPending =
+            String(b.status)
+            .toLowerCase()
+            === "pending";
+
 
         if(
-            String(rowMarket || "").trim().toLowerCase()
-            !==
-            String(selectedMarket || "").trim().toLowerCase()
+            aPending &&
+            !bPending
         ){
 
-            return;
+            return -1;
 
         }
 
-        rows.push(row);
+
+        if(
+            !aPending &&
+            bPending
+        ){
+
+            return 1;
+
+        }
+
+
+        return (
+            Number(b.id || 0)
+            -
+            Number(a.id || 0)
+        );
 
     });
 
 
     /*
-      Result matching amount
-    */
+     * STATS
+     */
 
-    rows.forEach(row => {
-
-        row.calculated_amount =
-            getWinningAmount(row);
-
-    });
-
-
-    /*
-      Stats
-    */
-
-    const pendingRows =
+    const pending =
         rows.filter(
-            x => x.status === "pending"
+            r =>
+                r.status === "pending"
         );
 
-    const acceptedRows =
+
+    const accepted =
         rows.filter(
-            x => x.status === "accepted"
+            r =>
+                r.status === "accepted"
         );
 
-    const totalWinning =
-        pendingRows.reduce(
+
+    const cancelled =
+        rows.filter(
+            r =>
+                r.status === "cancelled"
+        );
+
+
+    const paid =
+        accepted.reduce(
             (sum,row) =>
-                sum + Number(row.calculated_amount || 0),
+                sum +
+                Number(
+                    row.amount || 0
+                ),
             0
         );
 
-    document.getElementById("pendingCount")
-        .textContent = pendingRows.length;
 
-    document.getElementById("acceptedCount")
-        .textContent = acceptedRows.length;
+    document
+    .getElementById(
+        "pendingCount"
+    )
+    .textContent =
+        pending.length;
 
-    document.getElementById("totalWinning")
-        .textContent =
-        "₹" + totalWinning.toLocaleString("en-IN");
+
+    document
+    .getElementById(
+        "acceptedCount"
+    )
+    .textContent =
+        accepted.length;
+
+
+    document
+    .getElementById(
+        "cancelledCount"
+    )
+    .textContent =
+        cancelled.length;
+
+
+    document
+    .getElementById(
+        "paidAmount"
+    )
+    .textContent =
+        "₹" +
+        paid.toLocaleString(
+            "en-IN"
+        );
 
 
     /*
-      Result info
-    */
+     * RESULT INFO
+     */
 
-    document.getElementById("resultInfo")
-        .style.display = "block";
+    document
+    .getElementById(
+        "resultInfo"
+    )
+    .style.display =
+        "block";
 
-    document.getElementById("infoMarket")
-        .textContent = selectedMarket;
 
-    document.getElementById("infoDate")
-        .textContent = formatDate(selectedDate);
+    document
+    .getElementById(
+        "infoMarket"
+    )
+    .textContent =
+        selectedMarket;
 
-    document.getElementById("infoResult")
-        .textContent = selectedResult;
+
+    document
+    .getElementById(
+        "infoDate"
+    )
+    .textContent =
+        formatDate(
+            selectedDate
+        );
+
+
+    document
+    .getElementById(
+        "infoResult"
+    )
+    .textContent =
+        selectedResult;
 
 
     /*
-      Nothing
-    */
+     * EMPTY
+     */
 
     if(rows.length === 0){
 
         list.innerHTML =
             `<div class="empty">
-                इस Date और Market की कोई winning entry नहीं मिली.
-            </div>`;
+
+                इस Date और Market की
+                कोई winning entry नहीं मिली.
+
+             </div>`;
 
         return;
 
@@ -1028,110 +1974,93 @@ function renderWining(){
 
     list.innerHTML = "";
 
+
+    /*
+     * CARDS
+     */
+
     rows.forEach(row => {
 
-        const card =
-            document.createElement("div");
-
-        card.className = "card";
-
         const status =
-            String(row.status || "pending")
-            .toLowerCase();
+            String(
+                row.status ||
+                "pending"
+            ).toLowerCase();
 
-        const calculated =
-            Number(row.calculated_amount || 0);
 
-        const currentAmount =
-            Number(row.amount || 0);
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "card" +
+            (
+                status !== "pending"
+                ? " processed"
+                : ""
+            );
+
+
+        const amount =
+            Number(
+                row.amount || 0
+            );
+
 
         /*
-          Pending में calculated amount दिखाएँ.
-          Accepted में existing amount.
-        */
+         * Processed status
+         */
 
-        const displayAmount =
-            status === "pending"
-            ? calculated
-            : currentAmount;
+        let statusBadge = "";
 
 
-        card.innerHTML = `
+        if(status === "accepted"){
 
-            <div class="card-top">
+            statusBadge =
+                `<div class="status accepted">
+                    ACCEPT
+                 </div>`;
 
-                <div class="market-name">
-                    ${escapeHtml(row.market || selectedMarket)}
-                </div>
+        }
+        else if(
+            status === "cancelled"
+        ){
 
-                <div class="status ${status}">
-                    ${statusText(status)}
-                </div>
+            statusBadge =
+                `<div class="status cancelled">
+                    CANCEL
+                 </div>`;
 
-            </div>
+        }
+        else{
 
+            statusBadge =
+                `<div class="status pending">
+                    PENDING
+                 </div>`;
 
-            <div class="details">
-
-                <div class="detail">
-                    <div class="detail-title">
-                        User ID
-                    </div>
-
-                    <div class="detail-value">
-                        ${escapeHtml(row.user_id || "-")}
-                    </div>
-                </div>
-
-
-                <div class="detail">
-                    <div class="detail-title">
-                        Number
-                    </div>
-
-                    <div class="detail-value">
-                        ${escapeHtml(row.number || "-")}
-                    </div>
-                </div>
+        }
 
 
-                <div class="detail">
-                    <div class="detail-title">
-                        Bet Amount
-                    </div>
+        /*
+         * Buttons
+         */
 
-                    <div class="detail-value">
-                        ₹${Number(row.bet_amount || 0)
-                        .toLocaleString("en-IN")}
-                    </div>
-                </div>
+        let actions = "";
 
 
-                <div class="detail">
-                    <div class="detail-title">
-                        Winning
-                    </div>
+        if(status === "pending"){
 
-                    <div class="detail-value win-amount">
-                        ₹${displayAmount
-                        .toLocaleString("en-IN")}
-                    </div>
-                </div>
+            actions = `
 
-            </div>
-
-
-            ${
-                status === "pending"
-                ?
-                `
                 <div class="actions">
 
                     <button
                         class="accept-btn"
                         onclick="acceptWining(
-                            ${Number(row.id)},
-                            ${calculated}
+                            ${Number(row.id)}
                         )">
 
                         ✓ ACCEPT
@@ -1150,12 +2079,141 @@ function renderWining(){
                     </button>
 
                 </div>
-                `
-                :
-                ""
-            }
+
+            `;
+
+        }
+
+
+        card.innerHTML = `
+
+            <div class="card-top">
+
+                <div>
+
+                    <div class="user-title">
+
+                        User ID:
+                        ${escapeHtml(
+                            row.user_id || "-"
+                        )}
+
+                    </div>
+
+                    <div class="user-sub">
+
+                        History ID:
+                        ${escapeHtml(
+                            row.history_id || "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                ${statusBadge}
+
+            </div>
+
+
+            <div class="details">
+
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        MARKET
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            row.market || "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        NUMBER
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            row.number || "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        BET
+                    </div>
+
+                    <div class="detail-value">
+
+                        ₹${Number(
+                            row.bet_amount || 0
+                        ).toLocaleString(
+                            "en-IN"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        GAME
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                            row.game_type || "-"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-title">
+                        WINNING
+                    </div>
+
+                    <div class="detail-value win">
+
+                        ₹${amount.toLocaleString(
+                            "en-IN"
+                        )}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            ${actions}
 
         `;
+
 
         list.appendChild(card);
 
@@ -1164,17 +2222,72 @@ function renderWining(){
 }
 
 
-/* ================= ACCEPT ================= */
+/* =====================================================
+   ACCEPT
+===================================================== */
 
-async function acceptWining(
-    id,
-    winningAmount
-){
+async function acceptWining(id){
 
-    if(!winningAmount || winningAmount <= 0){
+    /*
+     * Current row फिर से check
+     */
+
+    const { data, error } =
+        await supabaseClient
+
+        .from("wining")
+
+        .select(
+            "id,user_id,number,amount,status"
+        )
+
+        .eq(
+            "id",
+            id
+        )
+
+        .single();
+
+
+    if(error){
 
         alert(
-            "इस entry के लिए winning amount 0 है."
+            "Entry verify नहीं हुई:\n\n"
+            + error.message
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Already processed
+     */
+
+    if(data.status !== "pending"){
+
+        alert(
+            "यह winning पहले ही process हो चुकी है."
+        );
+
+        await loadWining();
+
+        return;
+
+    }
+
+
+    const amount =
+        Number(
+            data.amount || 0
+        );
+
+
+    if(amount <= 0){
+
+        alert(
+            "Winning amount 0 है."
         );
 
         return;
@@ -1184,46 +2297,24 @@ async function acceptWining(
 
     const ok =
         confirm(
-            "Winning Accept करें?\n\n" +
-            "Amount: ₹" +
-            Number(winningAmount)
-            .toLocaleString("en-IN")
+            "Winning ACCEPT करें?\n\n"
+            +
+            "User ID: "
+            + data.user_id
+            + "\n"
+            +
+            "Number: "
+            + data.number
+            + "\n"
+            +
+            "Amount: ₹"
+            + amount.toLocaleString(
+                "en-IN"
+            )
         );
 
-    if(!ok) return;
 
-
-    /*
-      पहले current row दोबारा पढ़ेंगे
-      ताकि double accept न हो
-    */
-
-    const { data, error } =
-        await supabaseClient
-        .from("wining")
-        .select("id,status")
-        .eq("id", id)
-        .single();
-
-    if(error){
-
-        alert(
-            "Entry verify नहीं हुई.\n\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    if(data.status !== "pending"){
-
-        alert(
-            "यह entry पहले ही process हो चुकी है.\n" +
-            "Status: " + data.status
-        );
-
-        await fetchWining();
+    if(!ok){
 
         return;
 
@@ -1231,84 +2322,102 @@ async function acceptWining(
 
 
     /*
-      Amount और status दोनों update
-    */
+     * Pending ही होने पर accept
+     */
 
     const { error:updateError } =
         await supabaseClient
+
         .from("wining")
+
         .update({
 
-            amount: winningAmount,
-            status: "accepted"
+            status:
+                "accepted"
 
         })
-        .eq("id", id)
-        .eq("status", "pending");
+
+        .eq(
+            "id",
+            id
+        )
+
+        .eq(
+            "status",
+            "pending"
+        );
 
 
     if(updateError){
 
-        console.error(updateError);
+        console.error(
+            updateError
+        );
 
         alert(
-            "Accept नहीं हुआ.\n\n" +
-            updateError.message
+            "Accept नहीं हुआ:\n\n"
+            + updateError.message
         );
 
         return;
+
     }
 
 
     /*
-      Existing database trigger:
-      pending -> accepted
-      = login.balance में amount add
-    */
+     * Existing trigger:
+     *
+     * pending -> accepted
+     *
+     * login.balance में amount
+     */
 
     alert(
-        "✓ Winning Accepted\n\n" +
-        "₹" +
-        Number(winningAmount)
-        .toLocaleString("en-IN") +
-        " wallet में add होगा."
+        "✓ ACCEPT हो गया\n\n"
+        +
+        "₹"
+        +
+        amount.toLocaleString(
+            "en-IN"
+        )
+        +
+        " wallet में add किया जाएगा."
     );
 
 
-    await fetchWining();
+    await loadWining();
 
 }
 
 
-/* ================= CANCEL ================= */
+/* =====================================================
+   CANCEL
+===================================================== */
 
 async function cancelWining(id){
 
-    const ok =
-        confirm(
-            "क्या आप इस winning को Cancel करना चाहते हैं?"
-        );
-
-    if(!ok) return;
-
-
-    /*
-      Double processing रोकना
-    */
-
     const { data, error } =
         await supabaseClient
+
         .from("wining")
-        .select("id,status")
-        .eq("id", id)
+
+        .select(
+            "id,user_id,number,status"
+        )
+
+        .eq(
+            "id",
+            id
+        )
+
         .single();
 
 
     if(error){
 
         alert(
-            "Entry verify नहीं हुई.\n\n" +
-            error.message
+            "Entry verify नहीं हुई:\n\n"
+            + error.message
         );
 
         return;
@@ -1319,11 +2428,30 @@ async function cancelWining(id){
     if(data.status !== "pending"){
 
         alert(
-            "यह entry पहले ही process हो चुकी है.\n" +
-            "Status: " + data.status
+            "यह winning पहले ही process हो चुकी है."
         );
 
-        await fetchWining();
+        await loadWining();
+
+        return;
+
+    }
+
+
+    const ok =
+        confirm(
+            "इस winning को CANCEL करें?\n\n"
+            +
+            "User ID: "
+            + data.user_id
+            + "\n"
+            +
+            "Number: "
+            + data.number
+        );
+
+
+    if(!ok){
 
         return;
 
@@ -1332,23 +2460,36 @@ async function cancelWining(id){
 
     const { error:updateError } =
         await supabaseClient
+
         .from("wining")
+
         .update({
 
-            status: "cancelled"
+            status:
+                "cancelled"
 
         })
-        .eq("id", id)
-        .eq("status", "pending");
+
+        .eq(
+            "id",
+            id
+        )
+
+        .eq(
+            "status",
+            "pending"
+        );
 
 
     if(updateError){
 
-        console.error(updateError);
+        console.error(
+            updateError
+        );
 
         alert(
-            "Cancel नहीं हुआ.\n\n" +
-            updateError.message
+            "Cancel नहीं हुआ:\n\n"
+            + updateError.message
         );
 
         return;
@@ -1356,27 +2497,47 @@ async function cancelWining(id){
     }
 
 
-    alert("✕ Winning Cancelled");
+    alert(
+        "✕ CANCEL हो गया."
+    );
 
-    await fetchWining();
+
+    await loadWining();
 
 }
 
 
-/* ================= HELPERS ================= */
+/* =====================================================
+   HELPERS
+===================================================== */
 
 function getLocalDate(dateString){
 
-    if(!dateString) return null;
+    if(!dateString){
 
-    const d = new Date(dateString);
+        return null;
+
+    }
+
+
+    const d =
+        new Date(dateString);
+
 
     return (
-        d.getFullYear() +
-        "-" +
-        String(d.getMonth()+1).padStart(2,"0") +
-        "-" +
-        String(d.getDate()).padStart(2,"0")
+        d.getFullYear()
+        +
+        "-"
+        +
+        String(
+            d.getMonth()+1
+        ).padStart(2,"0")
+        +
+        "-"
+        +
+        String(
+            d.getDate()
+        ).padStart(2,"0")
     );
 
 }
@@ -1384,10 +2545,16 @@ function getLocalDate(dateString){
 
 function formatDate(date){
 
-    if(!date) return "-";
+    if(!date){
+
+        return "-";
+
+    }
+
 
     const parts =
         date.split("-");
+
 
     if(parts.length !== 3){
 
@@ -1395,49 +2562,47 @@ function formatDate(date){
 
     }
 
+
     return (
-        parts[2] +
-        "-" +
-        parts[1] +
-        "-" +
+        parts[2]
+        +
+        "-"
+        +
+        parts[1]
+        +
+        "-"
+        +
         parts[0]
     );
 
 }
 
 
-function statusText(status){
-
-    if(status === "accepted")
-        return "ACCEPTED";
-
-    if(status === "cancelled")
-        return "CANCELLED";
-
-    return "PENDING";
-
-}
-
-
 function escapeHtml(value){
 
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-function showLoading(){
-
-    document.getElementById("winingList")
-        .innerHTML =
-        `<div class="loading">
-            Winning data load हो रहा है...
-        </div>`;
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
@@ -1445,4 +2610,3 @@ function showLoading(){
 
 </body>
 </html>
-```
