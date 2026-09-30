@@ -166,28 +166,24 @@ const supabaseClient = supabase.createClient(
 
 function getUserId() {
 
-  // Sabse pehle existing user_id
   let userId = localStorage.getItem("user_id");
 
   if (userId && userId !== "null" && userId !== "undefined") {
     return String(userId).trim();
   }
 
-  // Agar login me id naam se save hai
   let id = localStorage.getItem("id");
 
   if (id && id !== "null" && id !== "undefined") {
     return String(id).trim();
   }
 
-  // Kuch systems me userId naam ho sakta hai
   let userId2 = localStorage.getItem("userId");
 
   if (userId2 && userId2 !== "null" && userId2 !== "undefined") {
     return String(userId2).trim();
   }
 
-  // Login ID ke liye fallback
   let loginId = localStorage.getItem("login_id");
 
   if (loginId && loginId !== "null" && loginId !== "undefined") {
@@ -213,8 +209,6 @@ async function loadWining() {
 
   const userId = getUserId();
 
-
-  /* LOGIN CHECK */
 
   if (!userId) {
 
@@ -242,8 +236,6 @@ async function loadWining() {
     .order("id", { ascending: false });
 
 
-  /* ================= ERROR ================= */
-
   if (error) {
 
     console.error("WINING ERROR:", error);
@@ -260,11 +252,7 @@ async function loadWining() {
   }
 
 
-  /* ================= NO DATA ================= */
-
   if (!data || data.length === 0) {
-
-    console.log("NO WINING FOUND FOR USER:", userId);
 
     list.innerHTML = `
       <div class="empty">
@@ -275,6 +263,39 @@ async function loadWining() {
     `;
 
     return;
+  }
+
+
+  /* ================= HISTORY IDs ================= */
+
+  const historyIds = [
+    ...new Set(
+      data
+        .map(row => row.history_id)
+        .filter(id => id !== null && id !== undefined)
+    )
+  ];
+
+
+  let historyMap = {};
+
+
+  if (historyIds.length > 0) {
+
+    const { data: historyData, error: historyError } =
+      await supabaseClient
+        .from("history")
+        .select("id, created_at")
+        .in("id", historyIds);
+
+
+    if (!historyError && historyData) {
+
+      historyData.forEach(h => {
+        historyMap[String(h.id)] = h.created_at;
+      });
+
+    }
   }
 
 
@@ -301,19 +322,31 @@ async function loadWining() {
     }
 
 
+    /*
+      Pehle wining.created_at
+      Agar wo null hai to history.created_at
+    */
+
+    const dateValue =
+      row.created_at ||
+      historyMap[String(row.history_id)] ||
+      null;
+
+
     let createdDate = "";
 
 
-    if (row.created_at) {
+    if (dateValue) {
 
-      createdDate = new Date(row.created_at).toLocaleString(
+      createdDate = new Date(dateValue).toLocaleString(
         "en-IN",
         {
           day: "2-digit",
           month: "2-digit",
           year: "numeric",
           hour: "2-digit",
-          minute: "2-digit"
+          minute: "2-digit",
+          hour12: true
         }
       );
 
