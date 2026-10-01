@@ -4,8 +4,7 @@ const MENU_ITEMS = [
 
   {name:"🏠 Home", link:"home.html"},
   {name:"👤 Profile", link:"profile.html"},
-  {name:"💳 UPI Details", link:"deposit.html"},
-  {name:"🏦 Bank Details", link:"withdraw.html"},
+ 
   {name:"📜 History", link:"history_toggle"},
 
   {name:"📊 Result", link:"market.html"},
