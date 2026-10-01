@@ -9,7 +9,7 @@ const MENU_ITEMS = [
   {name:"📜 History", link:"history_toggle"},
 
   {name:"📊 Result", link:"market.html"},
-  {name:"💰 Winning", link:"userwining.html"},
+  {name:"💰 Winning", link:"wining.html"},
   {name:"💰 Commission", link:"comishion.html"},
   {name:"📊 Game Rates", link:"#"},
   {name:"📄 Terms", link:"terms.html"},
