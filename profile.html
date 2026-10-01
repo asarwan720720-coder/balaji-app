@@ -1,5 +1,5 @@
+```html
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-   content="width=device-width, initial-scale=1.0">
+      content="width=device-width, initial-scale=1.0">
 
 <title>My Profile</title>
 
@@ -22,34 +22,99 @@
 body{
   margin:0;
   font-family:Arial,sans-serif;
-  background:#f2f2f2;
+  background:linear-gradient(135deg,#f7f7f7,#ededed);
+  color:#222;
 }
 
-/* HEADER */
+/* ================================
+   HEADER
+================================ */
 
 .header{
-  background:red;
+  background:linear-gradient(135deg,#ff0000,#d90000);
   color:white;
-  padding:18px;
+  padding:22px 15px;
   text-align:center;
-  font-size:22px;
+  font-size:23px;
+  font-weight:bold;
+  box-shadow:0 3px 12px rgba(0,0,0,.15);
+}
+
+/* ================================
+   MAIN
+================================ */
+
+.profile-card{
+  max-width:650px;
+  margin:22px auto;
+  padding:0 15px 25px;
+}
+
+/* ================================
+   PROFILE TOP
+================================ */
+
+.profile-top{
+  background:white;
+  border-radius:22px;
+  padding:25px 20px;
+  text-align:center;
+  box-shadow:0 5px 20px rgba(0,0,0,.10);
+  margin-bottom:15px;
+}
+
+.profile-icon{
+  width:72px;
+  height:72px;
+  margin:auto;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff0000,#ff5555);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  font-weight:bold;
+  box-shadow:0 5px 15px rgba(255,0,0,.25);
+}
+
+.profile-heading{
+  margin-top:12px;
+  font-size:21px;
   font-weight:bold;
 }
 
-/* PROFILE CARD */
-
-.profile-card{
-  margin:20px 15px;
-  padding:25px 20px;
-  background:white;
-  border-radius:20px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.10);
+.profile-sub{
+  margin-top:5px;
+  color:#777;
+  font-size:13px;
 }
 
-/* USER DETAILS */
+/* ================================
+   INFO CARD
+================================ */
+
+.info-card{
+  background:white;
+  border-radius:20px;
+  padding:8px 20px;
+  box-shadow:0 4px 18px rgba(0,0,0,.08);
+  margin-bottom:15px;
+}
+
+.section-title{
+  font-size:17px;
+  font-weight:bold;
+  padding:15px 0 8px;
+  color:#111;
+}
+
+/* ================================
+   DETAILS
+================================ */
 
 .detail{
-  padding:15px 0;
+  padding:14px 0;
   border-bottom:1px solid #eeeeee;
 }
 
@@ -58,89 +123,146 @@ body{
 }
 
 .label{
-  font-size:13px;
-  color:#777;
-  margin-bottom:6px;
+  font-size:12px;
+  color:#888;
+  margin-bottom:5px;
+  font-weight:bold;
+  text-transform:uppercase;
+  letter-spacing:.3px;
 }
 
 .value{
-  font-size:18px;
+  font-size:16px;
   font-weight:bold;
   color:#222;
   word-break:break-word;
 }
 
-/* INPUT */
+/* ================================
+   INPUT
+================================ */
 
 .input{
   width:100%;
-  padding:13px;
+  padding:14px;
   border:1px solid #ddd;
-  border-radius:10px;
+  border-radius:12px;
+  background:#fafafa;
   font-size:16px;
   outline:none;
+  transition:.2s;
 }
 
 .input:focus{
   border-color:red;
+  background:white;
+  box-shadow:0 0 0 3px rgba(255,0,0,.08);
 }
 
-/* QR */
+/* ================================
+   QR
+================================ */
 
 .qrBox{
   text-align:center;
-  padding:15px 0;
+  padding:15px 0 10px;
 }
 
 .qrImage{
-  width:180px;
-  height:180px;
+  width:190px;
+  height:190px;
   object-fit:contain;
   border:1px solid #ddd;
-  border-radius:12px;
+  border-radius:16px;
   display:none;
-  margin:10px auto;
+  margin:5px auto 15px;
+  padding:7px;
+  background:white;
+  box-shadow:0 3px 12px rgba(0,0,0,.08);
 }
 
 .qrInput{
   width:100%;
-  margin-top:10px;
+  padding:12px;
+  border:1px dashed #bbb;
+  border-radius:12px;
+  background:#fafafa;
+  font-size:14px;
 }
 
-/* SAVE BUTTON */
+/* ================================
+   SAVE BUTTON
+================================ */
 
 .saveBtn{
   width:100%;
-  padding:15px;
-  margin-top:20px;
+  padding:16px;
+  margin-top:5px;
   border:0;
-  border-radius:12px;
-  background:red;
+  border-radius:14px;
+  background:linear-gradient(135deg,#ff0000,#d80000);
   color:white;
   font-size:17px;
   font-weight:bold;
   cursor:pointer;
+  box-shadow:0 5px 15px rgba(255,0,0,.22);
+  transition:.2s;
+}
+
+.saveBtn:hover{
+  transform:translateY(-1px);
 }
 
 .saveBtn:active{
   transform:scale(.98);
 }
 
-/* MESSAGE */
+/* ================================
+   MESSAGE
+================================ */
 
 .message{
   text-align:center;
-  margin-top:15px;
+  margin-top:14px;
+  min-height:20px;
   font-weight:bold;
   color:#159447;
+  font-size:14px;
 }
 
-/* LOADING */
+/* ================================
+   MOBILE
+================================ */
 
-.loading{
-  text-align:center;
-  color:#777;
-  padding:20px;
+@media(max-width:500px){
+
+  .header{
+    font-size:21px;
+    padding:19px 12px;
+  }
+
+  .profile-card{
+    margin:15px auto;
+    padding:0 10px 20px;
+  }
+
+  .profile-top{
+    padding:22px 15px;
+  }
+
+  .info-card{
+    padding:8px 16px;
+  }
+
+  .value{
+    font-size:15px;
+  }
+
+  .qrImage{
+    width:175px;
+    height:175px;
+  }
+
 }
 
 </style>
@@ -149,212 +271,273 @@ body{
 
 <body>
 
+
+<!-- ================================
+     HEADER
+================================ -->
+
 <div class="header">
   My Profile
 </div>
 
+
 <div class="profile-card">
 
-  <!-- USER ID -->
 
-  <div class="detail">
+  <!-- ================================
+       PROFILE TOP
+  ================================= -->
 
-```
-<div class="label">
-  User ID
-</div>
+  <div class="profile-top">
 
-<div class="value" id="userId">
-  Loading...
-</div>
-```
+    <div class="profile-icon">
+      👤
+    </div>
 
-  </div>
+    <div class="profile-heading">
+      My Account
+    </div>
 
-  <!-- USER NAME -->
-
-  <div class="detail">
-
-```
-<div class="label">
-  User Name
-</div>
-
-<div class="value" id="userName">
-  Loading...
-</div>
-```
+    <div class="profile-sub">
+      View and update your account details
+    </div>
 
   </div>
 
-  <!-- MOBILE -->
 
-  <div class="detail">
+  <!-- ================================
+       BASIC INFORMATION
+  ================================= -->
 
-```
-<div class="label">
-  Mobile Number
-</div>
+  <div class="info-card">
 
-<div class="value" id="userMobile">
-  Loading...
-</div>
-```
+    <div class="section-title">
+      👤 Account Information
+    </div>
 
-  </div>
 
-  <!-- REFER CODE -->
+    <!-- USER ID -->
 
-  <div class="detail">
+    <div class="detail">
 
-```
-<div class="label">
-  Refer Code
-</div>
+      <div class="label">
+        User ID
+      </div>
 
-<div class="value" id="refCode">
-  Loading...
-</div>
-```
+      <div
+        class="value"
+        id="userId">
 
-  </div>
+        Loading...
 
-  <!-- QR CODE -->
+      </div>
 
-  <div class="detail">
+    </div>
 
-```
-<div class="label">
-  My QR Code
-</div>
 
-<div class="qrBox">
+    <!-- USER NAME -->
 
-  <img
-    id="qrImage"
-    class="qrImage"
-    alt="QR Code">
+    <div class="detail">
 
-  <input
-    id="qrFile"
-    class="qrInput"
-    type="file"
-    accept="image/*">
+      <div class="label">
+        User Name
+      </div>
 
-</div>
-```
+      <div
+        class="value"
+        id="userName">
 
-  </div>
+        Loading...
 
-  <!-- UPI -->
+      </div>
 
-  <div class="detail">
+    </div>
 
-```
-<div class="label">
-  UPI ID
-</div>
 
-<input
-  id="upiId"
-  class="input"
-  type="text"
-  placeholder="example@upi">
-```
+    <!-- MOBILE -->
 
-  </div>
+    <div class="detail">
 
-  <!-- BANK NAME -->
+      <div class="label">
+        Mobile Number
+      </div>
 
-  <div class="detail">
+      <div
+        class="value"
+        id="userMobile">
 
-```
-<div class="label">
-  Bank Name
-</div>
+        Loading...
 
-<input
-  id="bankName"
-  class="input"
-  type="text"
-  placeholder="Bank Name">
-```
+      </div>
+
+    </div>
+
+
+    <!-- REFER CODE -->
+
+    <div class="detail">
+
+      <div class="label">
+        Refer Code
+      </div>
+
+      <div
+        class="value"
+        id="refCode">
+
+        Loading...
+
+      </div>
+
+    </div>
 
   </div>
 
-  <!-- ACCOUNT HOLDER -->
 
-  <div class="detail">
+  <!-- ================================
+       PAYMENT INFORMATION
+  ================================= -->
 
-```
-<div class="label">
-  Account Holder Name
-</div>
+  <div class="info-card">
 
-<input
-  id="accountHolder"
-  class="input"
-  type="text"
-  placeholder="Account Holder Name">
-```
+    <div class="section-title">
+      💳 Payment Details
+    </div>
+
+
+    <!-- QR CODE -->
+
+    <div class="detail">
+
+      <div class="label">
+        My QR Code
+      </div>
+
+      <div class="qrBox">
+
+        <img
+          id="qrImage"
+          class="qrImage"
+          alt="QR Code">
+
+        <input
+          id="qrFile"
+          class="qrInput"
+          type="file"
+          accept="image/*">
+
+      </div>
+
+    </div>
+
+
+    <!-- UPI -->
+
+    <div class="detail">
+
+      <div class="label">
+        UPI ID
+      </div>
+
+      <input
+        id="upiId"
+        class="input"
+        type="text"
+        placeholder="example@upi">
+
+    </div>
+
+
+    <!-- BANK NAME -->
+
+    <div class="detail">
+
+      <div class="label">
+        Bank Name
+      </div>
+
+      <input
+        id="bankName"
+        class="input"
+        type="text"
+        placeholder="Bank Name">
+
+    </div>
+
+
+    <!-- ACCOUNT HOLDER -->
+
+    <div class="detail">
+
+      <div class="label">
+        Account Holder Name
+      </div>
+
+      <input
+        id="accountHolder"
+        class="input"
+        type="text"
+        placeholder="Account Holder Name">
+
+    </div>
+
+
+    <!-- ACCOUNT NUMBER -->
+
+    <div class="detail">
+
+      <div class="label">
+        Account Number
+      </div>
+
+      <input
+        id="accountNumber"
+        class="input"
+        type="text"
+        inputmode="numeric"
+        placeholder="Account Number">
+
+    </div>
+
+
+    <!-- IFSC -->
+
+    <div class="detail">
+
+      <div class="label">
+        IFSC Code
+      </div>
+
+      <input
+        id="ifscCode"
+        class="input"
+        type="text"
+        placeholder="IFSC Code">
+
+    </div>
 
   </div>
 
-  <!-- ACCOUNT NUMBER -->
-
-  <div class="detail">
-
-```
-<div class="label">
-  Account Number
-</div>
-
-<input
-  id="accountNumber"
-  class="input"
-  type="text"
-  inputmode="numeric"
-  placeholder="Account Number">
-```
-
-  </div>
-
-  <!-- IFSC -->
-
-  <div class="detail">
-
-```
-<div class="label">
-  IFSC Code
-</div>
-
-<input
-  id="ifscCode"
-  class="input"
-  type="text"
-  placeholder="IFSC Code">
-```
-
-  </div>
 
   <!-- SAVE -->
 
-<button
- class="saveBtn"
- onclick="saveDetails()">
+  <button
+    class="saveBtn"
+    onclick="saveDetails()">
 
-```
-Save / Update Details
-```
+    Save / Update Details
 
   </button>
+
 
   <div
     id="message"
     class="message">
   </div>
 
+
 </div>
+
 
 <script>
 
@@ -485,7 +668,7 @@ async function loadProfile(){
     data.mobile ?? "-";
 
   document.getElementById("refCode").innerText =
-  data.refer_code ?? "-"
+    data.refer_code ?? "-";
 
 
   // ===================================
@@ -662,7 +845,7 @@ async function saveDetails(){
       publicData.publicUrl;
 
 
-    // Show immediately
+    // SHOW IMMEDIATELY
 
     document.getElementById("qrImage").src =
       qrUrl;
@@ -760,3 +943,4 @@ loadProfile();
 </body>
 
 </html>
+```
