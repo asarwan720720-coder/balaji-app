@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 
@@ -238,7 +239,7 @@ body{
       id="submitBtn"
       class="submitBtn"
       type="button"
-      onclick="createDeposit()">
+      onclick="openPaymentPage()">
 
       Submit
 
@@ -321,7 +322,14 @@ function hideError(){
 }
 
 
-async function createDeposit(){
+/*
+ * IMPORTANT:
+ *
+ * Is page par request create nahi hoti.
+ * Sirf QR/payment page open hota hai.
+ */
+
+function openPaymentPage(){
 
   hideError();
 
@@ -361,94 +369,12 @@ async function createDeposit(){
   true;
 
   submitBtn.innerText =
-  "Please wait...";
+  "Opening...";
 
-
-  /*
-   * Deposit request create
-   */
-
-async function createDeposit(){
-
-  hideError();
-
-  const amountInput =
-  document.getElementById("amount");
-
-  const submitBtn =
-  document.getElementById("submitBtn");
-
-  const amount =
-  Number(amountInput.value);
-
-
-  if(!userId){
-
-    showError(
-      "User login nahi mila."
-    );
-
-    return;
-
-  }
-
-
-  if(!amount || amount <= 0){
-
-    showError(
-      "Valid amount enter karein."
-    );
-
-    return;
-
-  }
-
-
-  submitBtn.disabled =
-  true;
-
-  submitBtn.innerText =
-  "Please wait...";
-
-
-  /*
-   * Abhi request create nahi hogi.
-   * Sirf payment/QR page open hoga.
-   */
 
   window.location.href =
     "deposit-payment.html?amount=" +
     encodeURIComponent(amount);
-
-}
-
-
-  if(error){
-
-    console.error(error);
-
-    showError(
-      "Deposit request create nahi hui."
-    );
-
-    submitBtn.disabled =
-    false;
-
-    submitBtn.innerText =
-    "Submit";
-
-    return;
-
-  }
-
-
-  /*
-   * Page 2 open
-   */
-
-  window.location.href =
-    "deposit-payment.html?id=" +
-    encodeURIComponent(data.id);
 
 }
 
@@ -685,3 +611,4 @@ setInterval(
 </body>
 
 </html>
+
