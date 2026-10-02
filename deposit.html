@@ -368,26 +368,59 @@ async function createDeposit(){
    * Deposit request create
    */
 
-  const {
-    data,
-    error
-  } = await supabaseClient
+async function createDeposit(){
 
-    .from("deposit_requests")
+  hideError();
 
-    .insert({
+  const amountInput =
+  document.getElementById("amount");
 
-      user_id:userId,
+  const submitBtn =
+  document.getElementById("submitBtn");
 
-      amount:amount,
+  const amount =
+  Number(amountInput.value);
 
-      status:"pending"
 
-    })
+  if(!userId){
 
-    .select("id,amount,status")
+    showError(
+      "User login nahi mila."
+    );
 
-    .single();
+    return;
+
+  }
+
+
+  if(!amount || amount <= 0){
+
+    showError(
+      "Valid amount enter karein."
+    );
+
+    return;
+
+  }
+
+
+  submitBtn.disabled =
+  true;
+
+  submitBtn.innerText =
+  "Please wait...";
+
+
+  /*
+   * Abhi request create nahi hogi.
+   * Sirf payment/QR page open hoga.
+   */
+
+  window.location.href =
+    "deposit-payment.html?amount=" +
+    encodeURIComponent(amount);
+
+}
 
 
   if(error){
