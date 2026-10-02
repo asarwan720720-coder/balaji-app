@@ -207,9 +207,7 @@ input{
 
     <div class="quick-row">
 
-        <button class="quick-btn" onclick="setAmount(100)">
-            ₹100
-        </button>
+    
 
         <button class="quick-btn" onclick="setAmount(200)">
             ₹200
@@ -339,9 +337,9 @@ async function submitWithdraw(){
     }
 
 
-    if(amount < 100){
+    if(amount < 200){
 
-        alert("Minimum Withdraw ₹100 hai ❌");
+        alert("Minimum Withdraw ₹200 hai ❌");
         return;
 
     }
