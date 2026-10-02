@@ -1191,9 +1191,9 @@ async function loadButtons(){
 
     .from("Game result")
 
-    .select(
-      "name, number, open, close"
-    );
+   .select(
+  "name, number, open, close, kal"
+);
 
 
   if(error){
@@ -1361,10 +1361,8 @@ async function loadButtons(){
         "**";
 
 
-      const kalResult =
-        getKalResult(
-          item.name
-        );
+     const kalResult =
+  item.kal || "**";
 
 
       card.innerHTML = `
