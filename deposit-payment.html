@@ -315,8 +315,10 @@ new URLSearchParams(
 );
 
 
-const requestId =
-params.get("id");
+const amountFromPage =
+Number(
+  params.get("amount")
+);
 
 
 let currentRequest =
@@ -355,6 +357,11 @@ function hideError(){
 }
 
 
+/*
+ * QR page open hone ke baad
+ * request create/check hogi.
+ */
+
 async function loadRequest(){
 
   if(!userId){
@@ -373,10 +380,10 @@ async function loadRequest(){
   }
 
 
-  if(!requestId){
+  if(!amountFromPage || amountFromPage <= 0){
 
     showError(
-      "Deposit request nahi mili."
+      "Amount nahi mila."
     );
 
     document.getElementById(
@@ -389,20 +396,30 @@ async function loadRequest(){
   }
 
 
+  /*
+   * Pichhle 5 minute ka time.
+   */
+
+  const fiveMinutesAgo =
+    new Date(
+      Date.now() - 5 * 60 * 1000
+    ).toISOString();
+
+
+  /*
+   * Same user + same amount +
+   * pending request check.
+   */
+
   const {
-    data,
-    error
+    data: existingRequest,
+    error: existingError
   } = await supabaseClient
 
     .from("deposit_requests")
 
     .select(
-      "id,user_id,amount,status,utr"
-    )
-
-    .eq(
-      "id",
-      requestId
+      "id,user_id,amount,status,utr,created_at"
     )
 
     .eq(
@@ -410,15 +427,37 @@ async function loadRequest(){
       userId
     )
 
-    .single();
+    .eq(
+      "amount",
+      amountFromPage
+    )
+
+    .eq(
+      "status",
+      "pending"
+    )
+
+    .gte(
+      "created_at",
+      fiveMinutesAgo
+    )
+
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    )
+
+    .limit(1);
 
 
-  if(error || !data){
+  if(existingError){
 
-    console.error(error);
+    console.error(existingError);
 
     showError(
-      "Deposit request load nahi hui."
+      "Request check nahi ho saki."
     );
 
     document.getElementById(
@@ -431,16 +470,94 @@ async function loadRequest(){
   }
 
 
-  currentRequest =
-  data;
-
+  /*
+   * Agar pichhle 5 minute me
+   * same pending request hai,
+   * wahi request use hogi.
+   */
 
   if(
-    data.status !== "pending"
+    existingRequest &&
+    existingRequest.length > 0
   ){
 
-    window.location.href =
-      "deposit.html";
+    currentRequest =
+      existingRequest[0];
+
+  }
+
+  else{
+
+    /*
+     * New request create.
+     */
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+
+      .from("deposit_requests")
+
+      .insert({
+
+        user_id:userId,
+
+        amount:amountFromPage,
+
+        status:"pending"
+
+      })
+
+      .select(
+        "id,user_id,amount,status,utr,created_at"
+      )
+
+      .single();
+
+
+    if(error || !data){
+
+      console.error(error);
+
+      showError(
+        "Deposit request create nahi hui."
+      );
+
+      document.getElementById(
+        "loading"
+      ).style.display =
+      "none";
+
+      return;
+
+    }
+
+
+    currentRequest =
+      data;
+
+  }
+
+
+  /*
+   * Agar kisi reason se request pending nahi hai,
+   * payment page continue nahi karega.
+   */
+
+  if(
+    currentRequest.status !==
+    "pending"
+  ){
+
+    showError(
+      "Ye deposit request active nahi hai."
+    );
+
+    document.getElementById(
+      "loading"
+    ).style.display =
+    "none";
 
     return;
 
@@ -448,7 +565,9 @@ async function loadRequest(){
 
 
   const amount =
-  Number(data.amount);
+  Number(
+    currentRequest.amount
+  );
 
 
   document.getElementById(
@@ -459,21 +578,17 @@ async function loadRequest(){
 
 
   const upiId =
-  "7KW0568000@mairtel";
+    "7KW0568000@mairtel";
 
 
   const upiData =
-
     "upi://pay" +
-
     "?pa=" +
     encodeURIComponent(upiId) +
-
     "&am=" +
     encodeURIComponent(
       amount.toFixed(2)
     ) +
-
     "&cu=INR";
 
 
@@ -499,6 +614,10 @@ async function loadRequest(){
   );
 
 
+  /*
+   * Loading hide.
+   */
+
   document.getElementById(
     "loading"
   ).style.display =
@@ -512,6 +631,10 @@ async function loadRequest(){
 
 }
 
+
+/*
+ * User ID submit.
+ */
 
 async function submitUTR(){
 
@@ -532,8 +655,8 @@ async function submitUTR(){
 
   /*
    * User kuch bhi dale
-   * ya bilkul khaali chhode,
-   * dono situation me submit hoga.
+   * ya blank chhode,
+   * submit allowed hai.
    */
 
   const utr =
@@ -559,8 +682,7 @@ async function submitUTR(){
 
 
   /*
-   * User ID / entered text
-   * existing utr column me save hoga.
+   * Isi request ki ID par update.
    */
 
   const {
@@ -609,7 +731,6 @@ async function submitUTR(){
 
 
   /*
-   * Submit ke baad
    * Deposit page par wapas.
    */
 
@@ -627,6 +748,4 @@ loadRequest();
 </body>
 
 </html>
-```
 
-अब इसमें **Submit User ID** पर कोई input validation नहीं है। खाली छोड़कर भी button दबाने पर request submit होगी।
