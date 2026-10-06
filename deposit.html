@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 
@@ -112,6 +111,7 @@ body{
   background:#ffebee;
   color:#c62828;
   font-size:14px;
+  word-break:break-word;
 }
 
 .historyTitle{
@@ -184,15 +184,18 @@ body{
 
 <div class="container">
 
+
   <div class="card">
 
     <div class="title">
       Deposit
     </div>
 
+
     <div class="label">
       Enter Amount
     </div>
+
 
     <input
       id="amount"
@@ -202,6 +205,7 @@ body{
       inputmode="decimal"
       placeholder="Enter amount"
     >
+
 
     <div class="quickAmounts">
 
@@ -235,6 +239,7 @@ body{
 
     </div>
 
+
     <button
       id="submitBtn"
       class="submitBtn"
@@ -244,6 +249,7 @@ body{
       Submit
 
     </button>
+
 
     <div
       id="errorBox"
@@ -269,6 +275,11 @@ body{
 
 <script>
 
+
+// ==========================================
+// SUPABASE
+// ==========================================
+
 const SUPABASE_URL =
 "https://glhomrlwnwhevunfubog.supabase.co";
 
@@ -282,28 +293,43 @@ window.supabase.createClient(
 );
 
 
+// ==========================================
+// USER ID
+// ==========================================
+
 const userId =
 localStorage.getItem("user_id");
 
 
+// ==========================================
+// QUICK AMOUNT BUTTON
+// ==========================================
+
 function setAmount(amount){
 
-  document.getElementById("amount").value =
-  amount;
+  document.getElementById(
+    "amount"
+  ).value = amount;
 
 }
 
 
+// ==========================================
+// ERROR
+// ==========================================
+
 function showError(message){
 
   const box =
-  document.getElementById("errorBox");
+    document.getElementById(
+      "errorBox"
+    );
 
   box.innerText =
-  message;
+    message;
 
   box.style.display =
-  "block";
+    "block";
 
 }
 
@@ -311,50 +337,60 @@ function showError(message){
 function hideError(){
 
   const box =
-  document.getElementById("errorBox");
+    document.getElementById(
+      "errorBox"
+    );
 
   box.innerText =
-  "";
+    "";
 
   box.style.display =
-  "none";
+    "none";
 
 }
 
 
-/*
- * IMPORTANT:
- *
- * Is page par request create nahi hoti.
- * Sirf QR/payment page open hota hai.
- */
+// ==========================================
+// SUBMIT
+// SUPABASE ME REQUEST SEND
+// ==========================================
 
 async function openPaymentPage(){
 
   hideError();
 
-  const amountInput =
-    document.getElementById("amount");
-
-  const submitBtn =
-    document.getElementById("submitBtn");
 
   const amount =
-    Number(amountInput.value);
+    Number(
+      document.getElementById(
+        "amount"
+      ).value
+    );
 
 
-  // Amount check
-  if(!amount || amount <= 0){
+  const submitBtn =
+    document.getElementById(
+      "submitBtn"
+    );
+
+
+  // ₹100 minimum
+  // maximum koi limit nahi
+
+  if(
+    !amount ||
+    amount < 100
+  ){
 
     showError(
-      "Please amount enter karein."
+      "Minimum deposit ₹100 hai."
     );
 
     return;
+
   }
 
 
-  // Login check
   if(!userId){
 
     showError(
@@ -362,67 +398,104 @@ async function openPaymentPage(){
     );
 
     return;
+
   }
 
 
-  submitBtn.disabled = true;
-  submitBtn.innerText = "Creating Request...";
+  submitBtn.disabled =
+    true;
+
+  submitBtn.innerText =
+    "Please wait...";
 
 
-  // Supabase me request create
-  const { data, error } =
-    await supabaseClient
+  // ========================================
+  // ONLY REQUEST SEND TO SUPABASE
+  // ========================================
 
-      .from("deposit_requests")
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
 
-      .insert({
-        user_id: userId,
-        amount: amount,
-        status: "pending"
-      })
+    .from("deposit_requests")
 
-      .select("id")
-      .single();
+    .insert({
+
+      user_id:
+        Number(userId),
+
+      amount:
+        amount,
+
+      status:
+        "pending"
+
+    })
+
+    .select("id")
+    .single();
 
 
-  // Agar request fail hui
+  // ========================================
+  // ERROR
+  // ========================================
+
   if(error){
 
     console.error(
-      "Deposit request error:",
+      "SUPABASE ERROR:",
       error
     );
 
     showError(
-      "Deposit request create nahi hui. Dobara try karein."
+      "Request nahi gayi: " +
+      error.message
     );
 
-    submitBtn.disabled = false;
-    submitBtn.innerText = "Submit";
+    submitBtn.disabled =
+      false;
+
+    submitBtn.innerText =
+      "Submit";
 
     return;
+
   }
 
 
-  // Request successfully create hui
+  // ========================================
+  // REQUEST SUCCESS
+  // ========================================
+
   console.log(
-    "Deposit request created:",
+    "REQUEST SENT:",
     data
   );
 
 
-  // Payment page open
+  // ========================================
+  // PAYMENT PAGE
+  // ========================================
+
   window.location.href =
     "deposit-payment.html?amount=" +
     encodeURIComponent(amount);
 
 }
 
+
+// ==========================================
+// STATUS
+// ==========================================
+
 function getStatusHTML(status){
 
   const value =
-  String(status || "")
-  .toLowerCase();
+    String(
+      status || ""
+    ).toLowerCase();
 
 
   if(
@@ -464,6 +537,10 @@ function getStatusHTML(status){
 }
 
 
+// ==========================================
+// DATE
+// ==========================================
+
 function formatDate(value){
 
   if(!value)
@@ -471,11 +548,18 @@ function formatDate(value){
 
 
   const date =
-  new Date(value);
+    new Date(value);
 
 
-  if(isNaN(date.getTime()))
+  if(
+    isNaN(
+      date.getTime()
+    )
+  ){
+
     return value;
+
+  }
 
 
   return date.toLocaleString(
@@ -493,18 +577,24 @@ function formatDate(value){
 }
 
 
+// ==========================================
+// HISTORY
+// ==========================================
+
 async function loadHistory(){
 
   const history =
-  document.getElementById("history");
+    document.getElementById(
+      "history"
+    );
 
 
   if(!userId){
 
     history.innerHTML =
-    `<div class="noHistory">
-      Login required
-    </div>`;
+      `<div class="noHistory">
+        Login required
+      </div>`;
 
     return;
 
@@ -514,7 +604,8 @@ async function loadHistory(){
   const {
     data,
     error
-  } = await supabaseClient
+  } =
+  await supabaseClient
 
     .from("deposit_requests")
 
@@ -524,7 +615,7 @@ async function loadHistory(){
 
     .eq(
       "user_id",
-      userId
+      Number(userId)
     )
 
     .order(
@@ -537,41 +628,49 @@ async function loadHistory(){
 
   if(error){
 
-    console.error(error);
+    console.error(
+      "HISTORY ERROR:",
+      error
+    );
 
     history.innerHTML =
-    `<div class="noHistory">
-      History load nahi hui.
-    </div>`;
+      `<div class="noHistory">
+        History load nahi hui.
+      </div>`;
 
     return;
 
   }
 
 
-  if(!data || data.length === 0){
+  if(
+    !data ||
+    data.length === 0
+  ){
 
     history.innerHTML =
-    `<div class="noHistory">
-      No deposit history
-    </div>`;
+      `<div class="noHistory">
+        No deposit history
+      </div>`;
 
     return;
 
   }
 
 
-  history.innerHTML =
-  "";
+  history.innerHTML = "";
 
 
   data.forEach(item => {
 
     const div =
-    document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     div.className =
-    "historyItem";
+      "historyItem";
 
 
     div.innerHTML = `
@@ -583,7 +682,9 @@ async function loadHistory(){
         </div>
 
         <div class="value">
-          ₹${Number(item.amount || 0).toFixed(2)}
+          ₹${Number(
+            item.amount || 0
+          ).toFixed(2)}
         </div>
 
       </div>
@@ -609,7 +710,9 @@ async function loadHistory(){
         </div>
 
         <div class="value">
-          ${getStatusHTML(item.status)}
+          ${getStatusHTML(
+            item.status
+          )}
         </div>
 
       </div>
@@ -622,7 +725,9 @@ async function loadHistory(){
         </div>
 
         <div class="value">
-          ${formatDate(item.created_at)}
+          ${formatDate(
+            item.created_at
+          )}
         </div>
 
       </div>
@@ -630,12 +735,18 @@ async function loadHistory(){
     `;
 
 
-    history.appendChild(div);
+    history.appendChild(
+      div
+    );
 
   });
 
 }
 
+
+// ==========================================
+// START HISTORY
+// ==========================================
 
 loadHistory();
 
@@ -647,7 +758,7 @@ setInterval(
 
 </script>
 
+
 </body>
 
 </html>
-
