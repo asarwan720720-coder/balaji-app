@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 
@@ -8,9 +9,11 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Deposit</title>
+<title>Make Payment</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 
@@ -35,17 +38,86 @@ body{
 .card{
   background:#fff;
   border-radius:18px;
-  padding:20px;
-  margin-bottom:18px;
+  padding:22px;
   box-shadow:0 5px 20px rgba(0,0,0,.10);
 }
 
 .title{
   text-align:center;
-  font-size:25px;
+  font-size:24px;
   font-weight:bold;
-  margin-bottom:22px;
   color:#222;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#777;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.amountBox{
+  text-align:center;
+  background:#fff8e1;
+  border:1px solid #ffe082;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:20px;
+}
+
+.amountLabel{
+  font-size:13px;
+  color:#777;
+}
+
+.amount{
+  font-size:30px;
+  font-weight:bold;
+  color:#e65100;
+  margin-top:5px;
+}
+
+.qrBox{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:15px;
+  min-height:270px;
+}
+
+#qrcode{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.upiBox{
+  background:#f5f5f5;
+  border-radius:10px;
+  padding:13px;
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.upiLabel{
+  font-size:13px;
+  color:#777;
+  margin-bottom:5px;
+}
+
+.upiId{
+  font-size:17px;
+  font-weight:bold;
+  word-break:break-all;
+}
+
+.instruction{
+  text-align:center;
+  color:#555;
+  font-size:14px;
+  line-height:1.5;
+  margin-bottom:20px;
 }
 
 .label{
@@ -55,45 +127,28 @@ body{
   margin-bottom:8px;
 }
 
-.amountInput{
+.utrInput{
   width:100%;
   height:52px;
-  padding:0 14px;
   border:1px solid #ddd;
   border-radius:10px;
-  font-size:19px;
+  padding:0 14px;
+  font-size:17px;
   outline:none;
 }
 
-.amountInput:focus{
+.utrInput:focus{
   border-color:#ff9800;
-}
-
-.quickAmounts{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  margin-top:12px;
-}
-
-.quickBtn{
-  border:0;
-  background:#fff3e0;
-  color:#e65100;
-  padding:11px 4px;
-  border-radius:9px;
-  font-weight:bold;
-  cursor:pointer;
 }
 
 .submitBtn{
   width:100%;
   height:52px;
-  margin-top:18px;
+  margin-top:15px;
   border:0;
   border-radius:11px;
   background:#ff9800;
-  color:white;
+  color:#fff;
   font-size:17px;
   font-weight:bold;
   cursor:pointer;
@@ -111,68 +166,12 @@ body{
   background:#ffebee;
   color:#c62828;
   font-size:14px;
-  word-break:break-word;
 }
 
-.historyTitle{
-  font-size:20px;
-  font-weight:bold;
-  margin-bottom:15px;
-}
-
-.historyItem{
-  border:1px solid #eee;
-  border-radius:11px;
-  padding:14px;
-  margin-bottom:10px;
-  background:#fafafa;
-}
-
-.row{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:7px;
-}
-
-.labelSmall{
-  color:#777;
-  font-size:13px;
-}
-
-.value{
-  font-weight:bold;
-  font-size:14px;
-  text-align:right;
-}
-
-.status{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:7px;
-  font-size:12px;
-  font-weight:bold;
-}
-
-.pending{
-  background:#fff3cd;
-  color:#856404;
-}
-
-.accepted{
-  background:#d4edda;
-  color:#155724;
-}
-
-.cancelled{
-  background:#f8d7da;
-  color:#721c24;
-}
-
-.noHistory{
+.loading{
   text-align:center;
-  color:#888;
-  padding:20px 0;
+  padding:30px;
+  color:#777;
 }
 
 </style>
@@ -184,88 +183,106 @@ body{
 
 <div class="container">
 
-
   <div class="card">
 
     <div class="title">
-      Deposit
+      Complete Payment
     </div>
 
-
-    <div class="label">
-      Enter Amount
+    <div class="subtitle">
+      Scan QR Code and make payment
     </div>
-
-
-    <input
-      id="amount"
-      class="amountInput"
-      type="number"
-      min="100"
-      inputmode="decimal"
-      placeholder="Enter amount"
-    >
-
-
-    <div class="quickAmounts">
-
-      <button
-        class="quickBtn"
-        type="button"
-        onclick="setAmount(100)">
-        ₹100
-      </button>
-
-      <button
-        class="quickBtn"
-        type="button"
-        onclick="setAmount(200)">
-        ₹200
-      </button>
-
-      <button
-        class="quickBtn"
-        type="button"
-        onclick="setAmount(500)">
-        ₹500
-      </button>
-
-      <button
-        class="quickBtn"
-        type="button"
-        onclick="setAmount(1000)">
-        ₹1000
-      </button>
-
-    </div>
-
-
-    <button
-      id="submitBtn"
-      class="submitBtn"
-      type="button"
-      onclick="openPaymentPage()">
-
-      Submit
-
-    </button>
 
 
     <div
-      id="errorBox"
-      class="errorBox">
+      id="loading"
+      class="loading">
+
+      Loading...
+
     </div>
 
-  </div>
+
+    <div
+      id="paymentContent"
+      style="display:none;">
 
 
-  <div class="card">
+      <div class="amountBox">
 
-    <div class="historyTitle">
-      Deposit History
-    </div>
+        <div class="amountLabel">
+          Pay Amount
+        </div>
 
-    <div id="history">
+        <div
+          id="amount"
+          class="amount">
+          ₹0
+        </div>
+
+      </div>
+
+
+      <div class="qrBox">
+
+        <div id="qrcode">
+        </div>
+
+      </div>
+
+
+      <div class="upiBox">
+
+        <div class="upiLabel">
+          Payment UPI ID
+        </div>
+
+        <div class="upiId">
+          7KW0568000@mairtel
+        </div>
+
+      </div>
+
+
+      <div class="instruction">
+
+        QR scan karke payment karein.
+        <br>
+        Payment ke baad User ID niche enter karein.
+
+      </div>
+
+
+      <div class="label">
+        Enter User ID
+      </div>
+
+
+      <input
+        id="utr"
+        class="utrInput"
+        type="text"
+        autocomplete="off"
+        placeholder="Enter User ID"
+      >
+
+
+      <button
+        id="submitBtn"
+        class="submitBtn"
+        type="button"
+        onclick="submitUTR()">
+
+        Submit User ID
+
+      </button>
+
+
+      <div
+        id="errorBox"
+        class="errorBox">
+      </div>
+
     </div>
 
   </div>
@@ -274,11 +291,6 @@ body{
 
 
 <script>
-
-
-// ==========================================
-// SUPABASE
-// ==========================================
 
 const SUPABASE_URL =
 "https://glhomrlwnwhevunfubog.supabase.co";
@@ -293,43 +305,38 @@ window.supabase.createClient(
 );
 
 
-// ==========================================
-// USER ID
-// ==========================================
-
 const userId =
 localStorage.getItem("user_id");
 
 
-// ==========================================
-// QUICK AMOUNT BUTTON
-// ==========================================
-
-function setAmount(amount){
-
-  document.getElementById(
-    "amount"
-  ).value = amount;
-
-}
+const params =
+new URLSearchParams(
+  window.location.search
+);
 
 
-// ==========================================
-// ERROR
-// ==========================================
+const amountFromPage =
+Number(
+  params.get("amount")
+);
+
+
+let currentRequest =
+null;
+
 
 function showError(message){
 
   const box =
-    document.getElementById(
-      "errorBox"
-    );
+  document.getElementById(
+    "errorBox"
+  );
 
   box.innerText =
-    message;
+  message;
 
   box.style.display =
-    "block";
+  "block";
 
 }
 
@@ -337,64 +344,329 @@ function showError(message){
 function hideError(){
 
   const box =
-    document.getElementById(
-      "errorBox"
-    );
+  document.getElementById(
+    "errorBox"
+  );
 
   box.innerText =
-    "";
+  "";
 
   box.style.display =
-    "none";
+  "none";
 
 }
 
 
-// ==========================================
-// SUBMIT
-// SUPABASE ME REQUEST SEND
-// ==========================================
+/*
+ * QR page open hone ke baad
+ * request create/check hogi.
+ */
 
-async function openPaymentPage(){
+async function loadRequest(){
 
-  hideError();
-
-
-  const amount =
-    Number(
-      document.getElementById(
-        "amount"
-      ).value
-    );
-
-
-  const submitBtn =
-    document.getElementById(
-      "submitBtn"
-    );
-
-
-  // ₹100 minimum
-  // maximum koi limit nahi
-
-  if(
-    !amount ||
-    amount < 100
-  ){
+  if(!userId){
 
     showError(
-      "Minimum deposit ₹100 hai."
+      "User login nahi mila."
     );
+
+    document.getElementById(
+      "loading"
+    ).style.display =
+    "none";
 
     return;
 
   }
 
 
-  if(!userId){
+  if(!amountFromPage || amountFromPage <= 0){
 
     showError(
-      "User login nahi mila."
+      "Amount nahi mila."
+    );
+
+    document.getElementById(
+      "loading"
+    ).style.display =
+    "none";
+
+    return;
+
+  }
+
+
+  /*
+   * Pichhle 5 minute ka time.
+   */
+
+  const fiveMinutesAgo =
+    new Date(
+      Date.now() - 5 * 60 * 1000
+    ).toISOString();
+
+
+  /*
+   * Same user + same amount +
+   * pending request check.
+   */
+
+  const {
+    data: existingRequest,
+    error: existingError
+  } = await supabaseClient
+
+    .from("deposit_requests")
+
+    .select(
+      "id,user_id,amount,status,utr,created_at"
+    )
+
+    .eq(
+      "user_id",
+      userId
+    )
+
+    .eq(
+      "amount",
+      amountFromPage
+    )
+
+    .eq(
+      "status",
+      "pending"
+    )
+
+    .gte(
+      "created_at",
+      fiveMinutesAgo
+    )
+
+    .order(
+      "created_at",
+      {
+        ascending:false
+      }
+    )
+
+    .limit(1);
+
+
+  if(existingError){
+
+    console.error(existingError);
+
+    showError(
+      "Request check nahi ho saki."
+    );
+
+    document.getElementById(
+      "loading"
+    ).style.display =
+    "none";
+
+    return;
+
+  }
+
+
+  /*
+   * Agar pichhle 5 minute me
+   * same pending request hai,
+   * wahi request use hogi.
+   */
+
+  if(
+    existingRequest &&
+    existingRequest.length > 0
+  ){
+
+    currentRequest =
+      existingRequest[0];
+
+  }
+
+  else{
+
+    /*
+     * New request create.
+     */
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+
+      .from("deposit_requests")
+
+      .insert({
+
+        user_id:userId,
+
+        amount:amountFromPage,
+
+        status:"pending"
+
+      })
+
+      .select(
+        "id,user_id,amount,status,utr,created_at"
+      )
+
+      .single();
+
+
+    if(error || !data){
+
+      console.error(error);
+
+      showError(
+        "Deposit request create nahi hui."
+      );
+
+      document.getElementById(
+        "loading"
+      ).style.display =
+      "none";
+
+      return;
+
+    }
+
+
+    currentRequest =
+      data;
+
+  }
+
+
+  /*
+   * Agar kisi reason se request pending nahi hai,
+   * payment page continue nahi karega.
+   */
+
+  if(
+    currentRequest.status !==
+    "pending"
+  ){
+
+    showError(
+      "Ye deposit request active nahi hai."
+    );
+
+    document.getElementById(
+      "loading"
+    ).style.display =
+    "none";
+
+    return;
+
+  }
+
+
+  const amount =
+  Number(
+    currentRequest.amount
+  );
+
+
+  document.getElementById(
+    "amount"
+  ).innerText =
+    "₹" +
+    amount.toFixed(2);
+
+
+  const upiId =
+    "7KW0568000@mairtel";
+
+
+  const upiData =
+    "upi://pay" +
+    "?pa=" +
+    encodeURIComponent(upiId) +
+    "&am=" +
+    encodeURIComponent(
+      amount.toFixed(2)
+    ) +
+    "&cu=INR";
+
+
+  const qrBox =
+  document.getElementById(
+    "qrcode"
+  );
+
+
+  qrBox.innerHTML =
+  "";
+
+
+  new QRCode(
+    qrBox,
+    {
+      text:upiData,
+      width:240,
+      height:240,
+      correctLevel:
+        QRCode.CorrectLevel.M
+    }
+  );
+
+
+  /*
+   * Loading hide.
+   */
+
+  document.getElementById(
+    "loading"
+  ).style.display =
+  "none";
+
+
+  document.getElementById(
+    "paymentContent"
+  ).style.display =
+  "block";
+
+}
+
+
+/*
+ * User ID submit.
+ */
+
+async function submitUTR(){
+
+  hideError();
+
+
+  const utrInput =
+  document.getElementById(
+    "utr"
+  );
+
+
+  const submitBtn =
+  document.getElementById(
+    "submitBtn"
+  );
+
+
+  /*
+   * User kuch bhi dale
+   * ya blank chhode,
+   * submit allowed hai.
+   */
+
+  const utr =
+  utrInput.value;
+
+
+  if(!currentRequest){
+
+    showError(
+      "Deposit request nahi mili."
     );
 
     return;
@@ -403,361 +675,75 @@ async function openPaymentPage(){
 
 
   submitBtn.disabled =
-    true;
+  true;
 
   submitBtn.innerText =
-    "Please wait...";
+  "Submitting...";
 
 
-  // ========================================
-  // ONLY REQUEST SEND TO SUPABASE
-  // ========================================
+  /*
+   * Isi request ki ID par update.
+   */
 
   const {
-    data,
     error
-  } =
-  await supabaseClient
+  } = await supabaseClient
 
     .from("deposit_requests")
 
-    .insert({
+    .update({
 
-      user_id:
-        Number(userId),
+      utr:utr,
 
-      amount:
-        amount,
-
-      status:
-        "pending"
+      updated_at:
+        new Date().toISOString()
 
     })
 
-    .select("id")
-    .single();
-
-
-  // ========================================
-  // ERROR
-  // ========================================
-
-  if(error){
-
-    console.error(
-      "SUPABASE ERROR:",
-      error
-    );
-
-    showError(
-      "Request nahi gayi: " +
-      error.message
-    );
-
-    submitBtn.disabled =
-      false;
-
-    submitBtn.innerText =
-      "Submit";
-
-    return;
-
-  }
-
-
-  // ========================================
-  // REQUEST SUCCESS
-  // ========================================
-
-  console.log(
-    "REQUEST SENT:",
-    data
-  );
-
-
-  // ========================================
-  // PAYMENT PAGE
-  // ========================================
-
-  window.location.href =
-    "deposit-payment.html?amount=" +
-    encodeURIComponent(amount);
-
-}
-
-
-// ==========================================
-// STATUS
-// ==========================================
-
-function getStatusHTML(status){
-
-  const value =
-    String(
-      status || ""
-    ).toLowerCase();
-
-
-  if(
-    value === "accepted" ||
-    value === "approved" ||
-    value === "success"
-  ){
-
-    return `
-      <span class="status accepted">
-        Accepted
-      </span>
-    `;
-
-  }
-
-
-  if(
-    value === "cancelled" ||
-    value === "canceled" ||
-    value === "rejected"
-  ){
-
-    return `
-      <span class="status cancelled">
-        Cancelled
-      </span>
-    `;
-
-  }
-
-
-  return `
-    <span class="status pending">
-      Pending
-    </span>
-  `;
-
-}
-
-
-// ==========================================
-// DATE
-// ==========================================
-
-function formatDate(value){
-
-  if(!value)
-    return "-";
-
-
-  const date =
-    new Date(value);
-
-
-  if(
-    isNaN(
-      date.getTime()
-    )
-  ){
-
-    return value;
-
-  }
-
-
-  return date.toLocaleString(
-    "en-IN",
-    {
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit",
-      hour12:true
-    }
-  );
-
-}
-
-
-// ==========================================
-// HISTORY
-// ==========================================
-
-async function loadHistory(){
-
-  const history =
-    document.getElementById(
-      "history"
-    );
-
-
-  if(!userId){
-
-    history.innerHTML =
-      `<div class="noHistory">
-        Login required
-      </div>`;
-
-    return;
-
-  }
-
-
-  const {
-    data,
-    error
-  } =
-  await supabaseClient
-
-    .from("deposit_requests")
-
-    .select(
-      "id,amount,utr,status,created_at"
+    .eq(
+      "id",
+      currentRequest.id
     )
 
     .eq(
       "user_id",
-      Number(userId)
-    )
-
-    .order(
-      "created_at",
-      {
-        ascending:false
-      }
+      userId
     );
 
 
   if(error){
 
-    console.error(
-      "HISTORY ERROR:",
-      error
+    console.error(error);
+
+    showError(
+      "User ID submit nahi hua."
     );
 
-    history.innerHTML =
-      `<div class="noHistory">
-        History load nahi hui.
-      </div>`;
+    submitBtn.disabled =
+    false;
+
+    submitBtn.innerText =
+    "Submit User ID";
 
     return;
 
   }
 
 
-  if(
-    !data ||
-    data.length === 0
-  ){
+  /*
+   * Deposit page par wapas.
+   */
 
-    history.innerHTML =
-      `<div class="noHistory">
-        No deposit history
-      </div>`;
-
-    return;
-
-  }
-
-
-  history.innerHTML = "";
-
-
-  data.forEach(item => {
-
-    const div =
-      document.createElement(
-        "div"
-      );
-
-
-    div.className =
-      "historyItem";
-
-
-    div.innerHTML = `
-
-      <div class="row">
-
-        <div class="labelSmall">
-          Amount
-        </div>
-
-        <div class="value">
-          ₹${Number(
-            item.amount || 0
-          ).toFixed(2)}
-        </div>
-
-      </div>
-
-
-      <div class="row">
-
-        <div class="labelSmall">
-          UTR
-        </div>
-
-        <div class="value">
-          ${item.utr || "-"}
-        </div>
-
-      </div>
-
-
-      <div class="row">
-
-        <div class="labelSmall">
-          Status
-        </div>
-
-        <div class="value">
-          ${getStatusHTML(
-            item.status
-          )}
-        </div>
-
-      </div>
-
-
-      <div class="row">
-
-        <div class="labelSmall">
-          Date
-        </div>
-
-        <div class="value">
-          ${formatDate(
-            item.created_at
-          )}
-        </div>
-
-      </div>
-
-    `;
-
-
-    history.appendChild(
-      div
-    );
-
-  });
+  window.location.replace(
+    "deposit.html"
+  );
 
 }
 
 
-// ==========================================
-// START HISTORY
-// ==========================================
-
-loadHistory();
-
-
-setInterval(
-  loadHistory,
-  5000
-);
+loadRequest();
 
 </script>
-
 
 </body>
 
