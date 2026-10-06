@@ -329,20 +329,32 @@ function hideError(){
  * Sirf QR/payment page open hota hai.
  */
 
-function openPaymentPage(){
+async function openPaymentPage(){
 
   hideError();
 
   const amountInput =
-  document.getElementById("amount");
+    document.getElementById("amount");
 
   const submitBtn =
-  document.getElementById("submitBtn");
+    document.getElementById("submitBtn");
 
   const amount =
-  Number(amountInput.value);
+    Number(amountInput.value);
 
 
+  // Amount check
+  if(!amount || amount <= 0){
+
+    showError(
+      "Please amount enter karein."
+    );
+
+    return;
+  }
+
+
+  // Login check
   if(!userId){
 
     showError(
@@ -350,34 +362,61 @@ function openPaymentPage(){
     );
 
     return;
-
   }
 
 
-if(!amount || amount < 100){
+  submitBtn.disabled = true;
+  submitBtn.innerText = "Creating Request...";
 
-  showError(
-    "Minimum deposit ₹100 hai."
+
+  // Supabase me request create
+  const { data, error } =
+    await supabaseClient
+
+      .from("deposit_requests")
+
+      .insert({
+        user_id: userId,
+        amount: amount,
+        status: "pending"
+      })
+
+      .select("id")
+      .single();
+
+
+  // Agar request fail hui
+  if(error){
+
+    console.error(
+      "Deposit request error:",
+      error
+    );
+
+    showError(
+      "Deposit request create nahi hui. Dobara try karein."
+    );
+
+    submitBtn.disabled = false;
+    submitBtn.innerText = "Submit";
+
+    return;
+  }
+
+
+  // Request successfully create hui
+  console.log(
+    "Deposit request created:",
+    data
   );
 
-  return;
 
-}
-
-
-  submitBtn.disabled =
-  true;
-
-  submitBtn.innerText =
-  "Opening...";
-
-
+  // Payment page open
   window.location.href =
     "deposit-payment.html?amount=" +
     encodeURIComponent(amount);
 
 }
-
 
 function getStatusHTML(status){
 
