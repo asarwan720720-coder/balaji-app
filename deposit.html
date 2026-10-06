@@ -9,11 +9,9 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Make Payment</title>
+<title>Deposit</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 
@@ -38,86 +36,17 @@ body{
 .card{
   background:#fff;
   border-radius:18px;
-  padding:22px;
+  padding:20px;
+  margin-bottom:18px;
   box-shadow:0 5px 20px rgba(0,0,0,.10);
 }
 
 .title{
   text-align:center;
-  font-size:24px;
+  font-size:25px;
   font-weight:bold;
+  margin-bottom:22px;
   color:#222;
-  margin-bottom:8px;
-}
-
-.subtitle{
-  text-align:center;
-  color:#777;
-  font-size:14px;
-  margin-bottom:20px;
-}
-
-.amountBox{
-  text-align:center;
-  background:#fff8e1;
-  border:1px solid #ffe082;
-  border-radius:12px;
-  padding:15px;
-  margin-bottom:20px;
-}
-
-.amountLabel{
-  font-size:13px;
-  color:#777;
-}
-
-.amount{
-  font-size:30px;
-  font-weight:bold;
-  color:#e65100;
-  margin-top:5px;
-}
-
-.qrBox{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:15px;
-  min-height:270px;
-}
-
-#qrcode{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-.upiBox{
-  background:#f5f5f5;
-  border-radius:10px;
-  padding:13px;
-  text-align:center;
-  margin-bottom:20px;
-}
-
-.upiLabel{
-  font-size:13px;
-  color:#777;
-  margin-bottom:5px;
-}
-
-.upiId{
-  font-size:17px;
-  font-weight:bold;
-  word-break:break-all;
-}
-
-.instruction{
-  text-align:center;
-  color:#555;
-  font-size:14px;
-  line-height:1.5;
-  margin-bottom:20px;
 }
 
 .label{
@@ -127,28 +56,45 @@ body{
   margin-bottom:8px;
 }
 
-.utrInput{
+.amountInput{
   width:100%;
   height:52px;
+  padding:0 14px;
   border:1px solid #ddd;
   border-radius:10px;
-  padding:0 14px;
-  font-size:17px;
+  font-size:19px;
   outline:none;
 }
 
-.utrInput:focus{
+.amountInput:focus{
   border-color:#ff9800;
+}
+
+.quickAmounts{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+
+.quickBtn{
+  border:0;
+  background:#fff3e0;
+  color:#e65100;
+  padding:11px 4px;
+  border-radius:9px;
+  font-weight:bold;
+  cursor:pointer;
 }
 
 .submitBtn{
   width:100%;
   height:52px;
-  margin-top:15px;
+  margin-top:18px;
   border:0;
   border-radius:11px;
   background:#ff9800;
-  color:#fff;
+  color:white;
   font-size:17px;
   font-weight:bold;
   cursor:pointer;
@@ -168,10 +114,65 @@ body{
   font-size:14px;
 }
 
-.loading{
-  text-align:center;
-  padding:30px;
+.historyTitle{
+  font-size:20px;
+  font-weight:bold;
+  margin-bottom:15px;
+}
+
+.historyItem{
+  border:1px solid #eee;
+  border-radius:11px;
+  padding:14px;
+  margin-bottom:10px;
+  background:#fafafa;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:7px;
+}
+
+.labelSmall{
   color:#777;
+  font-size:13px;
+}
+
+.value{
+  font-weight:bold;
+  font-size:14px;
+  text-align:right;
+}
+
+.status{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:7px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.pending{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.accepted{
+  background:#d4edda;
+  color:#155724;
+}
+
+.cancelled{
+  background:#f8d7da;
+  color:#721c24;
+}
+
+.noHistory{
+  text-align:center;
+  color:#888;
+  padding:20px 0;
 }
 
 </style>
@@ -186,103 +187,79 @@ body{
   <div class="card">
 
     <div class="title">
-      Complete Payment
+      Deposit
     </div>
 
-    <div class="subtitle">
-      Scan QR Code and make payment
+    <div class="label">
+      Enter Amount
     </div>
 
+    <input
+      id="amount"
+      class="amountInput"
+      type="number"
+      min="100"
+      inputmode="decimal"
+      placeholder="Enter amount"
+    >
 
-    <div
-      id="loading"
-      class="loading">
-
-      Loading...
-
-    </div>
-
-
-    <div
-      id="paymentContent"
-      style="display:none;">
-
-
-      <div class="amountBox">
-
-        <div class="amountLabel">
-          Pay Amount
-        </div>
-
-        <div
-          id="amount"
-          class="amount">
-          ₹0
-        </div>
-
-      </div>
-
-
-      <div class="qrBox">
-
-        <div id="qrcode">
-        </div>
-
-      </div>
-
-
-      <div class="upiBox">
-
-        <div class="upiLabel">
-          Payment UPI ID
-        </div>
-
-        <div class="upiId">
-          7KW0568000@mairtel
-        </div>
-
-      </div>
-
-
-      <div class="instruction">
-
-        QR scan karke payment karein.
-        <br>
-        Payment ke baad User ID niche enter karein.
-
-      </div>
-
-
-      <div class="label">
-        Enter User ID
-      </div>
-
-
-      <input
-        id="utr"
-        class="utrInput"
-        type="text"
-        autocomplete="off"
-        placeholder="Enter User ID"
-      >
-
+    <div class="quickAmounts">
 
       <button
-        id="submitBtn"
-        class="submitBtn"
+        class="quickBtn"
         type="button"
-        onclick="submitUTR()">
-
-        Submit User ID
-
+        onclick="setAmount(100)">
+        ₹100
       </button>
 
+      <button
+        class="quickBtn"
+        type="button"
+        onclick="setAmount(200)">
+        ₹200
+      </button>
 
-      <div
-        id="errorBox"
-        class="errorBox">
-      </div>
+      <button
+        class="quickBtn"
+        type="button"
+        onclick="setAmount(500)">
+        ₹500
+      </button>
 
+      <button
+        class="quickBtn"
+        type="button"
+        onclick="setAmount(1000)">
+        ₹1000
+      </button>
+
+    </div>
+
+    <button
+      id="submitBtn"
+      class="submitBtn"
+      type="button"
+      onclick="openPaymentPage()">
+
+      Submit
+
+    </button>
+
+    <div
+      id="errorBox"
+      class="errorBox">
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="historyTitle">
+      Deposit History
+    </div>
+
+    <div id="history">
     </div>
 
   </div>
@@ -309,28 +286,18 @@ const userId =
 localStorage.getItem("user_id");
 
 
-const params =
-new URLSearchParams(
-  window.location.search
-);
+function setAmount(amount){
 
+  document.getElementById("amount").value =
+  amount;
 
-const amountFromPage =
-Number(
-  params.get("amount")
-);
-
-
-let currentRequest =
-null;
+}
 
 
 function showError(message){
 
   const box =
-  document.getElementById(
-    "errorBox"
-  );
+  document.getElementById("errorBox");
 
   box.innerText =
   message;
@@ -344,9 +311,7 @@ function showError(message){
 function hideError(){
 
   const box =
-  document.getElementById(
-    "errorBox"
-  );
+  document.getElementById("errorBox");
 
   box.innerText =
   "";
@@ -358,11 +323,25 @@ function hideError(){
 
 
 /*
- * QR page open hone ke baad
- * request create/check hogi.
+ * IMPORTANT:
+ *
+ * Is page par request create nahi hoti.
+ * Sirf QR/payment page open hota hai.
  */
 
-async function loadRequest(){
+function openPaymentPage(){
+
+  hideError();
+
+  const amountInput =
+  document.getElementById("amount");
+
+  const submitBtn =
+  document.getElementById("submitBtn");
+
+  const amount =
+  Number(amountInput.value);
+
 
   if(!userId){
 
@@ -370,76 +349,143 @@ async function loadRequest(){
       "User login nahi mila."
     );
 
-    document.getElementById(
-      "loading"
-    ).style.display =
-    "none";
-
     return;
 
   }
 
 
-  if(!amountFromPage || amountFromPage <= 0){
+if(!amount || amount < 100){
 
-    showError(
-      "Amount nahi mila."
-    );
+  showError(
+    "Minimum deposit ₹100 hai."
+  );
 
-    document.getElementById(
-      "loading"
-    ).style.display =
-    "none";
+  return;
+
+}
+
+
+  submitBtn.disabled =
+  true;
+
+  submitBtn.innerText =
+  "Opening...";
+
+
+  window.location.href =
+    "deposit-payment.html?amount=" +
+    encodeURIComponent(amount);
+
+}
+
+
+function getStatusHTML(status){
+
+  const value =
+  String(status || "")
+  .toLowerCase();
+
+
+  if(
+    value === "accepted" ||
+    value === "approved" ||
+    value === "success"
+  ){
+
+    return `
+      <span class="status accepted">
+        Accepted
+      </span>
+    `;
+
+  }
+
+
+  if(
+    value === "cancelled" ||
+    value === "canceled" ||
+    value === "rejected"
+  ){
+
+    return `
+      <span class="status cancelled">
+        Cancelled
+      </span>
+    `;
+
+  }
+
+
+  return `
+    <span class="status pending">
+      Pending
+    </span>
+  `;
+
+}
+
+
+function formatDate(value){
+
+  if(!value)
+    return "-";
+
+
+  const date =
+  new Date(value);
+
+
+  if(isNaN(date.getTime()))
+    return value;
+
+
+  return date.toLocaleString(
+    "en-IN",
+    {
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit",
+      hour12:true
+    }
+  );
+
+}
+
+
+async function loadHistory(){
+
+  const history =
+  document.getElementById("history");
+
+
+  if(!userId){
+
+    history.innerHTML =
+    `<div class="noHistory">
+      Login required
+    </div>`;
 
     return;
 
   }
 
-
-  /*
-   * Pichhle 5 minute ka time.
-   */
-
-  const fiveMinutesAgo =
-    new Date(
-      Date.now() - 5 * 60 * 1000
-    ).toISOString();
-
-
-  /*
-   * Same user + same amount +
-   * pending request check.
-   */
 
   const {
-    data: existingRequest,
-    error: existingError
+    data,
+    error
   } = await supabaseClient
 
     .from("deposit_requests")
 
     .select(
-      "id,user_id,amount,status,utr,created_at"
+      "id,amount,utr,status,created_at"
     )
 
     .eq(
       "user_id",
       userId
-    )
-
-    .eq(
-      "amount",
-      amountFromPage
-    )
-
-    .eq(
-      "status",
-      "pending"
-    )
-
-    .gte(
-      "created_at",
-      fiveMinutesAgo
     )
 
     .order(
@@ -447,267 +493,6 @@ async function loadRequest(){
       {
         ascending:false
       }
-    )
-
-    .limit(1);
-
-
-  if(existingError){
-
-    console.error(existingError);
-
-    showError(
-      "Request check nahi ho saki."
-    );
-
-    document.getElementById(
-      "loading"
-    ).style.display =
-    "none";
-
-    return;
-
-  }
-
-
-  /*
-   * Agar pichhle 5 minute me
-   * same pending request hai,
-   * wahi request use hogi.
-   */
-
-  if(
-    existingRequest &&
-    existingRequest.length > 0
-  ){
-
-    currentRequest =
-      existingRequest[0];
-
-  }
-
-  else{
-
-    /*
-     * New request create.
-     */
-
-    const {
-      data,
-      error
-    } = await supabaseClient
-
-      .from("deposit_requests")
-
-      .insert({
-
-        user_id:userId,
-
-        amount:amountFromPage,
-
-        status:"pending"
-
-      })
-
-      .select(
-        "id,user_id,amount,status,utr,created_at"
-      )
-
-      .single();
-
-
-    if(error || !data){
-
-      console.error(error);
-
-      showError(
-        "Deposit request create nahi hui."
-      );
-
-      document.getElementById(
-        "loading"
-      ).style.display =
-      "none";
-
-      return;
-
-    }
-
-
-    currentRequest =
-      data;
-
-  }
-
-
-  /*
-   * Agar kisi reason se request pending nahi hai,
-   * payment page continue nahi karega.
-   */
-
-  if(
-    currentRequest.status !==
-    "pending"
-  ){
-
-    showError(
-      "Ye deposit request active nahi hai."
-    );
-
-    document.getElementById(
-      "loading"
-    ).style.display =
-    "none";
-
-    return;
-
-  }
-
-
-  const amount =
-  Number(
-    currentRequest.amount
-  );
-
-
-  document.getElementById(
-    "amount"
-  ).innerText =
-    "₹" +
-    amount.toFixed(2);
-
-
-  const upiId =
-    "7KW0568000@mairtel";
-
-
-  const upiData =
-    "upi://pay" +
-    "?pa=" +
-    encodeURIComponent(upiId) +
-    "&am=" +
-    encodeURIComponent(
-      amount.toFixed(2)
-    ) +
-    "&cu=INR";
-
-
-  const qrBox =
-  document.getElementById(
-    "qrcode"
-  );
-
-
-  qrBox.innerHTML =
-  "";
-
-
-  new QRCode(
-    qrBox,
-    {
-      text:upiData,
-      width:240,
-      height:240,
-      correctLevel:
-        QRCode.CorrectLevel.M
-    }
-  );
-
-
-  /*
-   * Loading hide.
-   */
-
-  document.getElementById(
-    "loading"
-  ).style.display =
-  "none";
-
-
-  document.getElementById(
-    "paymentContent"
-  ).style.display =
-  "block";
-
-}
-
-
-/*
- * User ID submit.
- */
-
-async function submitUTR(){
-
-  hideError();
-
-
-  const utrInput =
-  document.getElementById(
-    "utr"
-  );
-
-
-  const submitBtn =
-  document.getElementById(
-    "submitBtn"
-  );
-
-
-  /*
-   * User kuch bhi dale
-   * ya blank chhode,
-   * submit allowed hai.
-   */
-
-  const utr =
-  utrInput.value;
-
-
-  if(!currentRequest){
-
-    showError(
-      "Deposit request nahi mili."
-    );
-
-    return;
-
-  }
-
-
-  submitBtn.disabled =
-  true;
-
-  submitBtn.innerText =
-  "Submitting...";
-
-
-  /*
-   * Isi request ki ID par update.
-   */
-
-  const {
-    error
-  } = await supabaseClient
-
-    .from("deposit_requests")
-
-    .update({
-
-      utr:utr,
-
-      updated_at:
-        new Date().toISOString()
-
-    })
-
-    .eq(
-      "id",
-      currentRequest.id
-    )
-
-    .eq(
-      "user_id",
-      userId
     );
 
 
@@ -715,33 +500,111 @@ async function submitUTR(){
 
     console.error(error);
 
-    showError(
-      "User ID submit nahi hua."
-    );
-
-    submitBtn.disabled =
-    false;
-
-    submitBtn.innerText =
-    "Submit User ID";
+    history.innerHTML =
+    `<div class="noHistory">
+      History load nahi hui.
+    </div>`;
 
     return;
 
   }
 
 
-  /*
-   * Deposit page par wapas.
-   */
+  if(!data || data.length === 0){
 
-  window.location.replace(
-    "deposit.html"
-  );
+    history.innerHTML =
+    `<div class="noHistory">
+      No deposit history
+    </div>`;
+
+    return;
+
+  }
+
+
+  history.innerHTML =
+  "";
+
+
+  data.forEach(item => {
+
+    const div =
+    document.createElement("div");
+
+    div.className =
+    "historyItem";
+
+
+    div.innerHTML = `
+
+      <div class="row">
+
+        <div class="labelSmall">
+          Amount
+        </div>
+
+        <div class="value">
+          ₹${Number(item.amount || 0).toFixed(2)}
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="labelSmall">
+          UTR
+        </div>
+
+        <div class="value">
+          ${item.utr || "-"}
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="labelSmall">
+          Status
+        </div>
+
+        <div class="value">
+          ${getStatusHTML(item.status)}
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="labelSmall">
+          Date
+        </div>
+
+        <div class="value">
+          ${formatDate(item.created_at)}
+        </div>
+
+      </div>
+
+    `;
+
+
+    history.appendChild(div);
+
+  });
 
 }
 
 
-loadRequest();
+loadHistory();
+
+
+setInterval(
+  loadHistory,
+  5000
+);
 
 </script>
 
