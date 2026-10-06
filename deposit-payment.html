@@ -14,170 +14,113 @@
 
 <style>
 
-*{
-  box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#fff7e6,#ffe0b2);
-  min-height:100vh;
-  padding:20px 12px;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
 }
 
-.container{
-  width:100%;
-  max-width:500px;
-  margin:auto;
+.container {
+    width: 100%;
+    max-width: 450px;
+    margin: auto;
+    padding: 20px;
 }
 
-.card{
-  background:#fff;
-  border-radius:18px;
-  padding:22px;
-  box-shadow:0 5px 20px rgba(0,0,0,.10);
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
-.title{
-  text-align:center;
-  font-size:24px;
-  font-weight:bold;
-  color:#222;
-  margin-bottom:8px;
+h2 {
+    text-align: center;
+    margin-top: 0;
 }
 
-.subtitle{
-  text-align:center;
-  color:#777;
-  font-size:14px;
-  margin-bottom:20px;
+.amount {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 15px 0;
 }
 
-.amountBox{
-  text-align:center;
-  background:#fff8e1;
-  border:1px solid #ffe082;
-  border-radius:12px;
-  padding:15px;
-  margin-bottom:20px;
+.upi {
+    text-align: center;
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 8px;
+    word-break: break-all;
 }
 
-.amountLabel{
-  font-size:13px;
-  color:#777;
+#qrcode {
+    width: 250px;
+    min-height: 250px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.amount{
-  font-size:30px;
-  font-weight:bold;
-  color:#e65100;
-  margin-top:5px;
+#qrcode img {
+    width: 240px;
+    height: 240px;
+    display: block;
 }
 
-.qrBox{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:15px;
-  min-height:270px;
+.loading {
+    text-align: center;
+    color: #666;
 }
 
-#qrcode{
-  width:240px;
-  height:240px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.error {
+    color: red;
+    text-align: center;
+    line-height: 1.5;
 }
 
-#qrcode img{
-  width:240px;
-  height:240px;
-  display:block;
+.success {
+    color: green;
+    text-align: center;
 }
 
-.upiBox{
-  background:#f5f5f5;
-  border-radius:10px;
-  padding:13px;
-  text-align:center;
-  margin-bottom:20px;
+input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-top: 8px;
 }
 
-.upiLabel{
-  font-size:13px;
-  color:#777;
-  margin-bottom:5px;
+button {
+    width: 100%;
+    border: none;
+    padding: 14px;
+    margin-top: 12px;
+    border-radius: 8px;
+    background: #1976d2;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
 }
 
-.upiId{
-  font-size:17px;
-  font-weight:bold;
-  word-break:break-all;
+button:disabled {
+    background: #aaa;
 }
 
-.instruction{
-  text-align:center;
-  color:#555;
-  font-size:14px;
-  line-height:1.5;
-  margin-bottom:20px;
-}
-
-.label{
-  font-size:15px;
-  font-weight:bold;
-  color:#444;
-  margin-bottom:8px;
-}
-
-.utrInput{
-  width:100%;
-  height:52px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  padding:0 14px;
-  font-size:17px;
-  outline:none;
-}
-
-.utrInput:focus{
-  border-color:#ff9800;
-}
-
-.submitBtn{
-  width:100%;
-  height:52px;
-  margin-top:15px;
-  border:0;
-  border-radius:11px;
-  background:#ff9800;
-  color:#fff;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.submitBtn:disabled{
-  background:#aaa;
-}
-
-.errorBox{
-  display:none;
-  margin-top:15px;
-  padding:12px;
-  border-radius:9px;
-  background:#ffebee;
-  color:#c62828;
-  font-size:14px;
-  line-height:1.5;
-}
-
-.loading{
-  text-align:center;
-  padding:30px;
-  color:#777;
+.note {
+    font-size: 13px;
+    color: #666;
+    margin-top: 15px;
+    line-height: 1.5;
+    text-align: center;
 }
 
 </style>
@@ -189,652 +132,726 @@ body{
 
 <div class="container">
 
-  <div class="card">
+    <div class="card">
 
-    <div class="title">
-      Complete Payment
-    </div>
+        <h2>Make Payment</h2>
 
-    <div class="subtitle">
-      Scan QR Code and make payment
-    </div>
-
-
-    <div id="loading" class="loading">
-      Loading...
-    </div>
-
-
-    <div id="paymentContent" style="display:none;">
-
-      <div class="amountBox">
-
-        <div class="amountLabel">
-          Pay Amount
+        <div id="loading" class="loading">
+            Loading...
         </div>
 
-        <div id="amount" class="amount">
-          ₹0
+        <div id="paymentBox" style="display:none;">
+
+            <div class="amount">
+                ₹<span id="amountText">0</span>
+            </div>
+
+            <div class="upi">
+                UPI ID:<br>
+                <strong id="upiText">7KW0568000@mairtel</strong>
+            </div>
+
+            <div id="qrcode"></div>
+
+            <div>
+                <label>Enter UTR / Transaction ID</label>
+
+                <input
+                    type="text"
+                    id="utr"
+                    placeholder="Enter UTR number"
+                    autocomplete="off"
+                >
+
+                <button id="submitBtn">
+                    Submit Payment
+                </button>
+            </div>
+
+            <div class="note">
+                Payment karne ke baad apna UTR / Transaction ID
+                enter karke Submit karein.
+            </div>
+
+            <div id="message"></div>
+
         </div>
-
-      </div>
-
-
-      <div class="qrBox">
-
-        <div id="qrcode"></div>
-
-      </div>
-
-
-      <div class="upiBox">
-
-        <div class="upiLabel">
-          Payment UPI ID
-        </div>
-
-        <div class="upiId">
-          7KW0568000@mairtel
-        </div>
-
-      </div>
-
-
-      <div class="instruction">
-
-        QR scan karke payment karein.
-        <br>
-        Payment ke baad User ID niche enter karein.
-
-      </div>
-
-
-      <div class="label">
-        Enter User ID
-      </div>
-
-
-      <input
-        id="utr"
-        class="utrInput"
-        type="text"
-        autocomplete="off"
-        placeholder="Enter User ID"
-      >
-
-
-      <button
-        id="submitBtn"
-        class="submitBtn"
-        type="button"
-        onclick="submitUTR()">
-
-        Submit User ID
-
-      </button>
-
-
-      <div id="errorBox" class="errorBox"></div>
 
     </div>
-
-  </div>
 
 </div>
 
 
 <script>
 
+// ===============================
+// SUPABASE
+// ===============================
+
 const SUPABASE_URL =
-"https://glhomrlwnwhevunfubog.supabase.co";
+    "https://glhomrlwnwhevunfubog.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_VihOz3hSXZzUiI9eANDL0A_EtaD-KIB";
+    "sb_publishable_VihOz3hSXZzUi9EandL0A_EtaD-KIB";
 
-const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
 );
 
+
+// ===============================
+// UPI DETAILS
+// ===============================
+
+const UPI_ID = "7KW0568000@mairtel";
+
+
+// ===============================
+// URL AMOUNT
+// ===============================
+
+const params = new URLSearchParams(
+    window.location.search
+);
+
+const amountFromPage = Number(
+    params.get("amount")
+);
+
+
+// ===============================
+// USER ID
+// ===============================
 
 const userId =
-localStorage.getItem("user_id");
+    localStorage.getItem("user_id");
 
 
-const UPI_ID =
-"7KW0568000@mairtel";
+// ===============================
+// ELEMENTS
+// ===============================
 
+const loading =
+    document.getElementById("loading");
 
-const params =
-new URLSearchParams(
-  window.location.search
-);
+const paymentBox =
+    document.getElementById("paymentBox");
 
+const amountText =
+    document.getElementById("amountText");
 
-const amountFromPage =
-Number(
-  params.get("amount")
-);
+const upiText =
+    document.getElementById("upiText");
 
+const qrBox =
+    document.getElementById("qrcode");
 
-let currentRequest = null;
-
-
-function showError(message){
-
-  const box =
-  document.getElementById("errorBox");
-
-  box.innerText =
-  message;
-
-  box.style.display =
-  "block";
-
-}
-
-
-function hideError(){
-
-  const box =
-  document.getElementById("errorBox");
-
-  box.innerText =
-  "";
-
-  box.style.display =
-  "none";
-
-}
-
-
-function hideLoading(){
-
-  document.getElementById(
-    "loading"
-  ).style.display =
-  "none";
-
-}
-
-
-function showPayment(){
-
-  document.getElementById(
-    "paymentContent"
-  ).style.display =
-  "block";
-
-}
-
-
-/*
-==================================================
-CREATE QR
-==================================================
-*/
-
-function createQR(amount){
-
-  const qrBox =
-  document.getElementById("qrcode");
-
-  if(!qrBox){
-
-    throw new Error(
-      "QR container nahi mila."
-    );
-
-  }
-
-
-  const upiData =
-    "upi://pay" +
-    "?pa=" +
-    encodeURIComponent(UPI_ID) +
-    "&am=" +
-    encodeURIComponent(
-      Number(amount).toFixed(2)
-    ) +
-    "&cu=INR";
-
-
-  console.log(
-    "UPI DATA:",
-    upiData
-  );
-
-
-  /*
-   * QRCode.js ki jagah direct QR image.
-   */
-
-  const qrURL =
-    "https://api.qrserver.com/v1/create-qr-code/" +
-    "?size=240x240" +
-    "&data=" +
-    encodeURIComponent(upiData);
-
-
-  qrBox.innerHTML = "";
-
-
-  const img =
-    document.createElement("img");
-
-
-  img.src =
-    qrURL;
-
-
-  img.width =
-    240;
-
-
-  img.height =
-    240;
-
-
-  img.alt =
-    "Payment QR Code";
-
-
-  img.onload =
-  function(){
-
-    console.log(
-      "QR successfully loaded"
-    );
-
-  };
-
-
-  img.onerror =
-  function(){
-
-    showError(
-      "QR image load nahi ho saki. Internet connection check karein."
-    );
-
-  };
-
-
-  qrBox.appendChild(img);
-
-}
-
-
-/*
-==================================================
-LOAD REQUEST
-==================================================
-*/
-
-async function loadRequest(){
-
-  try{
-
-    hideError();
-
-
-    if(!userId){
-
-      throw new Error(
-        "User login nahi mila. Please login again."
-      );
-
-    }
-
-
-    if(
-      !amountFromPage ||
-      amountFromPage <= 0
-    ){
-
-      throw new Error(
-        "Amount nahi mila."
-      );
-
-    }
-
-
-    const fiveMinutesAgo =
-      new Date(
-        Date.now() - 5 * 60 * 1000
-      ).toISOString();
-
-
-    /*
-     * Existing pending request check
-     */
-
-    const {
-      data: existingRequest,
-      error: existingError
-    } = await supabaseClient
-
-      .from("deposit_requests")
-
-      .select(
-        "id,user_id,amount,status,utr,created_at,updated_at"
-      )
-
-      .eq(
-        "user_id",
-        userId
-      )
-
-      .eq(
-        "amount",
-        amountFromPage
-      )
-
-      .eq(
-        "status",
-        "pending"
-      )
-
-      .gte(
-        "created_at",
-        fiveMinutesAgo
-      )
-
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-
-      .limit(1);
-
-
-    if(existingError){
-
-      console.error(
-        "CHECK ERROR:",
-        existingError
-      );
-
-      throw new Error(
-        "Request check nahi ho saki: " +
-        existingError.message
-      );
-
-    }
-
-
-    if(
-      existingRequest &&
-      existingRequest.length > 0
-    ){
-
-      currentRequest =
-        existingRequest[0];
-
-      console.log(
-        "Existing request:",
-        currentRequest
-      );
-
-    }
-
-    else{
-
-      /*
-       * New request
-       */
-
-      const {
-        data,
-        error
-      } = await supabaseClient
-
-        .from("deposit_requests")
-
-        .insert({
-
-          user_id:userId,
-
-          amount:amountFromPage,
-
-          status:"pending"
-
-        })
-
-        .select(
-          "id,user_id,amount,status,utr,created_at,updated_at"
-        )
-
-        .single();
-
-
-      if(error){
-
-        console.error(
-          "INSERT ERROR:",
-          error
-        );
-
-        throw new Error(
-          "Deposit request create nahi hui: " +
-          error.message
-        );
-
-      }
-
-
-      if(!data){
-
-        throw new Error(
-          "Deposit request create hui lekin data nahi mila."
-        );
-
-      }
-
-
-      currentRequest =
-        data;
-
-
-      console.log(
-        "New request:",
-        currentRequest
-      );
-
-    }
-
-
-    if(
-      !currentRequest ||
-      currentRequest.status !== "pending"
-    ){
-
-      throw new Error(
-        "Deposit request pending nahi hai."
-      );
-
-    }
-
-
-    const amount =
-      Number(
-        currentRequest.amount
-      );
-
-
-    document.getElementById(
-      "amount"
-    ).innerText =
-      "₹" +
-      amount.toFixed(2);
-
-
-    /*
-     * QR generate
-     */
-
-    createQR(amount);
-
-
-    hideLoading();
-
-    showPayment();
-
-
-  }catch(error){
-
-    console.error(
-      "PAYMENT ERROR:",
-      error
-    );
-
-
-    hideLoading();
-
-
-    showError(
-      error.message ||
-      "Payment page me error aa gaya."
-    );
-
-  }
-
-}
-
-
-/*
-==================================================
-SUBMIT USER ID
-==================================================
-*/
-
-async function submitUTR(){
-
-  hideError();
-
-
-  if(!currentRequest){
-
-    showError(
-      "Deposit request nahi mili."
-    );
-
-    return;
-
-  }
-
-
-  const utrInput =
+const utrInput =
     document.getElementById("utr");
 
-
-  const submitBtn =
+const submitBtn =
     document.getElementById("submitBtn");
 
-
-  const utr =
-    utrInput.value.trim();
-
-
-  if(!utr){
-
-    showError(
-      "User ID enter karein."
-    );
-
-    utrInput.focus();
-
-    return;
-
-  }
+const message =
+    document.getElementById("message");
 
 
-  submitBtn.disabled =
-  true;
+// ===============================
+// START
+// ===============================
 
-  submitBtn.innerText =
-  "Submitting...";
+window.addEventListener("load", function() {
 
+    loadRequest();
 
-  try{
-
-    const {
-      error
-    } = await supabaseClient
-
-      .from("deposit_requests")
-
-      .update({
-
-        utr:utr,
-
-        updated_at:
-          new Date().toISOString()
-
-      })
-
-      .eq(
-        "id",
-        currentRequest.id
-      )
-
-      .eq(
-        "user_id",
-        userId
-      );
+});
 
 
-    if(error){
+// ===============================
+// LOAD / CREATE REQUEST
+// ===============================
 
-      console.error(
-        "UPDATE ERROR:",
-        error
-      );
+async function loadRequest() {
 
-      throw new Error(
-        "User ID submit nahi hua: " +
-        error.message
-      );
+    try {
+
+        console.log("User ID:", userId);
+
+        console.log(
+            "Amount:",
+            amountFromPage
+        );
+
+
+        // USER ID CHECK
+
+        if (!userId) {
+
+            throw new Error(
+                "User ID localStorage me nahi mila."
+            );
+
+        }
+
+
+        // AMOUNT CHECK
+
+        if (
+            !amountFromPage ||
+            amountFromPage < 100
+        ) {
+
+            throw new Error(
+                "Invalid amount."
+            );
+
+        }
+
+
+        // SHOW BASIC DETAILS
+
+        amountText.textContent =
+            amountFromPage;
+
+        upiText.textContent =
+            UPI_ID;
+
+
+        // ===============================
+        // 5 MINUTE TIME
+        // ===============================
+
+        const fiveMinutesAgo =
+            new Date(
+                Date.now() - 5 * 60 * 1000
+            ).toISOString();
+
+
+        console.log(
+            "Checking existing request..."
+        );
+
+
+        // ===============================
+        // FIND EXISTING REQUEST
+        // ===============================
+
+        const {
+            data: existing,
+            error: findError
+        } = await supabase
+
+            .from("deposit_requests")
+
+            .select(
+                "id,user_id,amount,utr,status,created_at"
+            )
+
+            .eq(
+                "user_id",
+                Number(userId)
+            )
+
+            .eq(
+                "amount",
+                Number(amountFromPage)
+            )
+
+            .eq(
+                "status",
+                "pending"
+            )
+
+            .gte(
+                "created_at",
+                fiveMinutesAgo
+            )
+
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            )
+
+            .limit(1);
+
+
+        // ===============================
+        // FIND ERROR
+        // ===============================
+
+        if (findError) {
+
+            console.error(
+                "Find request error:",
+                findError
+            );
+
+            throw new Error(
+                "Deposit request check failed: " +
+                findError.message
+            );
+
+        }
+
+
+        let request;
+
+
+        // ===============================
+        // EXISTING REQUEST
+        // ===============================
+
+        if (
+            existing &&
+            existing.length > 0
+        ) {
+
+            request =
+                existing[0];
+
+            console.log(
+                "Existing request:",
+                request
+            );
+
+        }
+
+
+        // ===============================
+        // CREATE NEW REQUEST
+        // ===============================
+
+        else {
+
+            console.log(
+                "Creating new request..."
+            );
+
+
+            const {
+                data: newRequest,
+                error: insertError
+            } = await supabase
+
+                .from("deposit_requests")
+
+                .insert({
+
+                    user_id:
+                        Number(userId),
+
+                    amount:
+                        Number(amountFromPage),
+
+                    status:
+                        "pending"
+
+                })
+
+                .select(
+                    "id,user_id,amount,utr,status,created_at"
+                )
+
+                .single();
+
+
+            // ===============================
+            // INSERT ERROR
+            // ===============================
+
+            if (insertError) {
+
+                console.error(
+                    "Insert request error:",
+                    insertError
+                );
+
+                throw new Error(
+                    "Deposit request create failed: " +
+                    insertError.message
+                );
+
+            }
+
+
+            request =
+                newRequest;
+
+
+            console.log(
+                "New request:",
+                request
+            );
+
+        }
+
+
+        // ===============================
+        // CREATE QR
+        // ===============================
+
+        createQR();
+
+
+        // ===============================
+        // SHOW PAYMENT BOX
+        // ===============================
+
+        loading.style.display =
+            "none";
+
+        paymentBox.style.display =
+            "block";
+
+
+        // Existing UTR show karo
+        if (request.utr) {
+
+            utrInput.value =
+                request.utr;
+
+        }
+
 
     }
 
+    catch (error) {
 
-    window.location.replace(
-      "deposit.html"
-    );
-
-
-  }catch(error){
-
-    console.error(error);
+        console.error(
+            "loadRequest ERROR:",
+            error
+        );
 
 
-    showError(
-      error.message ||
-      "Submit nahi ho saka."
-    );
+        loading.innerHTML = `
+            <div class="error">
+                <strong>Something went wrong</strong>
+                <br><br>
+                ${escapeHtml(error.message)}
+            </div>
+        `;
 
-
-    submitBtn.disabled =
-    false;
-
-    submitBtn.innerText =
-    "Submit User ID";
-
-  }
+    }
 
 }
 
 
-/*
-==================================================
-START
-==================================================
-*/
+// ===============================
+// CREATE QR
+// ===============================
 
-loadRequest();
+function createQR() {
+
+    try {
+
+        qrBox.innerHTML = "";
+
+        const upiUrl =
+            "upi://pay" +
+            "?pa=" +
+            encodeURIComponent(UPI_ID) +
+            "&am=" +
+            encodeURIComponent(
+                amountFromPage.toFixed(2)
+            ) +
+            "&cu=INR";
+
+
+        console.log(
+            "UPI URL:",
+            upiUrl
+        );
+
+
+        const qrImage =
+            document.createElement("img");
+
+
+        qrImage.alt =
+            "UPI Payment QR";
+
+
+        qrImage.width = 240;
+
+        qrImage.height = 240;
+
+
+        qrImage.src =
+            "https://api.qrserver.com/v1/create-qr-code/" +
+            "?size=240x240&data=" +
+            encodeURIComponent(upiUrl);
+
+
+        qrImage.onload =
+            function() {
+
+                console.log(
+                    "QR loaded successfully"
+                );
+
+            };
+
+
+        qrImage.onerror =
+            function() {
+
+                console.error(
+                    "QR image failed to load"
+                );
+
+                qrBox.innerHTML = `
+                    <div class="error">
+                        QR image load nahi ho rahi.
+                    </div>
+                `;
+
+            };
+
+
+        qrBox.appendChild(
+            qrImage
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "QR ERROR:",
+            error
+        );
+
+        qrBox.innerHTML = `
+            <div class="error">
+                QR generate nahi ho paya.
+            </div>
+        `;
+
+    }
+
+}
+
+
+// ===============================
+// SUBMIT UTR
+// ===============================
+
+submitBtn.addEventListener(
+    "click",
+    submitUTR
+);
+
+
+async function submitUTR() {
+
+    try {
+
+        const utr =
+            utrInput.value.trim();
+
+
+        if (!utr) {
+
+            message.innerHTML = `
+                <div class="error">
+                    UTR / Transaction ID enter karein.
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        submitBtn.disabled =
+            true;
+
+        submitBtn.textContent =
+            "Submitting...";
+
+
+        // Latest pending request
+        const {
+            data: request,
+            error: requestError
+        } = await supabase
+
+            .from("deposit_requests")
+
+            .select(
+                "id,status,created_at"
+            )
+
+            .eq(
+                "user_id",
+                Number(userId)
+            )
+
+            .eq(
+                "amount",
+                Number(amountFromPage)
+            )
+
+            .eq(
+                "status",
+                "pending"
+            )
+
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            )
+
+            .limit(1)
+            .maybeSingle();
+
+
+        if (requestError) {
+
+            console.error(
+                "Request find error:",
+                requestError
+            );
+
+            throw new Error(
+                requestError.message
+            );
+
+        }
+
+
+        if (!request) {
+
+            throw new Error(
+                "Pending deposit request nahi mili."
+            );
+
+        }
+
+
+        // ===============================
+        // UPDATE UTR
+        // ===============================
+
+        const {
+            error: updateError
+        } = await supabase
+
+            .from("deposit_requests")
+
+            .update({
+
+                utr: utr,
+
+                updated_at:
+                    new Date().toISOString()
+
+            })
+
+            .eq(
+                "id",
+                request.id
+            );
+
+
+        if (updateError) {
+
+            console.error(
+                "UTR update error:",
+                updateError
+            );
+
+            throw new Error(
+                updateError.message
+            );
+
+        }
+
+
+        // ===============================
+        // SUCCESS
+        // ===============================
+
+        message.innerHTML = `
+            <div class="success">
+                UTR successfully submit ho gaya.
+                <br>
+                Payment verification ke liye pending hai.
+            </div>
+        `;
+
+
+        submitBtn.textContent =
+            "Submitted";
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Submit UTR ERROR:",
+            error
+        );
+
+
+        message.innerHTML = `
+            <div class="error">
+                ${escapeHtml(error.message)}
+            </div>
+        `;
+
+
+        submitBtn.disabled =
+            false;
+
+        submitBtn.textContent =
+            "Submit Payment";
+
+    }
+
+}
+
+
+// ===============================
+// HTML ESCAPE
+// ===============================
+
+function escapeHtml(text) {
+
+    return String(text)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
 
 </script>
 
