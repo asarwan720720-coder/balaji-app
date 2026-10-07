@@ -676,16 +676,16 @@ async function loadDates(){
 
         .from("history")
 
-        .select("created_at")
+        .select("game_date")
 
         .not(
-            "created_at",
+            "game_date",
             "is",
             null
         )
 
         .order(
-            "created_at",
+            "game_date",
             {
                 ascending:false
             }
@@ -713,9 +713,7 @@ async function loadDates(){
     (data || []).forEach(row => {
 
         const date =
-            getLocalDate(
-                row.created_at
-            );
+            row.game_date;
 
         if(date){
 
@@ -804,7 +802,7 @@ async function loadMarkets(date){
         .from("history")
 
         .select(
-            "market,created_at"
+            "market,game_date"
         )
 
         .not(
@@ -814,7 +812,7 @@ async function loadMarkets(date){
         )
 
         .not(
-            "created_at",
+            "game_date",
             "is",
             null
         );
@@ -836,7 +834,7 @@ async function loadMarkets(date){
     (data || []).forEach(row => {
 
         if(
-            getLocalDate(row.created_at)
+            row.game_date
             === date
         ){
 
@@ -1193,7 +1191,7 @@ async function createWiningRows(){
         .from("history")
 
         .select(
-            "id,user_id,market,data,total,created_at,status"
+            "id,user_id,market,data,total,created_at,game_date,status"
         )
 
         .eq(
@@ -1202,7 +1200,7 @@ async function createWiningRows(){
         )
 
         .not(
-            "created_at",
+            "game_date",
             "is",
             null
         );
@@ -1227,9 +1225,7 @@ async function createWiningRows(){
         .filter(row => {
 
             return (
-                getLocalDate(
-                    row.created_at
-                )
+                row.game_date
                 ===
                 selectedDate
             );
@@ -1692,7 +1688,7 @@ async function loadWining(){
             .from("history")
 
             .select(
-                "id,created_at,market"
+                "id,created_at,game_date,market"
             )
 
             .in(
@@ -1757,9 +1753,7 @@ function renderWining(){
             if(history){
 
                 date =
-                    getLocalDate(
-                        history.created_at
-                    );
+                    history.game_date;
 
 
                 if(!market){
